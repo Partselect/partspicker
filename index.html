@@ -321,7 +321,7 @@ function afterSplash(){
   };
   const showApp = user => {
     $i('useremail').textContent = user.email || ''; $i('userbar').hidden = false; loadModels();
-    if (unguard) unguard(); unguard = PP.session.guard(user, kicked);
+    if (unguard) unguard(); unguard = PP.session ? PP.session.guard(user, kicked) : null;
     if (!si.hidden) { si.classList.add('out'); setTimeout(() => { si.hidden = true; si.classList.remove('out'); }, 480); }
   };
   const showSignin = () => { $i('userbar').hidden = true; si.hidden = false; setTimeout(() => $i('si-email').focus(), 350); };
@@ -366,7 +366,7 @@ function afterSplash(){
     'auth/user-disabled': 'This account has been switched off.',
     'auth/too-many-requests': 'Too many tries. Wait a few minutes, then try again.',
     'auth/network-request-failed': 'No connection. Check your internet and try again.'
-  })[c] || 'Couldn\u2019t sign in. Try again.';
+  })[c] || ('Couldn\u2019t sign in (' + (c || 'app error') + '). Reload the page and try again.');
   $i('si-form').addEventListener('submit', async e => {
     e.preventDefault();
     const email = $i('si-email').value.trim(), pass = $i('si-pass').value;
@@ -376,11 +376,11 @@ function afterSplash(){
     try {
       await PP.auth.setPersistence($i('si-remember').checked ? 'local' : 'session');
       const cred = await PP.auth.signInWithEmailAndPassword(email, pass);
-      await PP.session.claim(cred.user);   // first device only: registers this device or refuses
+      if (PP.session) await PP.session.claim(cred.user);   // first device only: registers this device or refuses
       $i('si-pass').value = ''; await enter(cred.user);
     } catch (err) {
       if (err && err.code === 'pp/other-device') msg(otherDevice(err.label), 'err');
-      else { msg(errText(err && err.code), 'err'); $i('si-pass').setAttribute('aria-invalid', 'true'); }
+      else { msg(errText(err && (err.code || (err.message ? err.message.slice(0, 80) : ''))), 'err'); if (err && /auth\/(invalid|wrong|user-not)/.test(err.code || '')) $i('si-pass').setAttribute('aria-invalid', 'true'); console.error(err); }
     } finally { btn.disabled = false; btn.textContent = 'Sign in'; }
   });
   $i('si-forgot').onclick = async () => {

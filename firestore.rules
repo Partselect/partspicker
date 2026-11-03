@@ -5,21 +5,26 @@ service cloud.firestore {
     function signedIn() { return request.auth != null && request.auth.token.email != null; }
     function me() { return request.auth.token.email.lower(); }
 
-    // The owner (super admin): the only account that can add users, renew subscriptions and manage catalogues.
-    function isOwner() { return signedIn() && me() == 'admin@marinics.com'; }
+    // The super admin: the only account that can manage companies, logins, subscriptions and catalogues.
+    function isOwner() { return signedIn() && me() == 'bakku3344@gmail.com'; }
 
-    // A user's subscription, kept by the owner on the super admin page.
-    function sub() { return get(/databases/$(database)/documents/access/$(me())).data; }
+    // Each login email points to its company; the company holds the subscription.
+    function myLink() { return /databases/$(database)/documents/access/$(me()); }
+    function myCompany() { return get(/databases/$(database)/documents/companies/$(get(myLink()).data.company)).data; }
     function hasSub() {
-      return signedIn()
-        && exists(/databases/$(database)/documents/access/$(me()))
-        && sub().active == true
-        && request.time < sub().end;
+      return signedIn() && exists(myLink())
+        && myCompany().active == true
+        && request.time < myCompany().end;
     }
-    function inPlan(model) { return '*' in sub().models || model in sub().models; }
+    function inPlan(model) { return '*' in myCompany().models || model in myCompany().models; }
     function shown(model) { return get(/databases/$(database)/documents/models/$(model)).data.visible == true; }
 
-    // Engines: users see only engines that are shown and in their plan, while their subscription is running.
+    // The super admin can read and change everything (companies, logins, devices, catalogues).
+    match /{document=**} {
+      allow read, write: if isOwner();
+    }
+
+    // Engines: only shown engines in the company's plan, while the company's subscription is running.
     match /models/{model} {
       allow read: if isOwner() || (hasSub() && inPlan(model) && resource.data.visible == true);
       allow write: if isOwner();
@@ -29,10 +34,28 @@ service cloud.firestore {
       allow write: if isOwner();
     }
 
-    // Subscriptions: users may read only their own (to see their end date); only the owner can change them.
+    // Companies: a login can read its own company (to see the end date). Max 5 logins per company.
+    match /companies/{company} {
+      allow read: if isOwner() || (signedIn() && exists(myLink()) && get(myLink()).data.company == company);
+      allow create, update: if isOwner() && (!('members' in request.resource.data) || request.resource.data.members.size() <= 5);
+      allow delete: if isOwner();
+    }
+
+    // First device only: a login registers its first device; only the super admin can reset it.
+    match /sessions/{email} {
+      allow read: if isOwner() || (signedIn() && me() == email);
+      allow write: if isOwner() || (signedIn() && me() == email
+        && (resource == null || resource.data.device == 'signed-out' || resource.data.device == request.resource.data.device));
+    }
+
+    // Login → company links: a login can read its own; only the super admin changes them (except the password flag).
     match /access/{email} {
       allow read: if isOwner() || (signedIn() && me() == email);
       allow write: if isOwner();
+      // after setting their own password, a login may clear its "must change password" flag (and nothing else)
+      allow update: if signedIn() && me() == email
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['mustChange'])
+        && request.resource.data.mustChange == false;
     }
   }
 }

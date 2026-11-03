@@ -6,5 +6,51 @@ window.PP = (() => {
   const auth = firebase.auth(), db = firebase.firestore();
   try { db.enablePersistence({ synchronizeTabs: true }).catch(() => {}); } catch (e) {}   // keeps the catalogue for offline use
   const ready = new Promise(res => { const off = auth.onAuthStateChanged(u => { off(); res(u); }); });
-  return { configured: true, auth, db, ready, adminEmail: (window.PP_ADMIN_EMAIL || '').toLowerCase() };
+  const adminEmail = (window.PP_ADMIN_EMAIL || '').toLowerCase();
+
+  // ---------- one device per login ----------
+  let deviceId = 'dev-' + Math.random().toString(36).slice(2);
+  try {
+    deviceId = localStorage.getItem('pp-device') || deviceId;
+    localStorage.setItem('pp-device', deviceId);
+  } catch (e) {}
+  function deviceLabel(){
+    const ua = navigator.userAgent;
+    const os = /iPhone/.test(ua) ? 'iPhone' : /iPad|Macintosh.*Mobile|Macintosh(?=.*Safari)(?=.*Version).*Touch/.test(ua) ? 'iPad'
+      : /Android/.test(ua) ? (/(SM-|Samsung)/i.test(ua) ? 'Samsung phone' : 'Android phone') : /Windows/.test(ua) ? 'Windows PC' : /Mac OS X|Macintosh/.test(ua) ? 'Mac' : /Linux/.test(ua) ? 'Linux PC' : 'Device';
+    const br = /SamsungBrowser/.test(ua) ? 'Samsung Internet' : /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /FxiOS|Firefox\//.test(ua) ? 'Firefox' : /Safari\//.test(ua) ? 'Safari' : 'browser';
+    return os + ' · ' + br;
+  }
+  const isOwner = u => !!u && adminEmail && (u.email || '').toLowerCase() === adminEmail;
+  const ref = u => db.collection('sessions').doc((u.email || '').toLowerCase());
+  // First device only: a login is tied to the first device it signs in on.
+  // Called right after signing in: registers this device, or refuses (and signs out) if another device owns the login.
+  async function claim(u){
+    if (!u || isOwner(u)) return;
+    let cur = null;
+    try { const d = await ref(u).get(); cur = d.exists ? d.data() : null; } catch (e) {}
+    if (cur && cur.device && cur.device !== 'signed-out' && cur.device !== deviceId) {
+      await auth.signOut().catch(() => {});
+      throw { code: 'pp/other-device', label: cur.label || '' };
+    }
+    if (!cur || cur.device !== deviceId) {
+      try { await ref(u).set({ device: deviceId, label: deviceLabel(), at: firebase.firestore.FieldValue.serverTimestamp() }); }
+      catch (e) { await auth.signOut().catch(() => {}); throw { code: 'pp/other-device', label: '' }; }
+    }
+  }
+  // Watch the login: if another device signs in, sign this one out and call onKick(info).
+  function guard(u, onKick){
+    if (!u || isOwner(u)) return () => {};
+    let first = true, done = false;
+    const kick = d => { if (done) return; done = true; auth.signOut().catch(() => {}).then(() => onKick(d || {})); };
+    try {
+      return ref(u).onSnapshot(snap => {
+        const d = snap.exists ? snap.data() : null;
+        if (!d) { if (first) claim(u).catch(kick); first = false; return; }   // signed in before the lock existed: this device takes it
+        first = false;
+        if (d.device !== deviceId) kick(d);   // reset by Marinics, or registered to another device
+      }, () => {});
+    } catch (e) { return () => {}; }
+  }
+  return { configured: true, auth, db, ready, adminEmail, session: { deviceId, deviceLabel, claim, guard } };
 })();

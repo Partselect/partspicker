@@ -464,7 +464,7 @@ body{background:
     if (!window.PP || !PP.configured) return stop('Sign-in isn’t connected yet. See the README to add your Firebase keys.', 'Back to home', 'index.html');
     const user = await PP.ready;
     if (!user) { location.replace('index.html'); return; }
-    PP.session.guard(user, d => location.replace('index.html?kicked=' + (d.device === 'signed-out' ? 'admin' : '1')));   // first device only
+    if (PP.session) PP.session.guard(user, d => location.replace('index.html?kicked=' + (d.device === 'signed-out' ? 'admin' : '1')));   // first device only
     try { const acc = await PP.db.collection('access').doc(user.email.toLowerCase()).get(); if (acc.exists && acc.data().mustChange === true) { location.replace('index.html'); return; } } catch (e) {}
     // Reuse the drawings saved on this phone unless the admin has uploaded a newer catalogue (saves the free download allowance).
     const id = new URLSearchParams(location.search).get('m') || 'f300det';

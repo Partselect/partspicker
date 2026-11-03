@@ -1,406 +1,620 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light;box-sizing:border-box}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style><link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#132232"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Parts Picker"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"></head><body><title>Parts Picker</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Parts Picker Super</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#132232">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Parts Picker Super">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&display=swap">
 <style>
-/* Layout: a single counter-top screen. Logo and name on a dark band, then a grid of engine model cards. */
+/* Layout: control room. Navy bar with tabs, stat tiles, then a working list. Fixed light theme. */
 :root{
-  --bg:#E9ECEC; --mat:#FFFFFF; --gears:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22300%22%20height%3D%22300%22%20viewBox%3D%220%200%20300%20300%22%20fill%3D%22none%22%20stroke%3D%22%23D9E0E2%22%20stroke-width%3D%221.4%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M118.7%2070.0%20L118.6%2073.1%20L127.7%2076.1%20L126.6%2082.5%20L117.1%2082.4%20L115.8%2086.7%20L114.6%2089.5%20L122.1%2095.4%20L119.0%20101.1%20L110.0%2097.8%20L107.3%20101.3%20L105.3%20103.6%20L110.3%20111.7%20L105.4%20116.0%20L98.1%20109.8%20L94.4%20112.2%20L91.7%20113.6%20L93.6%20123.0%20L87.5%20125.3%20L82.8%20117.0%20L78.5%20118.0%20L75.4%20118.4%20L74.0%20127.9%20L67.6%20127.9%20L65.9%20118.5%20L61.5%20118.0%20L58.5%20117.4%20L54.0%20125.8%20L47.9%20123.6%20L49.6%20114.2%20L45.6%20112.2%20L43.0%20110.6%20L35.9%20116.9%20L30.9%20112.8%20L35.7%20104.6%20L32.7%20101.3%20L30.8%2098.9%20L21.9%20102.4%20L18.6%2096.9%20L25.9%2090.7%20L24.2%2086.7%20L23.3%2083.8%20L13.7%2084.0%20L12.5%2077.7%20L21.5%2074.4%20L21.3%2070.0%20L21.4%2066.9%20L12.3%2063.9%20L13.4%2057.5%20L22.9%2057.6%20L24.2%2053.3%20L25.4%2050.5%20L17.9%2044.6%20L21.0%2038.9%20L30.0%2042.2%20L32.7%2038.7%20L34.7%2036.4%20L29.7%2028.3%20L34.6%2024.0%20L41.9%2030.2%20L45.6%2027.8%20L48.3%2026.4%20L46.4%2017.0%20L52.5%2014.7%20L57.2%2023.0%20L61.5%2022.0%20L64.6%2021.6%20L66.0%2012.1%20L72.4%2012.1%20L74.1%2021.5%20L78.5%2022.0%20L81.5%2022.6%20L86.0%2014.2%20L92.1%2016.4%20L90.4%2025.8%20L94.4%2027.8%20L97.0%2029.4%20L104.1%2023.1%20L109.1%2027.2%20L104.3%2035.4%20L107.3%2038.7%20L109.2%2041.1%20L118.1%2037.6%20L121.4%2043.1%20L114.1%2049.3%20L115.8%2053.3%20L116.7%2056.2%20L126.3%2056.0%20L127.5%2062.3%20L118.5%2065.6Z%22/%3E%3Ccircle%20cx%3D%2270%22%20cy%3D%2270%22%20r%3D%2218.6%22/%3E%3Ccircle%20cx%3D%2270%22%20cy%3D%2270%22%20r%3D%228.4%22/%3E%3Ccircle%20cx%3D%22104.8%22%20cy%3D%2270.0%22%20r%3D%227.0%22/%3E%3Ccircle%20cx%3D%2280.8%22%20cy%3D%22103.1%22%20r%3D%227.0%22/%3E%3Ccircle%20cx%3D%2241.8%22%20cy%3D%2290.5%22%20r%3D%227.0%22/%3E%3Ccircle%20cx%3D%2241.8%22%20cy%3D%2249.5%22%20r%3D%227.0%22/%3E%3Ccircle%20cx%3D%2280.8%22%20cy%3D%2236.9%22%20r%3D%227.0%22/%3E%3Cpath%20d%3D%22M190.2%20138.0%20L190.1%20140.8%20L195.6%20143.6%20L194.1%20149.5%20L188.0%20149.4%20L186.2%20153.1%20L184.6%20155.5%20L188.0%20160.7%20L183.8%20165.0%20L178.5%20161.9%20L175.1%20164.2%20L172.6%20165.5%20L172.9%20171.6%20L167.1%20173.3%20L164.1%20168.0%20L160.0%20168.2%20L157.2%20168.1%20L154.4%20173.6%20L148.5%20172.1%20L148.6%20166.0%20L144.9%20164.2%20L142.5%20162.6%20L137.3%20166.0%20L133.0%20161.8%20L136.1%20156.5%20L133.8%20153.1%20L132.5%20150.6%20L126.4%20150.9%20L124.7%20145.1%20L130.0%20142.1%20L129.8%20138.0%20L129.9%20135.2%20L124.4%20132.4%20L125.9%20126.5%20L132.0%20126.6%20L133.8%20122.9%20L135.4%20120.5%20L132.0%20115.3%20L136.2%20111.0%20L141.5%20114.1%20L144.9%20111.8%20L147.4%20110.5%20L147.1%20104.4%20L152.9%20102.7%20L155.9%20108.0%20L160.0%20107.8%20L162.8%20107.9%20L165.6%20102.4%20L171.5%20103.9%20L171.4%20110.0%20L175.1%20111.8%20L177.5%20113.4%20L182.7%20110.0%20L187.0%20114.2%20L183.9%20119.5%20L186.2%20122.9%20L187.5%20125.4%20L193.6%20125.1%20L195.3%20130.9%20L190.0%20133.9Z%22/%3E%3Ccircle%20cx%3D%22160%22%20cy%3D%22138%22%20r%3D%2211.5%22/%3E%3Ccircle%20cx%3D%22160%22%20cy%3D%22138%22%20r%3D%225.2%22/%3E%3Cpath%20d%3D%22M253.8%2062.0%20L253.7%2064.7%20L257.4%2067.4%20L255.6%2072.9%20L251.0%2072.8%20L248.7%2076.0%20L246.8%2078.0%20L248.0%2082.5%20L243.1%2085.5%20L239.6%2082.5%20L235.8%2083.5%20L233.1%2083.8%20L231.1%2088.0%20L225.4%2087.1%20L224.7%2082.6%20L221.1%2080.9%20L218.8%2079.4%20L214.6%2081.3%20L210.8%2077.0%20L213.2%2073.1%20L211.5%2069.5%20L210.7%2066.8%20L206.3%2065.6%20L206.1%2059.8%20L210.5%2058.4%20L211.5%2054.5%20L212.6%2052.0%20L210.0%2048.2%20L213.6%2043.7%20L217.8%2045.4%20L221.1%2043.1%20L223.5%2041.9%20L224.0%2037.3%20L229.6%2036.1%20L231.8%2040.2%20L235.8%2040.5%20L238.5%2041.1%20L241.7%2037.9%20L246.8%2040.7%20L245.9%2045.2%20L248.7%2048.0%20L250.4%2050.2%20L255.0%2049.8%20L257.1%2055.2%20L253.5%2058.1Z%22/%3E%3Ccircle%20cx%3D%22232%22%20cy%3D%2262%22%20r%3D%228.3%22/%3E%3Ccircle%20cx%3D%22232%22%20cy%3D%2262%22%20r%3D%223.7%22/%3E%3Cpath%20d%3D%22M252.6%20226.0%20L252.5%20229.1%20L259.6%20232.2%20L258.2%20238.6%20L250.5%20238.6%20L248.8%20242.8%20L247.3%20245.5%20L252.4%20251.3%20L248.4%20256.6%20L241.4%20253.2%20L238.1%20256.2%20L235.6%20258.1%20L237.6%20265.5%20L231.7%20268.5%20L226.9%20262.4%20L222.6%20263.7%20L219.5%20264.2%20L218.1%20271.8%20L211.5%20271.9%20L209.8%20264.4%20L205.4%20263.7%20L202.4%20262.9%20L197.8%20269.1%20L191.8%20266.3%20L193.6%20258.8%20L189.9%20256.2%20L187.5%20254.2%20L180.8%20257.8%20L176.5%20252.7%20L181.4%20246.7%20L179.2%20242.8%20L177.9%20239.9%20L170.3%20240.2%20L168.7%20233.8%20L175.6%20230.5%20L175.4%20226.0%20L175.5%20222.9%20L168.4%20219.8%20L169.8%20213.4%20L177.5%20213.4%20L179.2%20209.2%20L180.7%20206.5%20L175.6%20200.7%20L179.6%20195.4%20L186.6%20198.8%20L189.9%20195.8%20L192.4%20193.9%20L190.4%20186.5%20L196.3%20183.5%20L201.1%20189.6%20L205.4%20188.3%20L208.5%20187.8%20L209.9%20180.2%20L216.5%20180.1%20L218.2%20187.6%20L222.6%20188.3%20L225.6%20189.1%20L230.2%20182.9%20L236.2%20185.7%20L234.4%20193.2%20L238.1%20195.8%20L240.5%20197.8%20L247.2%20194.2%20L251.5%20199.3%20L246.6%20205.3%20L248.8%20209.2%20L250.1%20212.1%20L257.7%20211.8%20L259.3%20218.2%20L252.4%20221.5Z%22/%3E%3Ccircle%20cx%3D%22214%22%20cy%3D%22226%22%20r%3D%2214.7%22/%3E%3Ccircle%20cx%3D%22214%22%20cy%3D%22226%22%20r%3D%226.6%22/%3E%3Ccircle%20cx%3D%22241.6%22%20cy%3D%22226.0%22%20r%3D%225.5%22/%3E%3Ccircle%20cx%3D%22222.5%22%20cy%3D%22252.2%22%20r%3D%225.5%22/%3E%3Ccircle%20cx%3D%22191.7%22%20cy%3D%22242.2%22%20r%3D%225.5%22/%3E%3Ccircle%20cx%3D%22191.7%22%20cy%3D%22209.8%22%20r%3D%225.5%22/%3E%3Ccircle%20cx%3D%22222.5%22%20cy%3D%22199.8%22%20r%3D%225.5%22/%3E%3Cpath%20d%3D%22M85.2%20214.0%20L85.0%20216.8%20L89.5%20219.6%20L87.8%20225.4%20L82.5%20225.3%20L80.4%20228.8%20L78.6%20231.0%20L80.5%20235.9%20L75.8%20239.5%20L71.6%20236.4%20L67.8%20238.0%20L65.0%20238.7%20L63.8%20243.8%20L57.7%20243.9%20L56.2%20238.9%20L52.2%20238.0%20L49.6%20236.9%20L45.5%20240.3%20L40.6%20236.9%20L42.3%20231.9%20L39.6%20228.8%20L38.1%20226.4%20L32.9%20226.8%20L30.9%20221.1%20L35.1%20218.1%20L34.8%20214.0%20L35.0%20211.2%20L30.5%20208.4%20L32.2%20202.6%20L37.5%20202.7%20L39.6%20199.2%20L41.4%20197.0%20L39.5%20192.1%20L44.2%20188.5%20L48.4%20191.6%20L52.2%20190.0%20L55.0%20189.3%20L56.2%20184.2%20L62.3%20184.1%20L63.8%20189.1%20L67.8%20190.0%20L70.4%20191.1%20L74.5%20187.7%20L79.4%20191.1%20L77.7%20196.1%20L80.4%20199.2%20L81.9%20201.6%20L87.1%20201.2%20L89.1%20206.9%20L84.9%20209.9Z%22/%3E%3Ccircle%20cx%3D%2260%22%20cy%3D%22214%22%20r%3D%229.6%22/%3E%3Ccircle%20cx%3D%2260%22%20cy%3D%22214%22%20r%3D%224.3%22/%3E%3Cpath%20d%3D%22M139.4%20262.0%20L139.3%20264.2%20L141.4%20266.3%20L139.6%20270.5%20L136.6%20270.3%20L134.4%20272.5%20L132.6%20273.7%20L132.3%20276.7%20L127.9%20277.9%20L126.1%20275.4%20L123.0%20275.1%20L120.9%20274.5%20L118.4%20276.1%20L114.7%20273.4%20L115.6%20270.5%20L113.9%20267.8%20L113.1%20265.8%20L110.3%20264.9%20L110.1%20260.3%20L112.9%20259.1%20L113.9%20256.2%20L115.0%20254.3%20L114.0%20251.5%20L117.4%20248.5%20L120.1%20249.9%20L123.0%20248.9%20L125.2%20248.6%20L126.7%20246.0%20L131.2%20246.9%20L131.7%20249.8%20L134.4%20251.5%20L136.0%20253.0%20L138.9%20252.6%20L141.1%20256.6%20L139.1%20258.9Z%22/%3E%3Ccircle%20cx%3D%22126%22%20cy%3D%22262%22%20r%3D%225.1%22/%3E%3Ccircle%20cx%3D%22126%22%20cy%3D%22262%22%20r%3D%222.3%22/%3E%3C/svg%3E"); --grid:rgba(30,60,70,.07);
-  --surface:#FFFFFF; --sunk:#F3F5F5; --ink:#162026; --muted:#5D6A71; --line:#D2D9DB;
-  --bar:#132232; --bar-ink:#E9EFF1; --bar-muted:#93A3AB;
-  --accent:#006597; --accent-ink:#FFFFFF; --accent-soft:rgba(0,101,151,.12);
-  --f-ui:"IBM Plex Sans Condensed","Arial Narrow",Arial,sans-serif;
-  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
-  --shadow:0 1px 2px rgba(16,28,34,.08),0 12px 32px rgba(16,28,34,.10);
+  --bg:#EEF3F6; --surface:#FFFFFF; --sunk:#F5F8FA; --ink:#132232; --muted:#5B7486; --line:rgba(19,34,50,.10);
+  --blue:#006597; --blue-soft:rgba(0,101,151,.10); --navy:#132232; --slate:#58778E;
+  --ok:#1F7A4D; --ok-soft:rgba(31,122,77,.12); --warn:#B26A00; --warn-soft:rgba(178,106,0,.13); --bad:#C0392B; --bad-soft:rgba(192,57,43,.11); --off:#6B7C88; --off-soft:rgba(107,124,136,.14);
+  --f-ui:"IBM Plex Sans Condensed","Arial Narrow",Arial,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --shadow:0 1px 2px rgba(19,34,50,.06),0 14px 34px -18px rgba(19,34,50,.28);
+  color-scheme:light;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0F1518; --mat:#11181C; --gears:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22300%22%20height%3D%22300%22%20viewBox%3D%220%200%20300%20300%22%20fill%3D%22none%22%20stroke%3D%22%2325323A%22%20stroke-width%3D%221.4%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M118.7%2070.0%20L118.6%2073.1%20L127.7%2076.1%20L126.6%2082.5%20L117.1%2082.4%20L115.8%2086.7%20L114.6%2089.5%20L122.1%2095.4%20L119.0%20101.1%20L110.0%2097.8%20L107.3%20101.3%20L105.3%20103.6%20L110.3%20111.7%20L105.4%20116.0%20L98.1%20109.8%20L94.4%20112.2%20L91.7%20113.6%20L93.6%20123.0%20L87.5%20125.3%20L82.8%20117.0%20L78.5%20118.0%20L75.4%20118.4%20L74.0%20127.9%20L67.6%20127.9%20L65.9%20118.5%20L61.5%20118.0%20L58.5%20117.4%20L54.0%20125.8%20L47.9%20123.6%20L49.6%20114.2%20L45.6%20112.2%20L43.0%20110.6%20L35.9%20116.9%20L30.9%20112.8%20L35.7%20104.6%20L32.7%20101.3%20L30.8%2098.9%20L21.9%20102.4%20L18.6%2096.9%20L25.9%2090.7%20L24.2%2086.7%20L23.3%2083.8%20L13.7%2084.0%20L12.5%2077.7%20L21.5%2074.4%20L21.3%2070.0%20L21.4%2066.9%20L12.3%2063.9%20L13.4%2057.5%20L22.9%2057.6%20L24.2%2053.3%20L25.4%2050.5%20L17.9%2044.6%20L21.0%2038.9%20L30.0%2042.2%20L32.7%2038.7%20L34.7%2036.4%20L29.7%2028.3%20L34.6%2024.0%20L41.9%2030.2%20L45.6%2027.8%20L48.3%2026.4%20L46.4%2017.0%20L52.5%2014.7%20L57.2%2023.0%20L61.5%2022.0%20L64.6%2021.6%20L66.0%2012.1%20L72.4%2012.1%20L74.1%2021.5%20L78.5%2022.0%20L81.5%2022.6%20L86.0%2014.2%20L92.1%2016.4%20L90.4%2025.8%20L94.4%2027.8%20L97.0%2029.4%20L104.1%2023.1%20L109.1%2027.2%20L104.3%2035.4%20L107.3%2038.7%20L109.2%2041.1%20L118.1%2037.6%20L121.4%2043.1%20L114.1%2049.3%20L115.8%2053.3%20L116.7%2056.2%20L126.3%2056.0%20L127.5%2062.3%20L118.5%2065.6Z%22/%3E%3Ccircle%20cx%3D%2270%22%20cy%3D%2270%22%20r%3D%2218.6%22/%3E%3Ccircle%20cx%3D%2270%22%20cy%3D%2270%22%20r%3D%228.4%22/%3E%3Ccircle%20cx%3D%22104.8%22%20cy%3D%2270.0%22%20r%3D%227.0%22/%3E%3Ccircle%20cx%3D%2280.8%22%20cy%3D%22103.1%22%20r%3D%227.0%22/%3E%3Ccircle%20cx%3D%2241.8%22%20cy%3D%2290.5%22%20r%3D%227.0%22/%3E%3Ccircle%20cx%3D%2241.8%22%20cy%3D%2249.5%22%20r%3D%227.0%22/%3E%3Ccircle%20cx%3D%2280.8%22%20cy%3D%2236.9%22%20r%3D%227.0%22/%3E%3Cpath%20d%3D%22M190.2%20138.0%20L190.1%20140.8%20L195.6%20143.6%20L194.1%20149.5%20L188.0%20149.4%20L186.2%20153.1%20L184.6%20155.5%20L188.0%20160.7%20L183.8%20165.0%20L178.5%20161.9%20L175.1%20164.2%20L172.6%20165.5%20L172.9%20171.6%20L167.1%20173.3%20L164.1%20168.0%20L160.0%20168.2%20L157.2%20168.1%20L154.4%20173.6%20L148.5%20172.1%20L148.6%20166.0%20L144.9%20164.2%20L142.5%20162.6%20L137.3%20166.0%20L133.0%20161.8%20L136.1%20156.5%20L133.8%20153.1%20L132.5%20150.6%20L126.4%20150.9%20L124.7%20145.1%20L130.0%20142.1%20L129.8%20138.0%20L129.9%20135.2%20L124.4%20132.4%20L125.9%20126.5%20L132.0%20126.6%20L133.8%20122.9%20L135.4%20120.5%20L132.0%20115.3%20L136.2%20111.0%20L141.5%20114.1%20L144.9%20111.8%20L147.4%20110.5%20L147.1%20104.4%20L152.9%20102.7%20L155.9%20108.0%20L160.0%20107.8%20L162.8%20107.9%20L165.6%20102.4%20L171.5%20103.9%20L171.4%20110.0%20L175.1%20111.8%20L177.5%20113.4%20L182.7%20110.0%20L187.0%20114.2%20L183.9%20119.5%20L186.2%20122.9%20L187.5%20125.4%20L193.6%20125.1%20L195.3%20130.9%20L190.0%20133.9Z%22/%3E%3Ccircle%20cx%3D%22160%22%20cy%3D%22138%22%20r%3D%2211.5%22/%3E%3Ccircle%20cx%3D%22160%22%20cy%3D%22138%22%20r%3D%225.2%22/%3E%3Cpath%20d%3D%22M253.8%2062.0%20L253.7%2064.7%20L257.4%2067.4%20L255.6%2072.9%20L251.0%2072.8%20L248.7%2076.0%20L246.8%2078.0%20L248.0%2082.5%20L243.1%2085.5%20L239.6%2082.5%20L235.8%2083.5%20L233.1%2083.8%20L231.1%2088.0%20L225.4%2087.1%20L224.7%2082.6%20L221.1%2080.9%20L218.8%2079.4%20L214.6%2081.3%20L210.8%2077.0%20L213.2%2073.1%20L211.5%2069.5%20L210.7%2066.8%20L206.3%2065.6%20L206.1%2059.8%20L210.5%2058.4%20L211.5%2054.5%20L212.6%2052.0%20L210.0%2048.2%20L213.6%2043.7%20L217.8%2045.4%20L221.1%2043.1%20L223.5%2041.9%20L224.0%2037.3%20L229.6%2036.1%20L231.8%2040.2%20L235.8%2040.5%20L238.5%2041.1%20L241.7%2037.9%20L246.8%2040.7%20L245.9%2045.2%20L248.7%2048.0%20L250.4%2050.2%20L255.0%2049.8%20L257.1%2055.2%20L253.5%2058.1Z%22/%3E%3Ccircle%20cx%3D%22232%22%20cy%3D%2262%22%20r%3D%228.3%22/%3E%3Ccircle%20cx%3D%22232%22%20cy%3D%2262%22%20r%3D%223.7%22/%3E%3Cpath%20d%3D%22M252.6%20226.0%20L252.5%20229.1%20L259.6%20232.2%20L258.2%20238.6%20L250.5%20238.6%20L248.8%20242.8%20L247.3%20245.5%20L252.4%20251.3%20L248.4%20256.6%20L241.4%20253.2%20L238.1%20256.2%20L235.6%20258.1%20L237.6%20265.5%20L231.7%20268.5%20L226.9%20262.4%20L222.6%20263.7%20L219.5%20264.2%20L218.1%20271.8%20L211.5%20271.9%20L209.8%20264.4%20L205.4%20263.7%20L202.4%20262.9%20L197.8%20269.1%20L191.8%20266.3%20L193.6%20258.8%20L189.9%20256.2%20L187.5%20254.2%20L180.8%20257.8%20L176.5%20252.7%20L181.4%20246.7%20L179.2%20242.8%20L177.9%20239.9%20L170.3%20240.2%20L168.7%20233.8%20L175.6%20230.5%20L175.4%20226.0%20L175.5%20222.9%20L168.4%20219.8%20L169.8%20213.4%20L177.5%20213.4%20L179.2%20209.2%20L180.7%20206.5%20L175.6%20200.7%20L179.6%20195.4%20L186.6%20198.8%20L189.9%20195.8%20L192.4%20193.9%20L190.4%20186.5%20L196.3%20183.5%20L201.1%20189.6%20L205.4%20188.3%20L208.5%20187.8%20L209.9%20180.2%20L216.5%20180.1%20L218.2%20187.6%20L222.6%20188.3%20L225.6%20189.1%20L230.2%20182.9%20L236.2%20185.7%20L234.4%20193.2%20L238.1%20195.8%20L240.5%20197.8%20L247.2%20194.2%20L251.5%20199.3%20L246.6%20205.3%20L248.8%20209.2%20L250.1%20212.1%20L257.7%20211.8%20L259.3%20218.2%20L252.4%20221.5Z%22/%3E%3Ccircle%20cx%3D%22214%22%20cy%3D%22226%22%20r%3D%2214.7%22/%3E%3Ccircle%20cx%3D%22214%22%20cy%3D%22226%22%20r%3D%226.6%22/%3E%3Ccircle%20cx%3D%22241.6%22%20cy%3D%22226.0%22%20r%3D%225.5%22/%3E%3Ccircle%20cx%3D%22222.5%22%20cy%3D%22252.2%22%20r%3D%225.5%22/%3E%3Ccircle%20cx%3D%22191.7%22%20cy%3D%22242.2%22%20r%3D%225.5%22/%3E%3Ccircle%20cx%3D%22191.7%22%20cy%3D%22209.8%22%20r%3D%225.5%22/%3E%3Ccircle%20cx%3D%22222.5%22%20cy%3D%22199.8%22%20r%3D%225.5%22/%3E%3Cpath%20d%3D%22M85.2%20214.0%20L85.0%20216.8%20L89.5%20219.6%20L87.8%20225.4%20L82.5%20225.3%20L80.4%20228.8%20L78.6%20231.0%20L80.5%20235.9%20L75.8%20239.5%20L71.6%20236.4%20L67.8%20238.0%20L65.0%20238.7%20L63.8%20243.8%20L57.7%20243.9%20L56.2%20238.9%20L52.2%20238.0%20L49.6%20236.9%20L45.5%20240.3%20L40.6%20236.9%20L42.3%20231.9%20L39.6%20228.8%20L38.1%20226.4%20L32.9%20226.8%20L30.9%20221.1%20L35.1%20218.1%20L34.8%20214.0%20L35.0%20211.2%20L30.5%20208.4%20L32.2%20202.6%20L37.5%20202.7%20L39.6%20199.2%20L41.4%20197.0%20L39.5%20192.1%20L44.2%20188.5%20L48.4%20191.6%20L52.2%20190.0%20L55.0%20189.3%20L56.2%20184.2%20L62.3%20184.1%20L63.8%20189.1%20L67.8%20190.0%20L70.4%20191.1%20L74.5%20187.7%20L79.4%20191.1%20L77.7%20196.1%20L80.4%20199.2%20L81.9%20201.6%20L87.1%20201.2%20L89.1%20206.9%20L84.9%20209.9Z%22/%3E%3Ccircle%20cx%3D%2260%22%20cy%3D%22214%22%20r%3D%229.6%22/%3E%3Ccircle%20cx%3D%2260%22%20cy%3D%22214%22%20r%3D%224.3%22/%3E%3Cpath%20d%3D%22M139.4%20262.0%20L139.3%20264.2%20L141.4%20266.3%20L139.6%20270.5%20L136.6%20270.3%20L134.4%20272.5%20L132.6%20273.7%20L132.3%20276.7%20L127.9%20277.9%20L126.1%20275.4%20L123.0%20275.1%20L120.9%20274.5%20L118.4%20276.1%20L114.7%20273.4%20L115.6%20270.5%20L113.9%20267.8%20L113.1%20265.8%20L110.3%20264.9%20L110.1%20260.3%20L112.9%20259.1%20L113.9%20256.2%20L115.0%20254.3%20L114.0%20251.5%20L117.4%20248.5%20L120.1%20249.9%20L123.0%20248.9%20L125.2%20248.6%20L126.7%20246.0%20L131.2%20246.9%20L131.7%20249.8%20L134.4%20251.5%20L136.0%20253.0%20L138.9%20252.6%20L141.1%20256.6%20L139.1%20258.9Z%22/%3E%3Ccircle%20cx%3D%22126%22%20cy%3D%22262%22%20r%3D%225.1%22/%3E%3Ccircle%20cx%3D%22126%22%20cy%3D%22262%22%20r%3D%222.3%22/%3E%3C/svg%3E"); --grid:rgba(160,200,210,.05);
-  --surface:#192328; --sunk:#141C20; --ink:#E6ECEE; --muted:#97A5AC; --line:#2A363C;
-  --bar:#0B1013; --bar-ink:#E6ECEE; --bar-muted:#8394A0;
-  --accent:#3AA6DB; --accent-ink:#04131C; --accent-soft:rgba(58,166,219,.16);
-  --shadow:0 1px 2px rgba(0,0,0,.35),0 12px 32px rgba(0,0,0,.4); color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0F1518; --mat:#11181C; --gears:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22300%22%20height%3D%22300%22%20viewBox%3D%220%200%20300%20300%22%20fill%3D%22none%22%20stroke%3D%22%2325323A%22%20stroke-width%3D%221.4%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M118.7%2070.0%20L118.6%2073.1%20L127.7%2076.1%20L126.6%2082.5%20L117.1%2082.4%20L115.8%2086.7%20L114.6%2089.5%20L122.1%2095.4%20L119.0%20101.1%20L110.0%2097.8%20L107.3%20101.3%20L105.3%20103.6%20L110.3%20111.7%20L105.4%20116.0%20L98.1%20109.8%20L94.4%20112.2%20L91.7%20113.6%20L93.6%20123.0%20L87.5%20125.3%20L82.8%20117.0%20L78.5%20118.0%20L75.4%20118.4%20L74.0%20127.9%20L67.6%20127.9%20L65.9%20118.5%20L61.5%20118.0%20L58.5%20117.4%20L54.0%20125.8%20L47.9%20123.6%20L49.6%20114.2%20L45.6%20112.2%20L43.0%20110.6%20L35.9%20116.9%20L30.9%20112.8%20L35.7%20104.6%20L32.7%20101.3%20L30.8%2098.9%20L21.9%20102.4%20L18.6%2096.9%20L25.9%2090.7%20L24.2%2086.7%20L23.3%2083.8%20L13.7%2084.0%20L12.5%2077.7%20L21.5%2074.4%20L21.3%2070.0%20L21.4%2066.9%20L12.3%2063.9%20L13.4%2057.5%20L22.9%2057.6%20L24.2%2053.3%20L25.4%2050.5%20L17.9%2044.6%20L21.0%2038.9%20L30.0%2042.2%20L32.7%2038.7%20L34.7%2036.4%20L29.7%2028.3%20L34.6%2024.0%20L41.9%2030.2%20L45.6%2027.8%20L48.3%2026.4%20L46.4%2017.0%20L52.5%2014.7%20L57.2%2023.0%20L61.5%2022.0%20L64.6%2021.6%20L66.0%2012.1%20L72.4%2012.1%20L74.1%2021.5%20L78.5%2022.0%20L81.5%2022.6%20L86.0%2014.2%20L92.1%2016.4%20L90.4%2025.8%20L94.4%2027.8%20L97.0%2029.4%20L104.1%2023.1%20L109.1%2027.2%20L104.3%2035.4%20L107.3%2038.7%20L109.2%2041.1%20L118.1%2037.6%20L121.4%2043.1%20L114.1%2049.3%20L115.8%2053.3%20L116.7%2056.2%20L126.3%2056.0%20L127.5%2062.3%20L118.5%2065.6Z%22/%3E%3Ccircle%20cx%3D%2270%22%20cy%3D%2270%22%20r%3D%2218.6%22/%3E%3Ccircle%20cx%3D%2270%22%20cy%3D%2270%22%20r%3D%228.4%22/%3E%3Ccircle%20cx%3D%22104.8%22%20cy%3D%2270.0%22%20r%3D%227.0%22/%3E%3Ccircle%20cx%3D%2280.8%22%20cy%3D%22103.1%22%20r%3D%227.0%22/%3E%3Ccircle%20cx%3D%2241.8%22%20cy%3D%2290.5%22%20r%3D%227.0%22/%3E%3Ccircle%20cx%3D%2241.8%22%20cy%3D%2249.5%22%20r%3D%227.0%22/%3E%3Ccircle%20cx%3D%2280.8%22%20cy%3D%2236.9%22%20r%3D%227.0%22/%3E%3Cpath%20d%3D%22M190.2%20138.0%20L190.1%20140.8%20L195.6%20143.6%20L194.1%20149.5%20L188.0%20149.4%20L186.2%20153.1%20L184.6%20155.5%20L188.0%20160.7%20L183.8%20165.0%20L178.5%20161.9%20L175.1%20164.2%20L172.6%20165.5%20L172.9%20171.6%20L167.1%20173.3%20L164.1%20168.0%20L160.0%20168.2%20L157.2%20168.1%20L154.4%20173.6%20L148.5%20172.1%20L148.6%20166.0%20L144.9%20164.2%20L142.5%20162.6%20L137.3%20166.0%20L133.0%20161.8%20L136.1%20156.5%20L133.8%20153.1%20L132.5%20150.6%20L126.4%20150.9%20L124.7%20145.1%20L130.0%20142.1%20L129.8%20138.0%20L129.9%20135.2%20L124.4%20132.4%20L125.9%20126.5%20L132.0%20126.6%20L133.8%20122.9%20L135.4%20120.5%20L132.0%20115.3%20L136.2%20111.0%20L141.5%20114.1%20L144.9%20111.8%20L147.4%20110.5%20L147.1%20104.4%20L152.9%20102.7%20L155.9%20108.0%20L160.0%20107.8%20L162.8%20107.9%20L165.6%20102.4%20L171.5%20103.9%20L171.4%20110.0%20L175.1%20111.8%20L177.5%20113.4%20L182.7%20110.0%20L187.0%20114.2%20L183.9%20119.5%20L186.2%20122.9%20L187.5%20125.4%20L193.6%20125.1%20L195.3%20130.9%20L190.0%20133.9Z%22/%3E%3Ccircle%20cx%3D%22160%22%20cy%3D%22138%22%20r%3D%2211.5%22/%3E%3Ccircle%20cx%3D%22160%22%20cy%3D%22138%22%20r%3D%225.2%22/%3E%3Cpath%20d%3D%22M253.8%2062.0%20L253.7%2064.7%20L257.4%2067.4%20L255.6%2072.9%20L251.0%2072.8%20L248.7%2076.0%20L246.8%2078.0%20L248.0%2082.5%20L243.1%2085.5%20L239.6%2082.5%20L235.8%2083.5%20L233.1%2083.8%20L231.1%2088.0%20L225.4%2087.1%20L224.7%2082.6%20L221.1%2080.9%20L218.8%2079.4%20L214.6%2081.3%20L210.8%2077.0%20L213.2%2073.1%20L211.5%2069.5%20L210.7%2066.8%20L206.3%2065.6%20L206.1%2059.8%20L210.5%2058.4%20L211.5%2054.5%20L212.6%2052.0%20L210.0%2048.2%20L213.6%2043.7%20L217.8%2045.4%20L221.1%2043.1%20L223.5%2041.9%20L224.0%2037.3%20L229.6%2036.1%20L231.8%2040.2%20L235.8%2040.5%20L238.5%2041.1%20L241.7%2037.9%20L246.8%2040.7%20L245.9%2045.2%20L248.7%2048.0%20L250.4%2050.2%20L255.0%2049.8%20L257.1%2055.2%20L253.5%2058.1Z%22/%3E%3Ccircle%20cx%3D%22232%22%20cy%3D%2262%22%20r%3D%228.3%22/%3E%3Ccircle%20cx%3D%22232%22%20cy%3D%2262%22%20r%3D%223.7%22/%3E%3Cpath%20d%3D%22M252.6%20226.0%20L252.5%20229.1%20L259.6%20232.2%20L258.2%20238.6%20L250.5%20238.6%20L248.8%20242.8%20L247.3%20245.5%20L252.4%20251.3%20L248.4%20256.6%20L241.4%20253.2%20L238.1%20256.2%20L235.6%20258.1%20L237.6%20265.5%20L231.7%20268.5%20L226.9%20262.4%20L222.6%20263.7%20L219.5%20264.2%20L218.1%20271.8%20L211.5%20271.9%20L209.8%20264.4%20L205.4%20263.7%20L202.4%20262.9%20L197.8%20269.1%20L191.8%20266.3%20L193.6%20258.8%20L189.9%20256.2%20L187.5%20254.2%20L180.8%20257.8%20L176.5%20252.7%20L181.4%20246.7%20L179.2%20242.8%20L177.9%20239.9%20L170.3%20240.2%20L168.7%20233.8%20L175.6%20230.5%20L175.4%20226.0%20L175.5%20222.9%20L168.4%20219.8%20L169.8%20213.4%20L177.5%20213.4%20L179.2%20209.2%20L180.7%20206.5%20L175.6%20200.7%20L179.6%20195.4%20L186.6%20198.8%20L189.9%20195.8%20L192.4%20193.9%20L190.4%20186.5%20L196.3%20183.5%20L201.1%20189.6%20L205.4%20188.3%20L208.5%20187.8%20L209.9%20180.2%20L216.5%20180.1%20L218.2%20187.6%20L222.6%20188.3%20L225.6%20189.1%20L230.2%20182.9%20L236.2%20185.7%20L234.4%20193.2%20L238.1%20195.8%20L240.5%20197.8%20L247.2%20194.2%20L251.5%20199.3%20L246.6%20205.3%20L248.8%20209.2%20L250.1%20212.1%20L257.7%20211.8%20L259.3%20218.2%20L252.4%20221.5Z%22/%3E%3Ccircle%20cx%3D%22214%22%20cy%3D%22226%22%20r%3D%2214.7%22/%3E%3Ccircle%20cx%3D%22214%22%20cy%3D%22226%22%20r%3D%226.6%22/%3E%3Ccircle%20cx%3D%22241.6%22%20cy%3D%22226.0%22%20r%3D%225.5%22/%3E%3Ccircle%20cx%3D%22222.5%22%20cy%3D%22252.2%22%20r%3D%225.5%22/%3E%3Ccircle%20cx%3D%22191.7%22%20cy%3D%22242.2%22%20r%3D%225.5%22/%3E%3Ccircle%20cx%3D%22191.7%22%20cy%3D%22209.8%22%20r%3D%225.5%22/%3E%3Ccircle%20cx%3D%22222.5%22%20cy%3D%22199.8%22%20r%3D%225.5%22/%3E%3Cpath%20d%3D%22M85.2%20214.0%20L85.0%20216.8%20L89.5%20219.6%20L87.8%20225.4%20L82.5%20225.3%20L80.4%20228.8%20L78.6%20231.0%20L80.5%20235.9%20L75.8%20239.5%20L71.6%20236.4%20L67.8%20238.0%20L65.0%20238.7%20L63.8%20243.8%20L57.7%20243.9%20L56.2%20238.9%20L52.2%20238.0%20L49.6%20236.9%20L45.5%20240.3%20L40.6%20236.9%20L42.3%20231.9%20L39.6%20228.8%20L38.1%20226.4%20L32.9%20226.8%20L30.9%20221.1%20L35.1%20218.1%20L34.8%20214.0%20L35.0%20211.2%20L30.5%20208.4%20L32.2%20202.6%20L37.5%20202.7%20L39.6%20199.2%20L41.4%20197.0%20L39.5%20192.1%20L44.2%20188.5%20L48.4%20191.6%20L52.2%20190.0%20L55.0%20189.3%20L56.2%20184.2%20L62.3%20184.1%20L63.8%20189.1%20L67.8%20190.0%20L70.4%20191.1%20L74.5%20187.7%20L79.4%20191.1%20L77.7%20196.1%20L80.4%20199.2%20L81.9%20201.6%20L87.1%20201.2%20L89.1%20206.9%20L84.9%20209.9Z%22/%3E%3Ccircle%20cx%3D%2260%22%20cy%3D%22214%22%20r%3D%229.6%22/%3E%3Ccircle%20cx%3D%2260%22%20cy%3D%22214%22%20r%3D%224.3%22/%3E%3Cpath%20d%3D%22M139.4%20262.0%20L139.3%20264.2%20L141.4%20266.3%20L139.6%20270.5%20L136.6%20270.3%20L134.4%20272.5%20L132.6%20273.7%20L132.3%20276.7%20L127.9%20277.9%20L126.1%20275.4%20L123.0%20275.1%20L120.9%20274.5%20L118.4%20276.1%20L114.7%20273.4%20L115.6%20270.5%20L113.9%20267.8%20L113.1%20265.8%20L110.3%20264.9%20L110.1%20260.3%20L112.9%20259.1%20L113.9%20256.2%20L115.0%20254.3%20L114.0%20251.5%20L117.4%20248.5%20L120.1%20249.9%20L123.0%20248.9%20L125.2%20248.6%20L126.7%20246.0%20L131.2%20246.9%20L131.7%20249.8%20L134.4%20251.5%20L136.0%20253.0%20L138.9%20252.6%20L141.1%20256.6%20L139.1%20258.9Z%22/%3E%3Ccircle%20cx%3D%22126%22%20cy%3D%22262%22%20r%3D%225.1%22/%3E%3Ccircle%20cx%3D%22126%22%20cy%3D%22262%22%20r%3D%222.3%22/%3E%3C/svg%3E"); --grid:rgba(160,200,210,.05);
-  --surface:#192328; --sunk:#141C20; --ink:#E6ECEE; --muted:#97A5AC; --line:#2A363C;
-  --bar:#0B1013; --bar-ink:#E6ECEE; --bar-muted:#8394A0;
-  --accent:#3AA6DB; --accent-ink:#04131C; --accent-soft:rgba(58,166,219,.16);
-  --shadow:0 1px 2px rgba(0,0,0,.35),0 12px 32px rgba(0,0,0,.4); color-scheme:dark}
-body{background:var(--mat);color:var(--ink);font-family:var(--f-ui);font-size:15px;min-height:100%;
-  background-image:var(--gears);background-size:300px 300px}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bar)}
-:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.hero{background:var(--bar);color:var(--bar-ink)}
-.hero .wrap{display:flex;align-items:center;gap:28px;padding-block:44px 40px}
-.logo{width:132px;height:132px;flex:none;border:1.5px solid rgba(0,101,151,.45);border-radius:28px;display:grid;place-items:center;background:rgba(0,101,151,.06)}
-.logo svg{width:104px;height:104px}
-.logo .draw{stroke-dasharray:240;stroke-dashoffset:240;animation:draw 1.4s ease-out forwards}
-@keyframes draw{to{stroke-dashoffset:0}}
-.hero h1{margin:0;font-size:clamp(34px,6vw,56px);line-height:1;font-weight:700;letter-spacing:-.01em}
-.hero h1 span{color:var(--accent)}
-.hero p{margin:12px 0 0;max-width:46ch;color:var(--bar-muted);font-size:16px;line-height:1.5}
-.how{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;font:500 12px var(--f-mono);letter-spacing:.04em;color:var(--bar-ink)}
-.how span{display:flex;align-items:center;gap:8px}
-.how i{font-style:normal;width:22px;height:22px;border-radius:50%;border:2px solid var(--accent);display:grid;place-items:center;color:var(--accent);font-size:11px}
-main .wrap{padding-block:34px 48px}
-.sec{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
-.sec h2{margin:0;font-size:22px}
-.sec small{font:500 12px var(--f-mono);color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
-.card{position:relative;display:flex;flex-direction:column;gap:14px;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);text-decoration:none;color:inherit;transition:transform .15s,border-color .15s}
-.card:hover{transform:translateY(-2px);border-color:var(--accent)}
-.card .top{display:flex;align-items:center;gap:14px}
-.card .ic{width:56px;height:56px;border-radius:12px;background:var(--accent-soft);display:grid;place-items:center;flex:none}
-.card .ic svg{width:42px;height:42px}
-.card .hp{font:700 12px var(--f-mono);color:var(--accent);letter-spacing:.08em}
-.card h3{margin:2px 0 0;font-size:21px;line-height:1.15}
-.specs{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0;font-size:14px}
-.specs dt{color:var(--muted)}
-.specs dd{margin:0;font-family:var(--f-mono);font-size:13px}
-.card .foot{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding-top:14px;margin-top:auto}
-.saved{font-size:13px;color:var(--muted)}
-.saved b{color:var(--accent)}
-.open{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 16px;border-radius:10px;background:var(--accent);color:var(--accent-ink);font-weight:600}
-.soon{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;min-height:220px;padding:20px;border:1.5px dashed rgba(93,106,113,.5);border-radius:14px;color:var(--muted);background:rgba(255,255,255,.25)}
-.soon svg{opacity:.45}
-footer .wrap{padding-block:0 32px;font-size:12.5px;color:var(--muted)}
-@media (max-width:640px){
-  .hero .wrap{flex-direction:column;align-items:flex-start;gap:18px;padding-block:28px}
-  .logo{width:96px;height:96px;border-radius:22px}
-  .logo svg{width:76px;height:76px}
-  .grid{grid-template-columns:1fr}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{min-height:100vh;font:15px var(--f-ui);color:var(--ink);background:radial-gradient(70vmax 50vmax at 0% 0%,rgba(0,101,151,.12),transparent 60%),radial-gradient(60vmax 50vmax at 100% 100%,rgba(88,119,142,.16),transparent 60%),var(--bg)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.top{position:sticky;top:0;z-index:20;background:rgba(19,34,50,.94);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);color:#EAF1F5;
+  padding:12px max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px))}
+.top .in{max-width:1180px;margin:0 auto}
+.bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;margin-right:auto}
+.brand .lg{width:44px;height:44px;border-radius:12px;background:#fff;display:grid;place-items:center;overflow:hidden}
+.brand .lg img{width:40px}
+.brand b{display:block;font-size:18px}
+.brand small{display:block;font:500 11px var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:#93A9B8}
+.me{font:500 12px var(--f-mono);color:#93A9B8}
+.tbtn{height:36px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#EAF1F5;cursor:pointer;font-weight:600}
+.tbtn:hover{background:rgba(255,255,255,.12)}
+.tabs{display:flex;gap:4px;margin-top:12px}
+.tab{height:42px;padding:0 18px;border:0;background:none;color:#93A9B8;font-weight:700;font-size:15px;cursor:pointer;border-bottom:3px solid transparent}
+.tab[aria-selected="true"]{color:#fff;border-bottom-color:#3AA6DB}
+main{max-width:1180px;margin:0 auto;padding:22px max(16px,env(safe-area-inset-right,0px)) 60px max(16px,env(safe-area-inset-left,0px))}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.stat{padding:16px;border-radius:16px;background:rgba(255,255,255,.8);border:1px solid #fff;box-shadow:var(--shadow);cursor:pointer;text-align:left;border-left:4px solid var(--c)}
+.stat .n{font:700 30px/1 var(--f-mono);color:var(--c)}
+.stat .l{margin-top:6px;font-size:13px;color:var(--muted)}
+.stat[aria-pressed="true"]{outline:2px solid var(--c)}
+.panel{background:rgba(255,255,255,.86);border:1px solid #fff;border-radius:18px;box-shadow:var(--shadow)}
+.panel>.tools:first-child,.panel>.upload:first-child{border-radius:18px 18px 0 0}
+#ulist{padding-bottom:4px}
+#ulist tr:last-child .menu{top:auto;bottom:calc(100% + 6px)}
+.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:14px;border-bottom:1px solid var(--line)}
+.tools input[type=search]{flex:1;min-width:180px;height:42px;border:1px solid var(--line);border-radius:12px;padding:0 12px;background:var(--sunk)}
+.btn{height:42px;padding:0 16px;border-radius:12px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.btn:hover{border-color:var(--slate)}
+.btn.pri{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 10px 22px -12px var(--blue)}
+.btn.sm{height:34px;padding:0 11px;font-size:13px;border-radius:10px}
+.btn.danger{color:var(--bad)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font:600 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:10px 14px;background:var(--sunk);border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+.u b{display:block}
+.u small{font:12px var(--f-mono);color:var(--muted)}
+.mono{font:13px var(--f-mono);white-space:nowrap}
+.pill{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font:600 12px var(--f-ui);background:var(--pc-soft);color:var(--pc);white-space:nowrap}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.s-active{--pc:var(--ok);--pc-soft:var(--ok-soft)} .s-soon{--pc:var(--warn);--pc-soft:var(--warn-soft)} .s-expired{--pc:var(--bad);--pc-soft:var(--bad-soft)} .s-paused,.s-none{--pc:var(--off);--pc-soft:var(--off-soft)}
+.days{display:block;font:12px var(--f-mono);color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{font:600 11px var(--f-mono);padding:3px 7px;border-radius:6px;background:var(--blue-soft);color:var(--blue)}
+.acts{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+.empty{padding:34px;text-align:center;color:var(--muted)}
+.renew{position:relative}
+.menu{position:absolute;right:0;top:calc(100% + 6px);z-index:10;min-width:180px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:6px;display:grid}
+.menu button{height:38px;border:0;background:none;text-align:left;padding:0 10px;border-radius:8px;cursor:pointer;font-weight:600}
+.menu button:hover{background:var(--blue-soft);color:var(--blue)}
+/* catalogue cards */
+.cats{display:grid;gap:12px;padding:14px}
+.cat{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 14px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.cat h3{margin:0;font-size:17px}
+.cat .meta{font:12px var(--f-mono);color:var(--muted)}
+.cat .r{grid-row:1/span 2;grid-column:2;display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.switch{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-weight:600;font-size:14px}
+.switch input{appearance:none;width:44px;height:26px;border-radius:13px;background:#C9D4DB;position:relative;cursor:pointer;transition:background .15s;margin:0}
+.switch input::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .15s}
+.switch input:checked{background:var(--ok)} .switch input:checked::after{left:21px}
+.upload{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:14px;border-bottom:1px solid var(--line)}
+.file{flex:1;min-width:220px;display:block;padding:14px;border:1.5px dashed rgba(0,101,151,.35);border-radius:12px;text-align:center;cursor:pointer;color:var(--muted);background:rgba(0,101,151,.03)}
+.file b{color:var(--blue)}
+.prog{height:5px;background:var(--blue-soft)}.prog i{display:block;height:100%;width:0;background:var(--blue);transition:width .2s}
+/* dialogs */
+.scrim{position:fixed;inset:0;z-index:50;background:rgba(19,34,50,.4);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px}
+.dlg{width:min(520px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:20px;box-shadow:0 30px 70px -20px rgba(19,34,50,.5);animation:pop .2s ease-out}
+@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.98)}}
+.dlg h2{margin:0;padding:18px 20px 4px;font-size:20px}
+.dlg .sub{padding:0 20px 12px;color:var(--muted);font-size:14px;border-bottom:1px solid var(--line)}
+.dlg form{padding:16px 20px 20px;display:grid;gap:12px}
+.f label{display:block;font:600 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--slate);margin-bottom:6px}
+.f input,.f select{width:100%;height:44px;border:1.5px solid var(--line);border-radius:12px;padding:0 12px;background:#fff}
+.f input:focus,.f select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px var(--blue-soft)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pw{display:flex;gap:8px}.pw input{flex:1;font-family:var(--f-mono)}
+.eng{display:grid;gap:6px;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--sunk);max-height:180px;overflow:auto}
+.eng label{display:flex;gap:10px;align-items:center;font-size:14px;text-transform:none;letter-spacing:0;font-family:var(--f-ui);color:var(--ink);margin:0;cursor:pointer}
+.eng input{width:18px;height:18px;accent-color:var(--blue)}
+.foot{display:flex;gap:10px;justify-content:flex-end;margin-top:4px}
+.msg{min-height:18px;font-size:14px;line-height:1.45}
+.err{color:var(--bad)}.ok{color:var(--ok)}
+.creds{background:var(--sunk);border:1px solid var(--line);border-radius:12px;padding:12px;font:13px/1.7 var(--f-mono);white-space:pre-wrap;user-select:all}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:60;background:var(--navy);color:#fff;padding:10px 16px;border-radius:12px;box-shadow:var(--shadow);font-size:14px}
+/* sign-in */
+.login{max-width:420px;margin:8vh auto 0;padding:26px;background:rgba(255,255,255,.88);border:1px solid #fff;border-radius:22px;box-shadow:var(--shadow)}
+.login img{display:block;width:140px;margin:0 auto 10px}
+.login h1{margin:0;text-align:center;font-size:24px}
+.login p{margin:4px 0 18px;text-align:center;color:var(--muted)}
+.login form{display:grid;gap:12px}
+@media (max-width:860px){
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  thead{display:none}
+  table,tbody,tr,td{display:block}
+  tr{padding:12px 14px;border-bottom:1px solid var(--line)}
+  td{border:0;padding:4px 0}
+  td[data-l]::before{content:attr(data-l);display:inline-block;min-width:76px;font:600 10.5px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .acts{justify-content:flex-start;margin-top:6px}
+  .cat{grid-template-columns:1fr}.cat .r{grid-row:auto;grid-column:1;justify-content:flex-start}
+  .two{grid-template-columns:1fr}
+  .me{display:none}
 }
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.logo .draw{stroke-dashoffset:0}}
-
-/* ================= Glass theme (home) ================= */
-:root{
-  --gears-light:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22300%22%20height%3D%22300%22%20viewBox%3D%220%200%20300%20300%22%20fill%3D%22none%22%20stroke%3D%22%23D9E0E2%22%20stroke-width%3D%221.4%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M118.7%2070.0%20L118.6%2073.1%20L127.7%2076.1%20L126.6%2082.5%20L117.1%2082.4%20L115.8%2086.7%20L114.6%2089.5%20L122.1%2095.4%20L119.0%20101.1%20L110.0%2097.8%20L107.3%20101.3%20L105.3%20103.6%20L110.3%20111.7%20L105.4%20116.0%20L98.1%20109.8%20L94.4%20112.2%20L91.7%20113.6%20L93.6%20123.0%20L87.5%20125.3%20L82.8%20117.0%20L78.5%20118.0%20L75.4%20118.4%20L74.0%20127.9%20L67.6%20127.9%20L65.9%20118.5%20L61.5%20118.0%20L58.5%20117.4%20L54.0%20125.8%20L47.9%20123.6%20L49.6%20114.2%20L45.6%20112.2%20L43.0%20110.6%20L35.9%20116.9%20L30.9%20112.8%20L35.7%20104.6%20L32.7%20101.3%20L30.8%2098.9%20L21.9%20102.4%20L18.6%2096.9%20L25.9%2090.7%20L24.2%2086.7%20L23.3%2083.8%20L13.7%2084.0%20L12.5%2077.7%20L21.5%2074.4%20L21.3%2070.0%20L21.4%2066.9%20L12.3%2063.9%20L13.4%2057.5%20L22.9%2057.6%20L24.2%2053.3%20L25.4%2050.5%20L17.9%2044.6%20L21.0%2038.9%20L30.0%2042.2%20L32.7%2038.7%20L34.7%2036.4%20L29.7%2028.3%20L34.6%2024.0%20L41.9%2030.2%20L45.6%2027.8%20L48.3%2026.4%20L46.4%2017.0%20L52.5%2014.7%20L57.2%2023.0%20L61.5%2022.0%20L64.6%2021.6%20L66.0%2012.1%20L72.4%2012.1%20L74.1%2021.5%20L78.5%2022.0%20L81.5%2022.6%20L86.0%2014.2%20L92.1%2016.4%20L90.4%2025.8%20L94.4%2027.8%20L97.0%2029.4%20L104.1%2023.1%20L109.1%2027.2%20L104.3%2035.4%20L107.3%2038.7%20L109.2%2041.1%20L118.1%2037.6%20L121.4%2043.1%20L114.1%2049.3%20L115.8%2053.3%20L116.7%2056.2%20L126.3%2056.0%20L127.5%2062.3%20L118.5%2065.6Z%22/%3E%3Ccircle%20cx%3D%2270%22%20cy%3D%2270%22%20r%3D%2218.6%22/%3E%3Ccircle%20cx%3D%2270%22%20cy%3D%2270%22%20r%3D%228.4%22/%3E%3Ccircle%20cx%3D%22104.8%22%20cy%3D%2270.0%22%20r%3D%227.0%22/%3E%3Ccircle%20cx%3D%2280.8%22%20cy%3D%22103.1%22%20r%3D%227.0%22/%3E%3Ccircle%20cx%3D%2241.8%22%20cy%3D%2290.5%22%20r%3D%227.0%22/%3E%3Ccircle%20cx%3D%2241.8%22%20cy%3D%2249.5%22%20r%3D%227.0%22/%3E%3Ccircle%20cx%3D%2280.8%22%20cy%3D%2236.9%22%20r%3D%227.0%22/%3E%3Cpath%20d%3D%22M190.2%20138.0%20L190.1%20140.8%20L195.6%20143.6%20L194.1%20149.5%20L188.0%20149.4%20L186.2%20153.1%20L184.6%20155.5%20L188.0%20160.7%20L183.8%20165.0%20L178.5%20161.9%20L175.1%20164.2%20L172.6%20165.5%20L172.9%20171.6%20L167.1%20173.3%20L164.1%20168.0%20L160.0%20168.2%20L157.2%20168.1%20L154.4%20173.6%20L148.5%20172.1%20L148.6%20166.0%20L144.9%20164.2%20L142.5%20162.6%20L137.3%20166.0%20L133.0%20161.8%20L136.1%20156.5%20L133.8%20153.1%20L132.5%20150.6%20L126.4%20150.9%20L124.7%20145.1%20L130.0%20142.1%20L129.8%20138.0%20L129.9%20135.2%20L124.4%20132.4%20L125.9%20126.5%20L132.0%20126.6%20L133.8%20122.9%20L135.4%20120.5%20L132.0%20115.3%20L136.2%20111.0%20L141.5%20114.1%20L144.9%20111.8%20L147.4%20110.5%20L147.1%20104.4%20L152.9%20102.7%20L155.9%20108.0%20L160.0%20107.8%20L162.8%20107.9%20L165.6%20102.4%20L171.5%20103.9%20L171.4%20110.0%20L175.1%20111.8%20L177.5%20113.4%20L182.7%20110.0%20L187.0%20114.2%20L183.9%20119.5%20L186.2%20122.9%20L187.5%20125.4%20L193.6%20125.1%20L195.3%20130.9%20L190.0%20133.9Z%22/%3E%3Ccircle%20cx%3D%22160%22%20cy%3D%22138%22%20r%3D%2211.5%22/%3E%3Ccircle%20cx%3D%22160%22%20cy%3D%22138%22%20r%3D%225.2%22/%3E%3Cpath%20d%3D%22M253.8%2062.0%20L253.7%2064.7%20L257.4%2067.4%20L255.6%2072.9%20L251.0%2072.8%20L248.7%2076.0%20L246.8%2078.0%20L248.0%2082.5%20L243.1%2085.5%20L239.6%2082.5%20L235.8%2083.5%20L233.1%2083.8%20L231.1%2088.0%20L225.4%2087.1%20L224.7%2082.6%20L221.1%2080.9%20L218.8%2079.4%20L214.6%2081.3%20L210.8%2077.0%20L213.2%2073.1%20L211.5%2069.5%20L210.7%2066.8%20L206.3%2065.6%20L206.1%2059.8%20L210.5%2058.4%20L211.5%2054.5%20L212.6%2052.0%20L210.0%2048.2%20L213.6%2043.7%20L217.8%2045.4%20L221.1%2043.1%20L223.5%2041.9%20L224.0%2037.3%20L229.6%2036.1%20L231.8%2040.2%20L235.8%2040.5%20L238.5%2041.1%20L241.7%2037.9%20L246.8%2040.7%20L245.9%2045.2%20L248.7%2048.0%20L250.4%2050.2%20L255.0%2049.8%20L257.1%2055.2%20L253.5%2058.1Z%22/%3E%3Ccircle%20cx%3D%22232%22%20cy%3D%2262%22%20r%3D%228.3%22/%3E%3Ccircle%20cx%3D%22232%22%20cy%3D%2262%22%20r%3D%223.7%22/%3E%3Cpath%20d%3D%22M252.6%20226.0%20L252.5%20229.1%20L259.6%20232.2%20L258.2%20238.6%20L250.5%20238.6%20L248.8%20242.8%20L247.3%20245.5%20L252.4%20251.3%20L248.4%20256.6%20L241.4%20253.2%20L238.1%20256.2%20L235.6%20258.1%20L237.6%20265.5%20L231.7%20268.5%20L226.9%20262.4%20L222.6%20263.7%20L219.5%20264.2%20L218.1%20271.8%20L211.5%20271.9%20L209.8%20264.4%20L205.4%20263.7%20L202.4%20262.9%20L197.8%20269.1%20L191.8%20266.3%20L193.6%20258.8%20L189.9%20256.2%20L187.5%20254.2%20L180.8%20257.8%20L176.5%20252.7%20L181.4%20246.7%20L179.2%20242.8%20L177.9%20239.9%20L170.3%20240.2%20L168.7%20233.8%20L175.6%20230.5%20L175.4%20226.0%20L175.5%20222.9%20L168.4%20219.8%20L169.8%20213.4%20L177.5%20213.4%20L179.2%20209.2%20L180.7%20206.5%20L175.6%20200.7%20L179.6%20195.4%20L186.6%20198.8%20L189.9%20195.8%20L192.4%20193.9%20L190.4%20186.5%20L196.3%20183.5%20L201.1%20189.6%20L205.4%20188.3%20L208.5%20187.8%20L209.9%20180.2%20L216.5%20180.1%20L218.2%20187.6%20L222.6%20188.3%20L225.6%20189.1%20L230.2%20182.9%20L236.2%20185.7%20L234.4%20193.2%20L238.1%20195.8%20L240.5%20197.8%20L247.2%20194.2%20L251.5%20199.3%20L246.6%20205.3%20L248.8%20209.2%20L250.1%20212.1%20L257.7%20211.8%20L259.3%20218.2%20L252.4%20221.5Z%22/%3E%3Ccircle%20cx%3D%22214%22%20cy%3D%22226%22%20r%3D%2214.7%22/%3E%3Ccircle%20cx%3D%22214%22%20cy%3D%22226%22%20r%3D%226.6%22/%3E%3Ccircle%20cx%3D%22241.6%22%20cy%3D%22226.0%22%20r%3D%225.5%22/%3E%3Ccircle%20cx%3D%22222.5%22%20cy%3D%22252.2%22%20r%3D%225.5%22/%3E%3Ccircle%20cx%3D%22191.7%22%20cy%3D%22242.2%22%20r%3D%225.5%22/%3E%3Ccircle%20cx%3D%22191.7%22%20cy%3D%22209.8%22%20r%3D%225.5%22/%3E%3Ccircle%20cx%3D%22222.5%22%20cy%3D%22199.8%22%20r%3D%225.5%22/%3E%3Cpath%20d%3D%22M85.2%20214.0%20L85.0%20216.8%20L89.5%20219.6%20L87.8%20225.4%20L82.5%20225.3%20L80.4%20228.8%20L78.6%20231.0%20L80.5%20235.9%20L75.8%20239.5%20L71.6%20236.4%20L67.8%20238.0%20L65.0%20238.7%20L63.8%20243.8%20L57.7%20243.9%20L56.2%20238.9%20L52.2%20238.0%20L49.6%20236.9%20L45.5%20240.3%20L40.6%20236.9%20L42.3%20231.9%20L39.6%20228.8%20L38.1%20226.4%20L32.9%20226.8%20L30.9%20221.1%20L35.1%20218.1%20L34.8%20214.0%20L35.0%20211.2%20L30.5%20208.4%20L32.2%20202.6%20L37.5%20202.7%20L39.6%20199.2%20L41.4%20197.0%20L39.5%20192.1%20L44.2%20188.5%20L48.4%20191.6%20L52.2%20190.0%20L55.0%20189.3%20L56.2%20184.2%20L62.3%20184.1%20L63.8%20189.1%20L67.8%20190.0%20L70.4%20191.1%20L74.5%20187.7%20L79.4%20191.1%20L77.7%20196.1%20L80.4%20199.2%20L81.9%20201.6%20L87.1%20201.2%20L89.1%20206.9%20L84.9%20209.9Z%22/%3E%3Ccircle%20cx%3D%2260%22%20cy%3D%22214%22%20r%3D%229.6%22/%3E%3Ccircle%20cx%3D%2260%22%20cy%3D%22214%22%20r%3D%224.3%22/%3E%3Cpath%20d%3D%22M139.4%20262.0%20L139.3%20264.2%20L141.4%20266.3%20L139.6%20270.5%20L136.6%20270.3%20L134.4%20272.5%20L132.6%20273.7%20L132.3%20276.7%20L127.9%20277.9%20L126.1%20275.4%20L123.0%20275.1%20L120.9%20274.5%20L118.4%20276.1%20L114.7%20273.4%20L115.6%20270.5%20L113.9%20267.8%20L113.1%20265.8%20L110.3%20264.9%20L110.1%20260.3%20L112.9%20259.1%20L113.9%20256.2%20L115.0%20254.3%20L114.0%20251.5%20L117.4%20248.5%20L120.1%20249.9%20L123.0%20248.9%20L125.2%20248.6%20L126.7%20246.0%20L131.2%20246.9%20L131.7%20249.8%20L134.4%20251.5%20L136.0%20253.0%20L138.9%20252.6%20L141.1%20256.6%20L139.1%20258.9Z%22/%3E%3Ccircle%20cx%3D%22126%22%20cy%3D%22262%22%20r%3D%225.1%22/%3E%3Ccircle%20cx%3D%22126%22%20cy%3D%22262%22%20r%3D%222.3%22/%3E%3C/svg%3E");
-  --glass:rgba(255,255,255,.58); --glass-line:rgba(255,255,255,.8); --glass-edge:rgba(22,32,38,.10);
-  --glass-hl:inset 0 1px 0 rgba(255,255,255,.85), inset 0 0 0 1px rgba(255,255,255,.25);
-  --glass-shadow:0 1px 1px rgba(16,28,34,.05), 0 18px 40px -12px rgba(16,28,34,.22);
-  --glass-blur:saturate(170%) blur(22px);
-  --glow-a:rgba(0,120,190,.20); --glow-b:rgba(40,150,170,.14);
-}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --glass:rgba(28,40,47,.52); --glass-line:rgba(255,255,255,.10); --glass-edge:rgba(255,255,255,.06);
-  --glass-hl:inset 0 1px 0 rgba(255,255,255,.10), inset 0 0 0 1px rgba(255,255,255,.04);
-  --glass-shadow:0 1px 1px rgba(0,0,0,.3), 0 22px 48px -12px rgba(0,0,0,.6);
-  --glow-a:rgba(58,166,219,.20); --glow-b:rgba(40,150,170,.12)}}
-:root[data-theme="dark"]{
-  --glass:rgba(28,40,47,.52); --glass-line:rgba(255,255,255,.10); --glass-edge:rgba(255,255,255,.06);
-  --glass-hl:inset 0 1px 0 rgba(255,255,255,.10), inset 0 0 0 1px rgba(255,255,255,.04);
-  --glass-shadow:0 1px 1px rgba(0,0,0,.3), 0 22px 48px -12px rgba(0,0,0,.6);
-  --glow-a:rgba(58,166,219,.20); --glow-b:rgba(40,150,170,.12)}
-body{background:radial-gradient(60vmax 50vmax at 10% 30%,var(--glow-a),transparent 60%),radial-gradient(55vmax 45vmax at 100% 100%,var(--glow-b),transparent 60%),var(--mat);background-attachment:fixed}
-main,footer{background-image:var(--gears);background-size:300px 300px}
-body{background-image:radial-gradient(60vmax 50vmax at 10% 30%,var(--glow-a),transparent 60%),radial-gradient(55vmax 45vmax at 100% 100%,var(--glow-b),transparent 60%)}
-.hero{background:linear-gradient(180deg,rgba(255,255,255,.05),transparent 70%),rgba(14,22,27,.86);-webkit-backdrop-filter:saturate(160%) blur(20px);backdrop-filter:saturate(160%) blur(20px);box-shadow:0 10px 30px -18px rgba(0,0,0,.6)}
-.logo{background:rgba(255,255,255,.04);border-color:rgba(0,101,151,.45);box-shadow:0 0 40px -10px rgba(0,101,151,.45),inset 0 1px 0 rgba(255,255,255,.08)}
-.card{background:var(--glass);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border:1px solid var(--glass-line);border-radius:20px;box-shadow:var(--glass-hl),var(--glass-shadow)}
-.card .foot{border-color:var(--glass-edge)}
-.card .ic{box-shadow:inset 0 0 0 1px var(--glass-edge)}
-.open{background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,0) 55%),var(--accent);box-shadow:0 10px 24px -10px var(--accent),inset 0 1px 0 rgba(255,255,255,.35)}
-.soon{background:var(--glass);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border-radius:20px}
-
-/* ================= Opening screen ================= */
-.splash{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;cursor:pointer;
-  background:radial-gradient(70vmax 55vmax at 50% 0%,rgba(0,101,151,.16),transparent 60%),radial-gradient(60vmax 50vmax at 50% 110%,rgba(88,119,142,.22),transparent 60%),#F7FAFC;
-  padding:max(24px,env(safe-area-inset-top,0px)) max(24px,env(safe-area-inset-right,0px)) max(24px,env(safe-area-inset-bottom,0px)) max(24px,env(safe-area-inset-left,0px));
-  transition:opacity .5s ease,transform .5s ease,visibility .5s}
-.splash::before{content:"";position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22300%22%20height%3D%22300%22%20viewBox%3D%220%200%20300%20300%22%20fill%3D%22none%22%20stroke%3D%22%23D9E0E2%22%20stroke-width%3D%221.4%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M118.7%2070.0%20L118.6%2073.1%20L127.7%2076.1%20L126.6%2082.5%20L117.1%2082.4%20L115.8%2086.7%20L114.6%2089.5%20L122.1%2095.4%20L119.0%20101.1%20L110.0%2097.8%20L107.3%20101.3%20L105.3%20103.6%20L110.3%20111.7%20L105.4%20116.0%20L98.1%20109.8%20L94.4%20112.2%20L91.7%20113.6%20L93.6%20123.0%20L87.5%20125.3%20L82.8%20117.0%20L78.5%20118.0%20L75.4%20118.4%20L74.0%20127.9%20L67.6%20127.9%20L65.9%20118.5%20L61.5%20118.0%20L58.5%20117.4%20L54.0%20125.8%20L47.9%20123.6%20L49.6%20114.2%20L45.6%20112.2%20L43.0%20110.6%20L35.9%20116.9%20L30.9%20112.8%20L35.7%20104.6%20L32.7%20101.3%20L30.8%2098.9%20L21.9%20102.4%20L18.6%2096.9%20L25.9%2090.7%20L24.2%2086.7%20L23.3%2083.8%20L13.7%2084.0%20L12.5%2077.7%20L21.5%2074.4%20L21.3%2070.0%20L21.4%2066.9%20L12.3%2063.9%20L13.4%2057.5%20L22.9%2057.6%20L24.2%2053.3%20L25.4%2050.5%20L17.9%2044.6%20L21.0%2038.9%20L30.0%2042.2%20L32.7%2038.7%20L34.7%2036.4%20L29.7%2028.3%20L34.6%2024.0%20L41.9%2030.2%20L45.6%2027.8%20L48.3%2026.4%20L46.4%2017.0%20L52.5%2014.7%20L57.2%2023.0%20L61.5%2022.0%20L64.6%2021.6%20L66.0%2012.1%20L72.4%2012.1%20L74.1%2021.5%20L78.5%2022.0%20L81.5%2022.6%20L86.0%2014.2%20L92.1%2016.4%20L90.4%2025.8%20L94.4%2027.8%20L97.0%2029.4%20L104.1%2023.1%20L109.1%2027.2%20L104.3%2035.4%20L107.3%2038.7%20L109.2%2041.1%20L118.1%2037.6%20L121.4%2043.1%20L114.1%2049.3%20L115.8%2053.3%20L116.7%2056.2%20L126.3%2056.0%20L127.5%2062.3%20L118.5%2065.6Z%22/%3E%3Ccircle%20cx%3D%2270%22%20cy%3D%2270%22%20r%3D%2218.6%22/%3E%3Ccircle%20cx%3D%2270%22%20cy%3D%2270%22%20r%3D%228.4%22/%3E%3Ccircle%20cx%3D%22104.8%22%20cy%3D%2270.0%22%20r%3D%227.0%22/%3E%3Ccircle%20cx%3D%2280.8%22%20cy%3D%22103.1%22%20r%3D%227.0%22/%3E%3Ccircle%20cx%3D%2241.8%22%20cy%3D%2290.5%22%20r%3D%227.0%22/%3E%3Ccircle%20cx%3D%2241.8%22%20cy%3D%2249.5%22%20r%3D%227.0%22/%3E%3Ccircle%20cx%3D%2280.8%22%20cy%3D%2236.9%22%20r%3D%227.0%22/%3E%3Cpath%20d%3D%22M190.2%20138.0%20L190.1%20140.8%20L195.6%20143.6%20L194.1%20149.5%20L188.0%20149.4%20L186.2%20153.1%20L184.6%20155.5%20L188.0%20160.7%20L183.8%20165.0%20L178.5%20161.9%20L175.1%20164.2%20L172.6%20165.5%20L172.9%20171.6%20L167.1%20173.3%20L164.1%20168.0%20L160.0%20168.2%20L157.2%20168.1%20L154.4%20173.6%20L148.5%20172.1%20L148.6%20166.0%20L144.9%20164.2%20L142.5%20162.6%20L137.3%20166.0%20L133.0%20161.8%20L136.1%20156.5%20L133.8%20153.1%20L132.5%20150.6%20L126.4%20150.9%20L124.7%20145.1%20L130.0%20142.1%20L129.8%20138.0%20L129.9%20135.2%20L124.4%20132.4%20L125.9%20126.5%20L132.0%20126.6%20L133.8%20122.9%20L135.4%20120.5%20L132.0%20115.3%20L136.2%20111.0%20L141.5%20114.1%20L144.9%20111.8%20L147.4%20110.5%20L147.1%20104.4%20L152.9%20102.7%20L155.9%20108.0%20L160.0%20107.8%20L162.8%20107.9%20L165.6%20102.4%20L171.5%20103.9%20L171.4%20110.0%20L175.1%20111.8%20L177.5%20113.4%20L182.7%20110.0%20L187.0%20114.2%20L183.9%20119.5%20L186.2%20122.9%20L187.5%20125.4%20L193.6%20125.1%20L195.3%20130.9%20L190.0%20133.9Z%22/%3E%3Ccircle%20cx%3D%22160%22%20cy%3D%22138%22%20r%3D%2211.5%22/%3E%3Ccircle%20cx%3D%22160%22%20cy%3D%22138%22%20r%3D%225.2%22/%3E%3Cpath%20d%3D%22M253.8%2062.0%20L253.7%2064.7%20L257.4%2067.4%20L255.6%2072.9%20L251.0%2072.8%20L248.7%2076.0%20L246.8%2078.0%20L248.0%2082.5%20L243.1%2085.5%20L239.6%2082.5%20L235.8%2083.5%20L233.1%2083.8%20L231.1%2088.0%20L225.4%2087.1%20L224.7%2082.6%20L221.1%2080.9%20L218.8%2079.4%20L214.6%2081.3%20L210.8%2077.0%20L213.2%2073.1%20L211.5%2069.5%20L210.7%2066.8%20L206.3%2065.6%20L206.1%2059.8%20L210.5%2058.4%20L211.5%2054.5%20L212.6%2052.0%20L210.0%2048.2%20L213.6%2043.7%20L217.8%2045.4%20L221.1%2043.1%20L223.5%2041.9%20L224.0%2037.3%20L229.6%2036.1%20L231.8%2040.2%20L235.8%2040.5%20L238.5%2041.1%20L241.7%2037.9%20L246.8%2040.7%20L245.9%2045.2%20L248.7%2048.0%20L250.4%2050.2%20L255.0%2049.8%20L257.1%2055.2%20L253.5%2058.1Z%22/%3E%3Ccircle%20cx%3D%22232%22%20cy%3D%2262%22%20r%3D%228.3%22/%3E%3Ccircle%20cx%3D%22232%22%20cy%3D%2262%22%20r%3D%223.7%22/%3E%3Cpath%20d%3D%22M252.6%20226.0%20L252.5%20229.1%20L259.6%20232.2%20L258.2%20238.6%20L250.5%20238.6%20L248.8%20242.8%20L247.3%20245.5%20L252.4%20251.3%20L248.4%20256.6%20L241.4%20253.2%20L238.1%20256.2%20L235.6%20258.1%20L237.6%20265.5%20L231.7%20268.5%20L226.9%20262.4%20L222.6%20263.7%20L219.5%20264.2%20L218.1%20271.8%20L211.5%20271.9%20L209.8%20264.4%20L205.4%20263.7%20L202.4%20262.9%20L197.8%20269.1%20L191.8%20266.3%20L193.6%20258.8%20L189.9%20256.2%20L187.5%20254.2%20L180.8%20257.8%20L176.5%20252.7%20L181.4%20246.7%20L179.2%20242.8%20L177.9%20239.9%20L170.3%20240.2%20L168.7%20233.8%20L175.6%20230.5%20L175.4%20226.0%20L175.5%20222.9%20L168.4%20219.8%20L169.8%20213.4%20L177.5%20213.4%20L179.2%20209.2%20L180.7%20206.5%20L175.6%20200.7%20L179.6%20195.4%20L186.6%20198.8%20L189.9%20195.8%20L192.4%20193.9%20L190.4%20186.5%20L196.3%20183.5%20L201.1%20189.6%20L205.4%20188.3%20L208.5%20187.8%20L209.9%20180.2%20L216.5%20180.1%20L218.2%20187.6%20L222.6%20188.3%20L225.6%20189.1%20L230.2%20182.9%20L236.2%20185.7%20L234.4%20193.2%20L238.1%20195.8%20L240.5%20197.8%20L247.2%20194.2%20L251.5%20199.3%20L246.6%20205.3%20L248.8%20209.2%20L250.1%20212.1%20L257.7%20211.8%20L259.3%20218.2%20L252.4%20221.5Z%22/%3E%3Ccircle%20cx%3D%22214%22%20cy%3D%22226%22%20r%3D%2214.7%22/%3E%3Ccircle%20cx%3D%22214%22%20cy%3D%22226%22%20r%3D%226.6%22/%3E%3Ccircle%20cx%3D%22241.6%22%20cy%3D%22226.0%22%20r%3D%225.5%22/%3E%3Ccircle%20cx%3D%22222.5%22%20cy%3D%22252.2%22%20r%3D%225.5%22/%3E%3Ccircle%20cx%3D%22191.7%22%20cy%3D%22242.2%22%20r%3D%225.5%22/%3E%3Ccircle%20cx%3D%22191.7%22%20cy%3D%22209.8%22%20r%3D%225.5%22/%3E%3Ccircle%20cx%3D%22222.5%22%20cy%3D%22199.8%22%20r%3D%225.5%22/%3E%3Cpath%20d%3D%22M85.2%20214.0%20L85.0%20216.8%20L89.5%20219.6%20L87.8%20225.4%20L82.5%20225.3%20L80.4%20228.8%20L78.6%20231.0%20L80.5%20235.9%20L75.8%20239.5%20L71.6%20236.4%20L67.8%20238.0%20L65.0%20238.7%20L63.8%20243.8%20L57.7%20243.9%20L56.2%20238.9%20L52.2%20238.0%20L49.6%20236.9%20L45.5%20240.3%20L40.6%20236.9%20L42.3%20231.9%20L39.6%20228.8%20L38.1%20226.4%20L32.9%20226.8%20L30.9%20221.1%20L35.1%20218.1%20L34.8%20214.0%20L35.0%20211.2%20L30.5%20208.4%20L32.2%20202.6%20L37.5%20202.7%20L39.6%20199.2%20L41.4%20197.0%20L39.5%20192.1%20L44.2%20188.5%20L48.4%20191.6%20L52.2%20190.0%20L55.0%20189.3%20L56.2%20184.2%20L62.3%20184.1%20L63.8%20189.1%20L67.8%20190.0%20L70.4%20191.1%20L74.5%20187.7%20L79.4%20191.1%20L77.7%20196.1%20L80.4%20199.2%20L81.9%20201.6%20L87.1%20201.2%20L89.1%20206.9%20L84.9%20209.9Z%22/%3E%3Ccircle%20cx%3D%2260%22%20cy%3D%22214%22%20r%3D%229.6%22/%3E%3Ccircle%20cx%3D%2260%22%20cy%3D%22214%22%20r%3D%224.3%22/%3E%3Cpath%20d%3D%22M139.4%20262.0%20L139.3%20264.2%20L141.4%20266.3%20L139.6%20270.5%20L136.6%20270.3%20L134.4%20272.5%20L132.6%20273.7%20L132.3%20276.7%20L127.9%20277.9%20L126.1%20275.4%20L123.0%20275.1%20L120.9%20274.5%20L118.4%20276.1%20L114.7%20273.4%20L115.6%20270.5%20L113.9%20267.8%20L113.1%20265.8%20L110.3%20264.9%20L110.1%20260.3%20L112.9%20259.1%20L113.9%20256.2%20L115.0%20254.3%20L114.0%20251.5%20L117.4%20248.5%20L120.1%20249.9%20L123.0%20248.9%20L125.2%20248.6%20L126.7%20246.0%20L131.2%20246.9%20L131.7%20249.8%20L134.4%20251.5%20L136.0%20253.0%20L138.9%20252.6%20L141.1%20256.6%20L139.1%20258.9Z%22/%3E%3Ccircle%20cx%3D%22126%22%20cy%3D%22262%22%20r%3D%225.1%22/%3E%3Ccircle%20cx%3D%22126%22%20cy%3D%22262%22%20r%3D%222.3%22/%3E%3C/svg%3E");background-size:300px 300px;opacity:.5;pointer-events:none;-webkit-mask-image:radial-gradient(closest-side,transparent 55%,#000 100%);mask-image:radial-gradient(closest-side,transparent 55%,#000 100%)}
-.splash.out{opacity:0;transform:scale(1.04);visibility:hidden}
-.sp-in{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center}
-.sp-icon{width:112px;height:112px;border-radius:28px;display:grid;place-items:center;color:#006597;
-  background:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.9);box-shadow:0 24px 50px -18px rgba(0,101,151,.45),inset 0 1px 0 #fff;
-  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);animation:spPop .6s cubic-bezier(.2,.9,.3,1.2) both}
-.sp-icon svg{width:84px;height:84px;color:#006597!important}
-.sp-icon svg *{stroke-dasharray:240;stroke-dashoffset:240;animation:draw 1.2s .15s ease-out forwards}
-.sp-title{margin:22px 0 0;font:700 clamp(40px,11vw,64px)/1 var(--f-ui);letter-spacing:-.01em;color:#132232;animation:spUp .6s .35s both}
-.sp-title span{color:#006597}
-.sp-by{margin-top:38px;font:600 11px var(--f-mono);letter-spacing:.32em;text-transform:uppercase;color:#58778E;animation:spUp .6s .7s both}
-.sp-logo{display:block;width:min(240px,62vw);height:auto;margin-top:12px;animation:spUp .7s .85s both}
-.sp-bar{position:relative;width:120px;height:3px;border-radius:2px;background:rgba(0,101,151,.15);overflow:hidden;animation:spUp .4s .9s both}
-.sp-bar i{position:absolute;inset:0;background:#006597;transform-origin:left;animation:spLoad 1.5s .9s ease-in-out both}
-@keyframes spPop{from{opacity:0;transform:scale(.7)}}
-@keyframes spUp{from{opacity:0;transform:translateY(14px)}}
-@keyframes spLoad{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-.powered{display:flex;align-items:center;gap:10px;margin-top:10px}
-.powered span{font:600 10.5px var(--f-mono);letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
-.powered img{height:34px;width:auto}
-@media (prefers-reduced-motion:reduce){.splash{transition:none}}
-
-/* ================= Sign-in screen ================= */
-.signin{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;overflow:auto;
-  background:radial-gradient(70vmax 55vmax at 50% 0%,rgba(0,101,151,.16),transparent 60%),radial-gradient(60vmax 50vmax at 50% 110%,rgba(88,119,142,.22),transparent 60%),#F7FAFC;
-  padding:max(20px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(20px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
-  transition:opacity .45s ease,visibility .45s;color:#132232;color-scheme:light}
-.signin::before{content:"";position:fixed;inset:0;background-image:var(--gears-light);background-size:300px 300px;opacity:.5;pointer-events:none;-webkit-mask-image:radial-gradient(closest-side,transparent 50%,#000 100%);mask-image:radial-gradient(closest-side,transparent 50%,#000 100%)}
-.signin.out{opacity:0;visibility:hidden}
-.si-card{position:relative;width:min(400px,100%);padding:28px 26px 22px;border-radius:26px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.95);
-  box-shadow:0 30px 60px -24px rgba(19,34,50,.35),inset 0 1px 0 #fff;-webkit-backdrop-filter:saturate(170%) blur(22px);backdrop-filter:saturate(170%) blur(22px);animation:spPop .5s cubic-bezier(.2,.9,.3,1.15) both}
-.si-logo{display:block;width:150px;height:auto;margin:0 auto 18px}
-.si-card h2{margin:0;text-align:center;font:700 26px/1.1 var(--f-ui)}
-.si-card h2 span{color:#006597}
-.si-sub{margin:6px 0 22px;text-align:center;font-size:14px;color:#58778E}
-.si-form{display:grid;gap:14px}
-.si-field{display:grid;gap:6px}
-.si-field label{font:600 11px var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:#486B7D}
-.si-input{position:relative;display:flex;align-items:center}
-.si-input input{width:100%;height:50px;box-sizing:border-box;padding:0 14px;border-radius:14px;border:1.5px solid rgba(72,107,125,.25);background:rgba(255,255,255,.85);
-  font:500 16px var(--f-ui);color:#132232;outline:none;transition:border-color .15s,box-shadow .15s}
-.si-input input:focus{border-color:#006597;box-shadow:0 0 0 4px rgba(0,101,151,.14)}
-.si-input input[aria-invalid="true"]{border-color:#C0392B}
-.si-eye{position:absolute;right:6px;width:40px;height:40px;border:0;border-radius:10px;background:none;color:#58778E;cursor:pointer;display:grid;place-items:center}
-.si-eye:hover{background:rgba(0,101,151,.08);color:#006597}
-.si-input input.pw{padding-right:52px}
-.si-row{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px}
-.si-row label{display:flex;align-items:center;gap:8px;color:#486B7D;cursor:pointer}
-.si-row input{width:18px;height:18px;accent-color:#006597}
-.si-link{border:0;background:none;padding:4px 0;color:#006597;font:600 14px var(--f-ui);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
-.si-btn{height:52px;border:0;border-radius:14px;cursor:pointer;font:700 17px var(--f-ui);color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;
-  background:linear-gradient(180deg,rgba(255,255,255,.2),rgba(255,255,255,0) 55%),#006597;box-shadow:0 14px 28px -12px rgba(0,101,151,.7),inset 0 1px 0 rgba(255,255,255,.35)}
-.si-btn:hover{filter:brightness(1.06)}
-.si-btn:disabled{opacity:.7;cursor:wait}
-.si-spin{width:18px;height:18px;border-radius:50%;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.si-msg{min-height:20px;font-size:14px;line-height:1.4;text-align:center}
-.si-msg.err{color:#C0392B}
-.si-msg.ok{color:#1F7A4D}
-.si-foot{margin-top:18px;padding-top:14px;border-top:1px solid rgba(72,107,125,.15);text-align:center;font:500 11px var(--f-mono);letter-spacing:.18em;text-transform:uppercase;color:#7A93A3}
-.si-setup{font-size:14px;line-height:1.5;color:#486B7D;text-align:center;background:rgba(0,101,151,.06);border-radius:14px;padding:14px}
-.si-setup code{font:600 13px var(--f-mono);color:#006597}
-.userbar{position:absolute;top:max(14px,env(safe-area-inset-top,0px));right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:10px;z-index:2}
-.userbar span{font:500 12px var(--f-mono);color:var(--bar-muted);max-width:42vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.userbar button{height:36px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:var(--bar-ink);font:600 13px var(--f-ui);cursor:pointer}
-.userbar button:hover{background:rgba(255,255,255,.12)}
-.hero{position:relative}
-
-.subnote{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding:12px 16px;border-radius:14px;font-weight:600;font-size:14.5px;line-height:1.4;
-  background:var(--glass);border:1px solid var(--glass-line);box-shadow:var(--glass-hl),var(--glass-shadow);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur)}
-.subnote::before{content:"";flex:none;width:10px;height:10px;border-radius:50%;background:currentColor}
-.subnote.ok{color:#1F7A4D}.subnote.warn{color:#B26A00}.subnote.bad{color:#C0392B}.subnote.info{color:var(--accent)}
-
-.np-head{display:grid;gap:6px;text-align:center;padding:12px 14px;border-radius:14px;background:rgba(0,101,151,.07)}
-.np-head b{font-size:17px;color:#006597}
-.np-head span{font-size:14px;line-height:1.45;color:#486B7D}
+.cnt{display:inline-block;font:700 13px var(--f-mono);padding:2px 8px;border-radius:6px;background:var(--blue-soft);color:var(--blue)}
+.cnt.full{background:var(--warn-soft);color:var(--warn)}
+.mails{display:grid;gap:1px;margin-top:4px;font:12px var(--f-mono);color:var(--muted)}
+.mails .none{font-style:italic}
+.logins{display:grid;gap:6px}
+.li{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:var(--sunk)}
+.li .lt{flex:1;min-width:0;display:grid}
+.li span{min-width:0;overflow:hidden;text-overflow:ellipsis;font:13px var(--f-mono)}
+.li .dev{font-size:12px;color:var(--muted)}
+.li{flex-wrap:wrap}
+.logins .none{color:var(--muted);font-size:14px}
+.addl{display:grid;gap:10px;padding:12px;border:1.5px dashed rgba(0,101,151,.3);border-radius:14px}
+.full{padding:12px;border-radius:12px;background:var(--warn-soft);color:var(--warn);font-weight:600;font-size:14px}
+.warnbox{display:grid;gap:4px;padding:12px 14px;border-radius:12px;background:var(--bad-soft);color:#7A2318;font-size:14px;line-height:1.45}
+.warnbox b{color:var(--bad)}
+.btn.danger-solid{background:var(--bad);border-color:var(--bad);color:#fff}
+.rulesban{margin-bottom:16px;padding:14px 16px;border-radius:14px;background:var(--bad-soft);border:1px solid rgba(192,57,43,.3);color:#7A2318;line-height:1.5;font-size:14.5px}
+.rulesban b{color:var(--bad)}.rulesban code{font:600 13px var(--f-mono)}
 </style>
-
-<div class="splash" id="splash" aria-hidden="true">
-  <div class="sp-in">
-    <div class="sp-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><path d="M40 22c0-7 6-12 14-12h24c10 0 17 7 17 16v14c0 6-4 10-10 10H46c-4 0-6-3-6-7z"/> <path d="M46 24h30M46 31h22"/> <path d="M86 18v26"/> <path d="M46 50l4 10h32l4-10"/> <path d="M40 40H28v28h8"/><path d="M28 54h-6"/> <path d="M54 60l2 28h18l2-28"/> <path d="M60 68h10"/> <path d="M46 90h40"/> <path d="M54 92c0 6 5 10 12 10h14c5 0 7-3 5-7l-2-3"/> <path d="M63 102l-3 10h6l5-10"/> <path d="M86 97c4-11 11-14 14-9 2 4-4 8-14 9z"/> <path d="M86 97c5 9 4 16-1 15-4-1-3-8 1-15z"/> <circle cx="86" cy="97" r="2.4"/></svg></div>
-    <h1 class="sp-title">Parts <span>Picker</span></h1>
-    <div class="sp-by">powered by</div>
-    <img class="sp-logo" src="marinics.png" alt="Marinics">
-  </div>
-  <div class="sp-bar"><i></i></div>
-</div>
-<!--LOGIN-->
-<section class="signin" id="signin" hidden aria-label="Sign in">
-  <div class="si-card">
-    <img class="si-logo" src="marinics.png" alt="Marinics">
-    <h2>Parts <span>Picker</span></h2>
-    <p class="si-sub">Sign in to continue</p>
-    <div class="si-setup" id="si-setup" hidden>Sign-in isn't connected yet. Add your Firebase keys to <code>firebase-config.js</code>, following the README.</div>
-    <form class="si-form" id="si-form" novalidate>
-      <div class="si-field"><label for="si-email">Email</label><div class="si-input"><input id="si-email" type="email" autocomplete="username" inputmode="email" autocapitalize="off" spellcheck="false" placeholder="you@example.com" required></div></div>
-      <div class="si-field"><label for="si-pass">Password</label><div class="si-input"><input id="si-pass" class="pw" type="password" autocomplete="current-password" placeholder="Password" required>
-        <button type="button" class="si-eye" id="si-eye" aria-label="Show password"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
-      <div class="si-row"><label><input type="checkbox" id="si-remember" checked> Keep me signed in</label><button type="button" class="si-link" id="si-forgot">Forgot password?</button></div>
-      <button class="si-btn" id="si-btn" type="submit">Sign in</button>
-      <div class="si-msg" id="si-msg" role="status"></div>
-    </form>
-    <form class="si-form" id="np-form" hidden novalidate>
-      <div class="np-head"><b>Set your own password</b><span>This is your first sign-in. Choose a new password you'll remember. The temporary password stops working after this.</span></div>
-      <div class="si-field"><label for="np-1">New password</label><div class="si-input"><input id="np-1" class="pw" type="password" autocomplete="new-password" placeholder="At least 8 characters" minlength="8">
-        <button type="button" class="si-eye" id="np-eye" aria-label="Show password"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
-      <div class="si-field"><label for="np-2">Type it again</label><div class="si-input"><input id="np-2" class="pw" type="password" autocomplete="new-password" placeholder="Same password again"></div></div>
-      <button class="si-btn" id="np-btn" type="submit">Save password</button>
-      <div class="si-msg" id="np-msg" role="status"></div>
-    </form>
-    <div class="si-foot">Powered by Marinics</div>
-  </div>
-</section>
-<!--/LOGIN-->
-<header class="hero">
-  <!--USERBAR--><div class="userbar" id="userbar" hidden><span id="useremail"></span><button id="signout" type="button">Sign out</button></div><!--/USERBAR-->
-  <div class="wrap">
-    <div class="logo" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><path class="draw" d="M40 22c0-7 6-12 14-12h24c10 0 17 7 17 16v14c0 6-4 10-10 10H46c-4 0-6-3-6-7z"/> <path class="draw" d="M46 24h30M46 31h22"/> <path class="draw" d="M86 18v26"/> <path class="draw" d="M46 50l4 10h32l4-10"/> <path class="draw" d="M40 40H28v28h8"/><path class="draw" d="M28 54h-6"/> <path class="draw" d="M54 60l2 28h18l2-28"/> <path class="draw" d="M60 68h10"/> <path class="draw" d="M46 90h40"/> <path class="draw" d="M54 92c0 6 5 10 12 10h14c5 0 7-3 5-7l-2-3"/> <path class="draw" d="M63 102l-3 10h6l5-10"/> <path class="draw" d="M86 97c4-11 11-14 14-9 2 4-4 8-14 9z"/> <path class="draw" d="M86 97c5 9 4 16-1 15-4-1-3-8 1-15z"/> <circle class="draw" cx="86" cy="97" r="2.4"/></svg></div>
-    <div>
-      <h1>Parts <span>Picker</span></h1>
-      <p>Pick parts straight from the exploded drawings. Tap a number, set the quantity, and download your list as an image or Excel file.</p>
-      <div class="how"><span><i>1</i>Choose engine</span><span><i>2</i>Tap numbers</span><span><i>3</i>Download list</span></div>
+</head>
+<body>
+<header class="top" id="top" hidden>
+  <div class="in">
+    <div class="bar">
+      <div class="brand"><span class="lg"><img src="../marinics.png" alt=""></span><div><b>Parts Picker</b><small>Super admin</small></div></div>
+      <span class="me" id="me"></span>
+      <button class="tbtn" id="signout">Sign out</button>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="true" data-tab="users">Companies</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="cats">Catalogues</button>
     </div>
   </div>
 </header>
 
 <main>
-  <div class="wrap">
-    <div class="subnote" id="subnote" hidden></div>
-    <div class="sec"><h2>Select engine model</h2><small id="mcount"></small></div>
-    <div class="grid" id="grid"></div>
-  </div>
-</main>
-<footer><div class="wrap"><div class="powered"><span>Powered by</span><img src="marinics.png" alt="Marinics"></div>Lists are saved on this device only. Part numbers come from the manufacturer's parts catalogue for each model; check them before ordering.</div></footer>
+  <section class="login" id="login" hidden>
+    <img src="../marinics.png" alt="Marinics">
+    <h1>Super admin</h1>
+    <p>Owner sign-in</p>
+    <form id="lform">
+      <div class="f"><label for="lem">Email</label><input id="lem" type="email" autocomplete="username" required></div>
+      <div class="f"><label for="lpw">Password</label><input id="lpw" type="password" autocomplete="current-password" required></div>
+      <button class="btn pri" type="submit" style="justify-content:center;height:48px">Sign in</button>
+      <div class="msg" id="lmsg"></div>
+    </form>
+  </section>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="firebase-config.js"></script><script src="pp-auth.js"></script><script>
-/* Add a new engine here: copy one entry, point href at its folder. */
-const MODELS = [
-  { id: 'f300det', hp: '300 HP · 2025', name: 'F300DET / FL300DET', codes: '6JD7 · 6JE7', catalog: '1Z6JD-200SA',
-    figs: 53, parts: 1474, listKey: 'f300det-parts-list-v1', href: 'f300det/index.html' },
-];
-const ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><path d="M40 22c0-7 6-12 14-12h24c10 0 17 7 17 16v14c0 6-4 10-10 10H46c-4 0-6-3-6-7z"/> <path d="M46 24h30M46 31h22"/> <path d="M86 18v26"/> <path d="M46 50l4 10h32l4-10"/> <path d="M40 40H28v28h8"/><path d="M28 54h-6"/> <path d="M54 60l2 28h18l2-28"/> <path d="M60 68h10"/> <path d="M46 90h40"/> <path d="M54 92c0 6 5 10 12 10h14c5 0 7-3 5-7l-2-3"/> <path d="M63 102l-3 10h6l5-10"/> <path d="M86 97c4-11 11-14 14-9 2 4-4 8-14 9z"/> <path d="M86 97c5 9 4 16-1 15-4-1-3-8 1-15z"/> <circle cx="86" cy="97" r="2.4"/></svg>`;
-const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-function savedCount(key){
-  try { const l = JSON.parse(localStorage.getItem(key) || '[]'); return Array.isArray(l) ? l.filter(x => x.qty > 0).length : 0; } catch (e) { return 0; }
+  <div class="rulesban" id="rulesban" hidden></div>
+  <section id="v-users" hidden>
+    <div class="stats" id="stats"></div>
+    <div class="panel">
+      <div class="tools">
+        <input type="search" id="q" placeholder="Search company or email" aria-label="Search companies">
+        <button class="btn pri" id="adduser"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add company</button>
+      </div>
+      <div id="ulist"></div>
+    </div>
+  </section>
+
+  <section id="v-cats" hidden>
+    <div class="panel">
+      <div class="upload">
+        <label class="file" for="cfile"><b>Choose catalogue file</b> · <span id="cfname">e.g. f300det-catalogue.json</span></label>
+        <input id="cfile" type="file" accept=".json,application/json" hidden>
+        <button class="btn pri" id="cgo" disabled>Upload catalogue</button>
+      </div>
+      <div class="prog"><i id="cprog"></i></div>
+      <div class="msg" id="cmsg" style="padding:10px 14px 0"></div>
+      <div class="cats" id="clist"></div>
+    </div>
+  </section>
+</main>
+<div id="layer"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="../firebase-config.js"></script><script>window.PP_APP_NAME = "super";</script>
+<script src="../pp-auth.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const DAY = 864e5, SOON = 14;
+const toDate = t => t ? (t.toDate ? t.toDate() : new Date(t)) : null;
+const fmtD = d => d ? d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }) : '–';
+const isoD = d => { const z = new Date(d.getTime() - d.getTimezoneOffset() * 6e4); return z.toISOString().slice(0, 10); };
+const addMonths = (d, m) => { const r = new Date(d); r.setMonth(r.getMonth() + m); return r; };
+const TS = d => firebase.firestore.Timestamp.fromDate(d);
+let me = null, users = [], models = [], filter = 'all', data = null;
+const toast = t => { let el = document.querySelector('.toast'); if (!el) { el = document.createElement('div'); el.className = 'toast'; document.body.appendChild(el); } el.textContent = t; clearTimeout(toast.t); toast.t = setTimeout(() => el.remove(), 2600); };
+
+function status(u){
+  const end = toDate(u.end);
+  if (!end) return { k: 'none', label: 'No subscription' };
+  if (u.active === false) return { k: 'paused', label: 'Paused' };
+  const left = Math.ceil((end - Date.now()) / DAY);
+  if (left <= 0) return { k: 'expired', label: 'Expired', left };
+  if (left <= SOON) return { k: 'soon', label: 'Ending soon', left };
+  return { k: 'active', label: 'Active', left };
 }
-function renderModels(models, note){
-  document.getElementById('mcount').textContent = `${models.length} model${models.length === 1 ? '' : 's'}`;
-  document.getElementById('grid').innerHTML = models.map(m => {
-    const n = savedCount(m.listKey || (m.id + '-parts-list-v1'));
-    return `<a class="card" href="${esc(m.href)}">
-      <div class="top"><span class="ic">${ICON}</span><div><div class="hp">${esc(m.hp || '')}</div><h3>${esc(m.name)}</h3></div></div>
-      <dl class="specs"><dt>Model codes</dt><dd>${esc(m.codes || '–')}</dd><dt>Catalogue</dt><dd>${esc(m.catalog || '–')}</dd><dt>Drawings</dt><dd>${m.figs} figures · ${(m.parts || 0).toLocaleString()} parts</dd></dl>
-      <div class="foot"><span class="saved">${n ? `<b>${n}</b> part${n === 1 ? '' : 's'} in your list` : 'No saved list yet'}</span><span class="open">Open <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
-    </a>`;
-  }).join('') + `<div class="soon">${ICON.replace('<svg', '<svg width="40" height="40"')}<b>${note || 'More engines coming'}</b><span>New models will appear here.</span></div>`;
+
+// ---------- sign in ----------
+function view(user){
+  me = user;
+  const ok = !!user;
+  $('login').hidden = ok; $('top').hidden = !ok;
+  if (!ok) { $('v-users').hidden = $('v-cats').hidden = true; return; }
+  $('me').textContent = user.email;
+  if (PP.adminEmail && user.email.toLowerCase() !== PP.adminEmail) { $('lmsg').textContent = ''; }
+  showTab('users'); refresh(); checkRules();
 }
-renderModels(window.PP ? [] : MODELS, window.PP ? 'Sign in to see your engines' : '');
-// Engines come from the protected database once signed in, filtered by the user's subscription
-function subNote(text, kind){
-  const n = document.getElementById('subnote');
-  if (!text) { n.hidden = true; return; }
-  n.hidden = false; n.className = 'subnote ' + (kind || ''); n.textContent = text;
-}
-async function loadModels(){
-  const user = PP.auth.currentUser; if (!user) return;
-  const email = (user.email || '').toLowerCase(), owner = PP.adminEmail && email === PP.adminEmail;
-  const fmt = d => d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
-  const toCards = docs => docs.map(m => ({ id: m.id, hp: m.sub, name: m.name, codes: m.codes, catalog: m.catalog, figs: m.figures, parts: m.parts, href: 'picker.html?m=' + encodeURIComponent(m.id) }))
-    .sort((a, b) => a.name.localeCompare(b.name));
+// Make sure the rules published in Firebase give the super admin full control
+async function checkRules(){
+  const ban = $('rulesban');
   try {
-    let docs = [];
-    if (owner) {
-      subNote('Signed in as owner: you see every engine, including hidden ones.', 'info');
-      docs = (await PP.db.collection('models').get()).docs.map(d => ({ id: d.id, ...d.data() })).filter(m => m.figures);
-    } else {
-      const a = await PP.db.collection('access').doc(email).get();
-      const cid = a.exists && a.data().company;
-      if (!cid) { subNote('Your login isn\u2019t linked to a company yet. Contact Marinics.', 'bad'); renderModels([], 'No engines on your account'); return; }
-      const c = await PP.db.collection('companies').doc(cid).get();
-      if (!c.exists) { subNote('Your company account wasn\u2019t found. Contact Marinics.', 'bad'); renderModels([], 'No engines on your account'); return; }
-      const sub = c.data(), end = sub.end && sub.end.toDate ? sub.end.toDate() : null, co = sub.name ? sub.name + ' · ' : '';
-      if (!end) { subNote(co + 'Your subscription hasn\u2019t been set up yet. Contact Marinics.', 'bad'); renderModels([], 'No engines on your account'); return; }
-      if (sub.active === false) { subNote(co + 'Your access is paused. Contact Marinics.', 'bad'); renderModels([], 'Access paused'); return; }
-      const left = Math.ceil((end - Date.now()) / 864e5);
-      if (left <= 0) { subNote(co + `Your subscription ended on ${fmt(end)}. Contact Marinics to renew.`, 'bad'); renderModels([], 'Subscription ended'); return; }
-      subNote(co + (left <= 14 ? `Subscription ends in ${left} day${left === 1 ? '' : 's'} (${fmt(end)}). Contact Marinics to renew.` : `Subscription active until ${fmt(end)}`), left <= 14 ? 'warn' : 'ok');
-      const plan = Array.isArray(sub.models) ? sub.models : ['*'];
-      if (plan.includes('*')) docs = (await PP.db.collection('models').where('visible', '==', true).get()).docs.map(d => ({ id: d.id, ...d.data() }));
-      else for (const id of plan) { try { const d = await PP.db.collection('models').doc(id).get(); if (d.exists) docs.push({ id: d.id, ...d.data() }); } catch (e) {} }
-      docs = docs.filter(m => m.figures && m.visible !== false);
-    }
-    const list = toCards(docs);
-    renderModels(list, list.length ? '' : 'No engines on your account yet');
+    const r = PP.db.collection('_check').doc('owner');
+    await r.set({ at: firebase.firestore.FieldValue.serverTimestamp(), by: me.email });
+    await r.delete();
+    ban.hidden = true;
   } catch (e) {
-    renderModels([], e && e.code === 'permission-denied' ? 'Your account doesn’t have access yet. Contact Marinics.' : 'Couldn’t load engines. Check your connection.');
+    ban.hidden = false;
+    ban.innerHTML = `<b>Firebase is blocking the super admin (${esc(e.code || e.message)}).</b> The Firestore rules published in Firebase are old. Open Firebase → Firestore Database → Rules, delete everything, paste the latest <code>firestore.rules</code>, Publish, wait a minute, then reload this page.`;
   }
 }
-
-// ---------- Sign in (only when the site is connected to Firebase) ----------
-function afterSplash(){
-  const PP = window.PP; if (!PP) return;              // preview without sign-in
-  const si = document.getElementById('signin'), $i = id => document.getElementById(id);
-  const msg = (t, cls) => { $i('si-msg').textContent = t || ''; $i('si-msg').className = 'si-msg ' + (cls || ''); };
-  let unguard = null;
-  const kicked = d => {
-    if (unguard) { unguard(); unguard = null; }
-    subNote(''); renderModels([], 'Sign in to see your engines'); showSignin();
-    msg(d.device === 'signed-out' ? 'Marinics reset the device for this login. Sign in again to register this device.'
-      : d.code === 'pp/other-device' ? otherDevice(d.label)
-      : `This login is now registered to another device${d.label ? ' (' + d.label + ')' : ''}. Ask Marinics to reset the device.`, 'err');
-  };
-  const showApp = user => {
-    $i('useremail').textContent = user.email || ''; $i('userbar').hidden = false; loadModels();
-    if (unguard) unguard(); unguard = PP.session ? PP.session.guard(user, kicked) : null;
-    if (!si.hidden) { si.classList.add('out'); setTimeout(() => { si.hidden = true; si.classList.remove('out'); }, 480); }
-  };
-  const showSignin = () => { $i('userbar').hidden = true; si.hidden = false; setTimeout(() => $i('si-email').focus(), 350); };
-  if (!PP.configured) { showSignin(); $i('si-setup').hidden = false; $i('si-form').hidden = true; return; }
-  // First sign-in: the user must replace the temporary password from Marinics
-  const needsNewPw = async u => { try { const a = await PP.db.collection('access').doc((u.email || '').toLowerCase()).get(); return a.exists && a.data().mustChange === true; } catch (e) { return false; } };
-  const showNewPw = u => {
-    showSignin(); $i('si-form').hidden = true; $i('np-form').hidden = false;
-    document.querySelector('.si-sub').textContent = u.email; setTimeout(() => $i('np-1').focus(), 350);
-  };
-  const enter = async u => { if (await needsNewPw(u)) showNewPw(u); else showApp(u); };
-  $i('np-eye').onclick = () => { const show = $i('np-1').type === 'password'; ['np-1', 'np-2'].forEach(k => $i(k).type = show ? 'text' : 'password'); };
-  $i('np-form').addEventListener('submit', async e => {
-    e.preventDefault();
-    const a = $i('np-1').value, b = $i('np-2').value, m = (t, c) => { $i('np-msg').textContent = t; $i('np-msg').className = 'si-msg ' + (c || ''); };
-    if (a.length < 8) return m('Use at least 8 characters.', 'err');
-    if (a !== b) return m('The two passwords don\u2019t match.', 'err');
-    const u = PP.auth.currentUser; if (!u) { $i('np-form').hidden = true; $i('si-form').hidden = false; return; }
-    const btn = $i('np-btn'); btn.disabled = true; btn.innerHTML = '<span class="si-spin"></span>Saving…';
-    try {
-      await u.updatePassword(a);
-      await PP.db.collection('access').doc(u.email.toLowerCase()).set({ mustChange: false }, { merge: true });
-      $i('np-1').value = $i('np-2').value = ''; $i('np-form').hidden = true; $i('si-form').hidden = false;
-      document.querySelector('.si-sub').textContent = 'Sign in to continue';
-      showApp(u);
-    } catch (err) {
-      if (err && err.code === 'auth/requires-recent-login') { await PP.auth.signOut(); $i('np-form').hidden = true; $i('si-form').hidden = false; msg('For safety, sign in again with the temporary password, then set your new one.', 'err'); }
-      else m(err && err.code === 'auth/weak-password' ? 'That password is too easy to guess. Try a longer one.' : 'Couldn\u2019t save. Check your connection and try again.', 'err');
-    } finally { btn.disabled = false; btn.textContent = 'Save password'; }
+if (!PP.configured) { $('login').hidden = false; $('lmsg').textContent = 'Firebase isn’t connected. Fill in firebase-config.js.'; $('lmsg').className = 'msg err'; }
+else PP.ready.then(u => {
+  view(u && PP.adminEmail && u.email.toLowerCase() === PP.adminEmail ? u : null);
+  // If this page's sign-in changes (signed out in another tab, or not the owner any more), go back to the sign-in screen
+  PP.auth.onAuthStateChanged(n => {
+    const owner = n && PP.adminEmail && (n.email || '').toLowerCase() === PP.adminEmail;
+    if (me && !owner) { view(null); $('lmsg').textContent = 'You were signed out. Sign in again as the super admin.'; $('lmsg').className = 'msg err'; }
   });
-  PP.ready.then(u => u ? enter(u) : showSignin());
-  const otherDevice = l => `This login is already registered to another device${l ? ' (' + l + ')' : ''}. Each login works only on the device it was first used on. Ask Marinics to reset the device.`;
-  const kq = (location.search.match(/[?&]kicked=([^&]+)/) || [])[1];
-  if (kq) { history.replaceState(null, '', location.pathname); setTimeout(() => msg(kq === 'admin' ? 'Marinics reset the device for this login. Sign in again to register this device.' : 'This login is registered to another device. Ask Marinics to reset the device.', 'err'), 400); }
-  $i('si-eye').onclick = () => { const p = $i('si-pass'); const show = p.type === 'password'; p.type = show ? 'text' : 'password'; $i('si-eye').setAttribute('aria-label', show ? 'Hide password' : 'Show password'); };
-  const errText = c => ({
-    'auth/invalid-email': 'That email address doesn\u2019t look right.',
-    'auth/missing-password': 'Enter your password.',
-    'auth/invalid-credential': 'Wrong email or password. Try again.',
-    'auth/wrong-password': 'Wrong email or password. Try again.',
-    'auth/user-not-found': 'Wrong email or password. Try again.',
-    'auth/user-disabled': 'This account has been switched off.',
-    'auth/too-many-requests': 'Too many tries. Wait a few minutes, then try again.',
-    'auth/network-request-failed': 'No connection. Check your internet and try again.'
-  })[c] || ('Couldn\u2019t sign in (' + (c || 'app error') + '). Reload the page and try again.');
-  $i('si-form').addEventListener('submit', async e => {
-    e.preventDefault();
-    const email = $i('si-email').value.trim(), pass = $i('si-pass').value;
-    $i('si-email').setAttribute('aria-invalid', !email); $i('si-pass').setAttribute('aria-invalid', !pass);
-    if (!email || !pass) { msg('Enter your email and password.', 'err'); return; }
-    const btn = $i('si-btn'); btn.disabled = true; btn.innerHTML = '<span class="si-spin"></span>Signing in…'; msg('');
-    try {
-      await PP.auth.setPersistence($i('si-remember').checked ? 'local' : 'session');
-      const cred = await PP.auth.signInWithEmailAndPassword(email, pass);
-      if (PP.session) await PP.session.claim(cred.user);   // first device only: registers this device or refuses
-      $i('si-pass').value = ''; await enter(cred.user);
-    } catch (err) {
-      if (err && err.code === 'pp/other-device') msg(otherDevice(err.label), 'err');
-      else { msg(errText(err && (err.code || (err.message ? err.message.slice(0, 80) : ''))), 'err'); if (err && /auth\/(invalid|wrong|user-not)/.test(err.code || '')) $i('si-pass').setAttribute('aria-invalid', 'true'); console.error(err); }
-    } finally { btn.disabled = false; btn.textContent = 'Sign in'; }
-  });
-  $i('si-forgot').onclick = async () => {
-    const email = $i('si-email').value.trim();
-    if (!email) { msg('Type your email above first, then tap Forgot password.', 'err'); $i('si-email').focus(); return; }
-    try { await PP.auth.sendPasswordResetEmail(email); msg('If that email has an account, a reset link is on its way.', 'ok'); }
-    catch (err) { msg(errText(err && err.code), 'err'); }
-  };
-  $i('signout').onclick = async () => { if (unguard) { unguard(); unguard = null; } try { await PP.auth.signOut(); } catch (e) {} subNote(''); renderModels([], 'Sign in to see your engines'); showSignin(); };
+});
+$('lform').onsubmit = async e => {
+  e.preventDefault(); $('lmsg').textContent = 'Signing in…'; $('lmsg').className = 'msg';
+  try {
+    const c = await PP.auth.signInWithEmailAndPassword($('lem').value.trim(), $('lpw').value);
+    if (PP.adminEmail && c.user.email.toLowerCase() !== PP.adminEmail) { await PP.auth.signOut(); throw { code: 'not-owner' }; }
+    view(c.user);
+  } catch (err) { $('lmsg').textContent = err.code === 'not-owner' ? 'Only the owner account can open the super admin.' : 'Wrong email or password.'; $('lmsg').className = 'msg err'; }
+};
+$('signout').onclick = async () => { await PP.auth.signOut(); view(null); };
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => showTab(t.dataset.tab));
+function showTab(k){
+  document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', t.dataset.tab === k));
+  $('v-users').hidden = k !== 'users'; $('v-cats').hidden = k !== 'cats';
 }
 
-// Opening screen: once per visit, tap to skip
-(() => {
-  const sp = document.getElementById('splash');
-  let seen = false; try { seen = sessionStorage.getItem('pp-splash') === '1'; sessionStorage.setItem('pp-splash', '1'); } catch (e) {}
-  if (seen) { sp.remove(); afterSplash(); return; }
-  let done = false;
-  const hide = () => { if (done) return; done = true; afterSplash(); sp.classList.add('out'); setTimeout(() => sp.remove(), 550); };
-  sp.addEventListener('click', hide);
-  setTimeout(hide, 2600);
-})();
+async function refresh(){
+  try {
+    const [us, ms] = await Promise.all([PP.db.collection('companies').get(), PP.db.collection('models').get()]);
+    users = us.docs.map(d => ({ id: d.id, ...d.data() }));
+    models = ms.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (a.name || a.id).localeCompare(b.name || b.id));
+    renderUsers(); renderCats();
+  } catch (e) { toast(e.code === 'permission-denied' ? 'Refused: check the owner email in the rules.' : 'Couldn’t load data.'); }
+}
+const modelName = id => (models.find(m => m.id === id) || {}).name || id;
+
+// ---------- companies ----------
+const MAXL = 5;
+const slug = n => (n.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'company') + '-' + Math.random().toString(36).slice(2, 6);
+const cRef = id => PP.db.collection('companies').doc(id);
+const aRef = email => PP.db.collection('access').doc(email);
+const members = c => Array.isArray(c.members) ? c.members : [];
+function renderUsers(){
+  const st = users.map(status), c = k => st.filter(s => s.k === k).length;
+  const logins = users.reduce((a, u) => a + members(u).length, 0);
+  const tiles = [['all', `Companies · ${logins} logins`, users.length, 'var(--blue)'], ['active', 'Active', c('active'), 'var(--ok)'], ['soon', `Ending in ${SOON} days`, c('soon'), 'var(--warn)'], ['expired', 'Expired / paused', c('expired') + c('paused') + c('none'), 'var(--bad)']];
+  $('stats').innerHTML = tiles.map(([k, l, n, col]) => `<button class="stat" style="--c:${col}" data-f="${k}" aria-pressed="${filter === k}"><div class="n">${n}</div><div class="l">${l}</div></button>`).join('');
+  const q = $('q').value.trim().toLowerCase();
+  const rows = users.map((u, i) => ({ u, s: st[i] }))
+    .filter(({ s }) => filter === 'all' || s.k === filter || (filter === 'expired' && ['paused', 'none'].includes(s.k)))
+    .filter(({ u }) => !q || ((u.name || '') + ' ' + members(u).join(' ')).toLowerCase().includes(q))
+    .sort((a, b) => (toDate(a.u.end) || 0) - (toDate(b.u.end) || 0));
+  if (!rows.length) { $('ulist').innerHTML = `<div class="empty">${users.length ? 'No companies match.' : 'No companies yet. Press <b>Add company</b> to create the first one.'}</div>`; return; }
+  $('ulist').innerHTML = `<table><thead><tr><th>Company</th><th>Logins</th><th>Engines</th><th>Ends</th><th>Status</th><th></th></tr></thead><tbody>${rows.map(({ u, s }) => {
+    const all = !u.models || u.models.includes('*');
+    const eng = all ? '<span class="chip">All engines</span>' : (u.models.length ? u.models.map(m => `<span class="chip">${esc(modelName(m))}</span>`).join('') : '<span class="chip" style="background:var(--bad-soft);color:var(--bad)">None</span>');
+    const left = s.left == null ? '' : s.left > 0 ? `${s.left} day${s.left === 1 ? '' : 's'} left` : `ended ${-s.left} day${s.left === -1 ? '' : 's'} ago`;
+    const ms = members(u);
+    return `<tr data-id="${esc(u.id)}">
+      <td class="u"><b>${esc(u.name || u.id)}</b><small>since ${fmtD(toDate(u.start))}</small></td>
+      <td data-l="Logins"><span class="cnt ${ms.length >= MAXL ? 'full' : ''}">${ms.length} / ${MAXL}</span><div class="mails">${ms.map(m => `<span>${esc(m)}</span>`).join('') || '<span class="none">No logins yet</span>'}</div></td>
+      <td data-l="Engines"><div class="chips">${eng}</div></td>
+      <td data-l="Ends" class="mono">${fmtD(toDate(u.end))}<span class="days">${left}</span></td>
+      <td data-l="Status"><span class="pill s-${s.k}">${s.label}</span></td>
+      <td><div class="acts">
+        <button class="btn sm pri" data-a="month">${['active', 'soon'].includes(s.k) ? 'Renew +1 month' : 'Subscribe 1 month'}</button>
+        <button class="btn sm" data-a="manage">Manage</button>
+        <button class="btn sm" data-a="pause">${u.active === false ? 'Resume' : 'Pause'}</button>
+        <button class="btn sm danger" data-a="rm">Remove</button>
+      </div></td></tr>`; }).join('')}</tbody></table>`;
+}
+$('q').oninput = renderUsers;
+$('stats').onclick = e => { const b = e.target.closest('[data-f]'); if (!b) return; filter = filter === b.dataset.f ? 'all' : b.dataset.f; renderUsers(); };
+async function saveCo(id, patch, okMsg){
+  try { await cRef(id).set({ ...patch, updated: firebase.firestore.FieldValue.serverTimestamp(), by: me.email }, { merge: true }); if (okMsg) toast(okMsg); await refresh(); return true; }
+  catch (e) { toast(e.code === 'permission-denied' ? 'Refused: only the super admin can change companies.' : 'Couldn’t save: ' + (e.message || e)); return false; }
+}
+$('ulist').onclick = async e => {
+  const b = e.target.closest('[data-a]'), tr = e.target.closest('tr'); if (!b || !tr) return;
+  const u = users.find(x => x.id === tr.dataset.id), a = b.dataset.a;
+  if (a === 'month') {
+    // one subscription = one month: running subscriptions extend from their end date, others start today
+    const end = toDate(u.end), running = ['active', 'soon'].includes(status(u).k);
+    const ne = addMonths(running ? end : new Date(), 1);
+    return saveCo(u.id, { end: TS(ne), active: true, ...(running ? {} : { start: TS(new Date()) }) }, `${u.name} subscribed until ${fmtD(ne)}`);
+  }
+  if (a === 'manage') return manage(u);
+  if (a === 'pause') return saveCo(u.id, { active: u.active === false }, u.active === false ? 'Access resumed' : 'Access paused');
+  if (a === 'rm') return confirmRemove(u);
+};
+
+function engineBoxes(sel){
+  const all = !sel || sel.includes('*');
+  return `<label><input type="checkbox" name="all" ${all ? 'checked' : ''}> <b>All engines</b> (including ones added later)</label>
+    ${models.map(m => `<label><input type="checkbox" name="m" value="${esc(m.id)}" ${all || sel.includes(m.id) ? 'checked' : ''} ${all ? 'disabled' : ''}> ${esc(m.name || m.id)}${m.visible === false ? ' <span style="color:var(--muted)">(hidden)</span>' : ''}</label>`).join('') || '<span style="color:var(--muted)">No catalogues uploaded yet.</span>'}`;
+}
+function wireEngines(f){
+  const all = f.querySelector('[name=all]');
+  all.onchange = () => f.querySelectorAll('[name=m]').forEach(c => { c.disabled = all.checked; if (all.checked) c.checked = true; });
+}
+const readEngines = f => f.querySelector('[name=all]').checked ? ['*'] : [...f.querySelectorAll('[name=m]:checked')].map(c => c.value);
+const genPw = () => { const a = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789'; let s = ''; const r = crypto.getRandomValues(new Uint32Array(10)); for (const x of r) s += a[x % a.length]; return s.slice(0, 4) + '-' + s.slice(4); };
+function dialog(html){ $('layer').innerHTML = `<div class="scrim" id="scrim"><div class="dlg" role="dialog">${html}</div></div>`; $('scrim').onclick = e => { if (e.target.id === 'scrim' || e.target.closest('[data-x]')) $('layer').innerHTML = ''; }; return $('layer').querySelector('form'); }
+const validEmail = e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+
+// Create a login (on a second connection so the super admin stays signed in) and link it to the company
+async function addLogin(co, email, pw){
+  email = email.trim().toLowerCase();
+  if (!validEmail(email)) throw new Error('Type a full email address.');
+  if (members(co).includes(email)) throw new Error('This email is already a login for this company.');
+  if (members(co).length >= MAXL) throw new Error(`This company already has ${MAXL} logins. Remove one first.`);
+  const other = users.find(x => x.id !== co.id && members(x).includes(email));
+  if (other) throw new Error(`This email already belongs to ${other.name}.`);
+  let note = 'Login created.', created = true;
+  try {
+    const sec = firebase.apps.find(a => a.name === 'create') || firebase.initializeApp(window.PP_FIREBASE, 'create');
+    await sec.auth().createUserWithEmailAndPassword(email, pw); await sec.auth().signOut();
+  } catch (err) {
+    if (err.code === 'auth/email-already-in-use') { created = false; note = 'This email already had a login, so its existing password is unchanged.'; }
+    else {
+      // the login was NOT created: stop here and say exactly how to fix it
+      const why = {
+        'auth/admin-restricted-operation': 'Firebase has sign-up switched off. In Firebase → Authentication → Settings → User actions, tick "Enable create (sign-up)" and Save, then add this login again.',
+        'auth/operation-not-allowed': 'Email/Password sign-in is off. In Firebase → Authentication → Sign-in method, enable Email/Password, then add this login again.',
+        'auth/weak-password': 'The password is too weak. Use at least 6 characters.',
+        'auth/invalid-email': 'That email address isn\u2019t valid.',
+        'auth/network-request-failed': 'No connection. Check the internet and try again.',
+        'auth/too-many-requests': 'Too many attempts. Wait a few minutes and try again.'
+      }[err.code] || ('Firebase refused to create the login (' + (err.code || err.message) + ').');
+      throw new Error('The login was not created. ' + why);
+    }
+  }
+  const list = [...members(co), email];
+  const RULES = ' Firebase refused it: the Firestore rules published in Firebase are not the latest. Paste the latest rules (Firestore → Rules), Publish, wait a minute, then add this login again.';
+  try { await aRef(email).set({ company: co.id, mustChange: created, added: firebase.firestore.FieldValue.serverTimestamp(), by: me.email }); }
+  catch (err) { throw new Error(created ? `The login ${email} was created, but linking it to the company was refused (access/${email}, ${err.code || err.message}).` + RULES : `Linking ${email} was refused (access/${email}, ${err.code || err.message}).` + RULES); }
+  try { await cRef(co.id).set({ members: list, updated: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true }); }
+  catch (err) { try { await aRef(email).delete(); } catch (e) {} throw new Error(`Adding ${email} to the company list was refused (companies/${co.id}, ${err.code || err.message}).` + RULES); }
+  co.members = list;
+  return { email, pw, created, note };
+}
+async function removeLogin(co, email){
+  const list = members(co).filter(m => m !== email);
+  await aRef(email).delete();
+  try { await PP.db.collection('sessions').doc(email).delete(); } catch (e) {}
+  await cRef(co.id).set({ members: list, updated: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
+  co.members = list;
+}
+const credText = (co, r) => `Parts Picker – Marinics\nCompany: ${co.name}\nLink: ${location.href.replace(/super\/.*$/, '')}\nEmail: ${r.email}${r.created ? '\nTemporary password: ' + r.pw + '\n(You\u2019ll set your own password the first time you sign in.)' : ''}\nSubscription until: ${fmtD(co.endDate || toDate(co.end))}\nThis login works on one device: the first one you sign in on.`;
+function showCreds(co, r, back){
+  $('layer').querySelector('.dlg').innerHTML = `<h2>Login added</h2><div class="sub">${esc(r.note)}</div><form>
+    <div class="f"><label>Send these to the user</label><div class="creds" id="cr">${esc(credText(co, r))}</div></div>
+    <div class="foot"><button type="button" class="btn" id="cp">Copy</button><button type="button" class="btn pri" id="bk">${back ? 'Back to company' : 'Done'}</button></div></form>`;
+  $('cp').onclick = async () => { try { await navigator.clipboard.writeText($('cr').textContent); toast('Copied'); } catch (e) { toast('Select the text and copy it'); } };
+  $('bk').onclick = () => { if (back) manage(users.find(x => x.id === co.id) || co); else $('layer').innerHTML = ''; };
+}
+
+$('adduser').onclick = () => {
+  const today = new Date();
+  const f = dialog(`<h2>Add company</h2><div class="sub">One subscription for the whole company, with up to ${MAXL} login emails.</div>
+    <form id="uf">
+      <div class="f"><label for="un">Company name</label><input id="un" required placeholder="e.g. Male Marine Workshop"></div>
+      <div class="two">
+        <div class="f"><label for="us">Start date</label><input id="us" type="date" value="${isoD(today)}"></div>
+        <div class="f"><label>Subscription</label><input id="ulbl" readonly value="1 month" style="background:var(--sunk);font-weight:600"></div>
+      </div>
+      <div class="f"><label>Engines this company can see</label><div class="eng">${engineBoxes(['*'])}</div></div>
+      <div class="f"><label for="ue">First login email</label><input id="ue" type="email" placeholder="name@company.com" autocomplete="off"></div>
+      <div class="f"><label for="up">Password</label><div class="pw"><input id="up" value="${genPw()}" minlength="6"><button type="button" class="btn" id="gen">New</button></div></div>
+      <div class="msg" id="umsg"></div>
+      <div class="foot"><button type="button" class="btn" data-x>Cancel</button><button class="btn pri" id="usave">Create company</button></div>
+    </form>`);
+  wireEngines(f);
+  $('gen').onclick = () => $('up').value = genPw();
+  const showEnd = () => { const st = new Date($('us').value + 'T00:00:00'); $('ulbl').value = isNaN(st) ? '1 month' : '1 month · until ' + fmtD(addMonths(st, 1)); };
+  $('us').oninput = showEnd; showEnd();
+  f.onsubmit = async e => {
+    e.preventDefault();
+    const m = (t, c) => { $('umsg').textContent = t; $('umsg').className = 'msg ' + (c || ''); };
+    const name = $('un').value.trim(), email = $('ue').value.trim().toLowerCase(), pw = $('up').value;
+    const start = new Date($('us').value + 'T00:00:00'), end = addMonths(start, 1), eng = readEngines(f);
+    if (!name) return m('Type the company name.', 'err');
+    if (isNaN(start)) return m('Pick a start date.', 'err');
+    if (!eng.length) return m('Pick at least one engine.', 'err');
+    if (email && !validEmail(email)) return m('Type a full email address, or leave it empty.', 'err');
+    if (email && pw.length < 6) return m('Password needs at least 6 characters.', 'err');
+    if (email && users.some(x => members(x).includes(email))) return m('This email already belongs to another company.', 'err');
+    $('usave').disabled = true; m('Creating…');
+    const id = slug(name);
+    try { await cRef(id).set({ name, start: TS(start), end: TS(end), active: true, models: eng, members: [], created: firebase.firestore.FieldValue.serverTimestamp(), by: me.email }); }
+    catch (err) { $('usave').disabled = false; return m('Couldn’t save: ' + (err.code === 'permission-denied' ? 'refused by the security rules.' : (err.message || err)), 'err'); }
+    const co = { id, name, start: TS(start), end: TS(end), endDate: end, active: true, models: eng, members: [] };
+    if (!email) { $('layer').innerHTML = ''; toast(`${name} added`); await refresh(); return; }
+    try { const r = await addLogin(co, email, pw); await refresh(); showCreds(co, r, true); }
+    catch (err) { await refresh(); m('Company saved, but the login failed: ' + (err.message || err), 'err'); $('usave').disabled = false; }
+  };
+};
+
+function manage(u){
+  const end = toDate(u.end) || addMonths(new Date(), 1), start = toDate(u.start) || new Date();
+  const ms = members(u);
+  const f = dialog(`<h2>${esc(u.name)}</h2><div class="sub">${ms.length} of ${MAXL} logins used · ${status(u).label}</div>
+    <form>
+      <div class="f"><label>Logins (${ms.length} / ${MAXL})</label>
+        <div class="logins">${ms.map(m => `<div class="li"><div class="lt"><span>${esc(m)}</span><small class="dev" data-dev="${esc(m)}">Checking device…</small></div><button type="button" class="btn sm" data-so="${esc(m)}" hidden>Reset device</button><button type="button" class="btn sm" data-reset="${esc(m)}">Reset password</button><button type="button" class="btn sm danger" data-rml="${esc(m)}">Remove</button></div>`).join('') || '<div class="none">No logins yet.</div>'}</div>
+      </div>
+      ${ms.length < MAXL ? `<div class="addl">
+        <div class="f"><label for="le">Add login email</label><input id="le" type="email" placeholder="name@company.com" autocomplete="off"></div>
+        <div class="f"><label for="lp">Password</label><div class="pw"><input id="lp" value="${genPw()}"><button type="button" class="btn" id="lgen">New</button><button type="button" class="btn pri" id="ladd">Add</button></div></div>
+      </div>` : `<div class="full">This company has the maximum of ${MAXL} logins. Remove one to add another.</div>`}
+      <div class="f"><label for="en">Company name</label><input id="en" value="${esc(u.name || '')}"></div>
+      <div class="two">
+        <div class="f"><label for="es">Start date</label><input id="es" type="date" value="${isoD(start)}"></div>
+        <div class="f"><label for="ee">End date</label><input id="ee" type="date" value="${isoD(end)}"></div>
+      </div>
+      <div class="f"><label>Engines this company can see</label><div class="eng">${engineBoxes(u.models || ['*'])}</div></div>
+      <div class="msg" id="emsg"></div>
+      <div class="foot"><button type="button" class="btn" data-x>Close</button><button class="btn pri">Save changes</button></div>
+    </form>`);
+  wireEngines(f);
+  const m = (t, c) => { $('emsg').textContent = t; $('emsg').className = 'msg ' + (c || ''); };
+  // one device per login: show where each login is signed in
+  ms.forEach(async email => {
+    const el = f.querySelector(`[data-dev="${CSS.escape(email)}"]`), so = f.querySelector(`[data-so="${CSS.escape(email)}"]`);
+    try {
+      const [d, ac] = await Promise.all([PP.db.collection('sessions').doc(email).get(), aRef(email).get()]), x = d.exists ? d.data() : null;
+      const pwNote = ac.exists && ac.data().mustChange === true ? ' · waiting for first sign-in (temporary password)' : '';
+      el.dataset.pw = pwNote;
+      if (!x || x.device === 'signed-out') { el.textContent = 'No device yet: the next device they sign in on becomes theirs' + pwNote; return; }
+      const at = toDate(x.at);
+      el.textContent = `Device: ${x.label || 'registered device'}${at ? ' · since ' + at.toLocaleString(undefined, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''}${pwNote}`;
+      so.hidden = false;
+    } catch (e) { el.textContent = ''; }
+  });
+  if ($('lgen')) $('lgen').onclick = () => $('lp').value = genPw();
+  if ($('ladd')) $('ladd').onclick = async () => {
+    if ($('lp').value.length < 6) return m('Password needs at least 6 characters.', 'err');
+    $('ladd').disabled = true; m('Adding…');
+    try { const r = await addLogin(u, $('le').value, $('lp').value); await refresh(); showCreds(u, r, true); }
+    catch (err) { m(err.code === 'permission-denied' ? 'Refused by the Firestore rules. Paste the latest rules, Publish, wait a minute and try again.' : (err.message || String(err)), 'err'); $('ladd').disabled = false; await refresh(); }
+  };
+  f.querySelector('.logins').onclick = async e => {
+    const rb = e.target.closest('[data-rml]'), pb = e.target.closest('[data-reset]'), sb = e.target.closest('[data-so]');
+    if (sb) {
+      try { await PP.db.collection('sessions').doc(sb.dataset.so).set({ device: 'signed-out', label: '', at: firebase.firestore.FieldValue.serverTimestamp() }); sb.hidden = true;
+        f.querySelector(`[data-dev="${CSS.escape(sb.dataset.so)}"]`).textContent = 'Device reset: the next device they sign in on becomes theirs.'; }
+      catch (err) { m('Couldn\u2019t sign out: ' + (err.message || err), 'err'); }
+    }
+    if (pb) { try { await PP.auth.sendPasswordResetEmail(pb.dataset.reset); m(`Reset email sent to ${pb.dataset.reset} (works if it’s a real inbox).`, 'ok'); } catch (err) { m('Couldn’t send: ' + (err.code || err.message), 'err'); } }
+    if (rb) {
+      if (rb.dataset.sure !== '1') { rb.dataset.sure = '1'; rb.textContent = 'Tap to confirm'; setTimeout(() => { if (rb.isConnected) { rb.dataset.sure = ''; rb.textContent = 'Remove'; } }, 3000); return; }
+      try { await removeLogin(u, rb.dataset.rml); await refresh(); manage(users.find(x => x.id === u.id)); toast('Login removed'); }
+      catch (err) { m('Couldn’t remove: ' + (err.message || err), 'err'); }
+    }
+  };
+  f.onsubmit = async e => {
+    e.preventDefault();
+    const s = new Date($('es').value + 'T00:00:00'), en = new Date($('ee').value + 'T23:59:59'), eng = readEngines(f), name = $('en').value.trim();
+    if (!name) return m('Type the company name.', 'err');
+    if (isNaN(en) || en <= s) return m('The end date must be after the start date.', 'err');
+    if (!eng.length) return m('Pick at least one engine.', 'err');
+    if (await saveCo(u.id, { name, start: TS(s), end: TS(en), models: eng }, 'Saved')) $('layer').innerHTML = '';
+  };
+}
+
+
+// ---------- remove a company: confirm with the super admin password ----------
+function confirmRemove(u){
+  const ms = members(u);
+  const f = dialog(`<h2>Remove ${esc(u.name)}?</h2><div class="sub">This can't be undone.</div>
+    <form>
+      <div class="warnbox"><b>What happens</b>
+        <span>• The company and its subscription are deleted.</span>
+        <span>• ${ms.length ? `Its ${ms.length === 1 ? 'login' : ms.length + ' logins'} (${ms.map(esc).join(', ')}) ${ms.length === 1 ? 'loses' : 'lose'} access straight away.` : 'It has no logins.'}</span>
+        <span>• The logins stay in Firebase → Authentication. You can add them to another company, or delete them there.</span>
+      </div>
+      <div class="f"><label for="rmpw">Your super admin password</label><input id="rmpw" type="password" autocomplete="current-password" required placeholder="Password for ${esc(me.email)}"></div>
+      <div class="msg" id="rmsg"></div>
+      <div class="foot"><button type="button" class="btn" data-x>Cancel</button><button class="btn danger-solid" id="rmgo">Remove company</button></div>
+    </form>`);
+  setTimeout(() => $('rmpw').focus(), 50);
+  const say = (t, c) => { $('rmsg').textContent = t; $('rmsg').className = 'msg ' + (c || ''); };
+  f.onsubmit = async e => {
+    e.preventDefault();
+    const pw = $('rmpw').value; if (!pw) return say('Type your password.', 'err');
+    $('rmgo').disabled = true; say('Checking password…');
+    // 1) confirm it's really the super admin
+    try {
+      const cred = firebase.auth.EmailAuthProvider.credential(PP.auth.currentUser.email, pw);
+      await PP.auth.currentUser.reauthenticateWithCredential(cred);
+    } catch (err) {
+      $('rmgo').disabled = false;
+      return say(['auth/wrong-password', 'auth/invalid-credential', 'auth/invalid-login-credentials'].includes(err.code) ? 'Wrong password.' : err.code === 'auth/too-many-requests' ? 'Too many tries. Wait a few minutes.' : 'Couldn’t check the password: ' + (err.code || err.message), 'err');
+    }
+    // 2) delete, step by step, so any refusal says exactly what was blocked
+    say('Removing…');
+    const failed = [];
+    for (const m of ms) {
+      try { await aRef(m).delete(); } catch (err) { failed.push(`login link ${m} (${err.code || err.message})`); }
+      try { await PP.db.collection('sessions').doc(m).delete(); } catch (err) { /* device record is optional */ }
+    }
+    try { await cRef(u.id).delete(); } catch (err) { failed.push(`company record (${err.code || err.message})`); }
+    await refresh();
+    if (!failed.length) { $('layer').innerHTML = ''; toast(`${u.name} removed`); return; }
+    $('rmgo').disabled = false;
+    say('Firebase refused to delete: ' + failed.join('; ') + '. Your Firestore rules are probably an older version. Paste the latest rules (they contain "allow delete: if isOwner();" under companies and "allow write: if isOwner();" under access), Publish, wait a minute and try again.', 'err');
+  };
+}
+
+// ---------- catalogues ----------
+function renderCats(){
+  const count = id => users.filter(u => status(u).k === 'active' || status(u).k === 'soon').filter(u => !u.models || u.models.includes('*') || u.models.includes(id)).length;
+  $('clist').innerHTML = models.length ? models.map(m => `<div class="cat" data-id="${esc(m.id)}">
+      <h3>${esc(m.name || m.id)}</h3>
+      <div class="r">
+        <label class="switch"><input type="checkbox" data-a="vis" ${m.visible !== false ? 'checked' : ''}> <span>${m.visible !== false ? 'Shown on app' : 'Hidden'}</span></label>
+        <button class="btn sm danger" data-a="del">Delete</button>
+      </div>
+      <div class="meta">${esc(m.sub || '')}${m.sub ? ' · ' : ''}${m.figures || 0} figures · ${(m.parts || 0).toLocaleString()} parts · ${count(m.id)} active compan${count(m.id) === 1 ? 'y' : 'ies'} · updated ${fmtD(toDate(m.updated))}</div>
+    </div>`).join('') : '<div class="empty">No catalogues yet. Choose a catalogue file above to add the first engine.</div>';
+}
+$('clist').onclick = async e => {
+  const b = e.target.closest('[data-a]'); if (!b) return;
+  const id = b.closest('.cat').dataset.id, model = PP.db.collection('models').doc(id);
+  if (b.dataset.a === 'vis') {
+    try { await model.set({ visible: b.checked }, { merge: true }); toast(b.checked ? 'Shown on the app' : 'Hidden from the app'); refresh(); }
+    catch (err) { b.checked = !b.checked; toast('Couldn’t change: ' + (err.message || err)); }
+  }
+  if (b.dataset.a === 'del') {
+    if (b.dataset.sure !== '1') { b.dataset.sure = '1'; b.textContent = 'Tap to confirm'; setTimeout(() => { if (b.isConnected) { b.dataset.sure = ''; b.textContent = 'Delete'; } }, 3000); return; }
+    try { const figs = await model.collection('figures').get(); for (const d of figs.docs) await d.ref.delete(); await model.delete(); toast('Catalogue deleted'); refresh(); }
+    catch (err) { toast('Couldn’t delete: ' + (err.message || err)); }
+  }
+};
+const cmsg = (t, c) => { $('cmsg').textContent = t || ''; $('cmsg').className = 'msg ' + (c || ''); };
+$('cfile').onchange = async () => {
+  const f = $('cfile').files[0]; if (!f) return; $('cfname').textContent = f.name;
+  try { data = JSON.parse(await f.text()); if (!data.model || !Array.isArray(data.figures) || !data.figures.length) throw 0; cmsg(`${data.name || data.model}: ${data.figures.length} figures ready.`); $('cgo').disabled = false; }
+  catch (e) { data = null; $('cgo').disabled = true; cmsg('That isn’t a Parts Picker catalogue file.', 'err'); }
+};
+$('cgo').onclick = async () => {
+  if (!data) return; $('cgo').disabled = true;
+  const model = PP.db.collection('models').doc(data.model), col = model.collection('figures');
+  try {
+    const prev = await model.get(), visible = prev.exists ? prev.data().visible !== false : true;
+    const keep = new Set(data.figures.map(f => 'fig' + String(f.n).padStart(2, '0')));
+    for (const d of (await col.get()).docs) if (!keep.has(d.id)) await d.ref.delete();
+    let done = 0;
+    for (const f of data.figures) {
+      await col.doc('fig' + String(f.n).padStart(2, '0')).set({ n: f.n, t: f.t, w: f.w, h: f.h, hs: f.hs, img: f.img, hot: JSON.stringify(f.hot), parts: JSON.stringify(f.parts) });
+      done++; $('cprog').style.width = (done / data.figures.length * 100) + '%'; cmsg(`Uploading… ${done} / ${data.figures.length}`);
+    }
+    await model.set({ name: data.name || data.model, sub: data.sub || '', codes: data.codes || '', catalog: data.catalog || '', short: data.short || '',
+      figures: data.figures.length, parts: data.figures.reduce((a, f) => a + f.parts.length, 0), visible, updated: firebase.firestore.FieldValue.serverTimestamp() });
+    cmsg(`Done. ${data.name || data.model} is uploaded${visible ? ' and shown on the app' : ' (hidden)'}.`, 'ok'); refresh();
+  } catch (err) { cmsg(err && err.code === 'permission-denied' ? 'Upload refused: only the owner can upload.' : 'Upload stopped: ' + (err.message || err), 'err'); }
+  finally { $('cgo').disabled = false; }
+};
 </script>
-<script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js",{scope:"./"}).catch(function(){});</script></body></html>
+<script>if("serviceWorker" in navigator)navigator.serviceWorker.register("../sw.js",{scope:"../"}).catch(function(){});</script>
+</body>
+</html>

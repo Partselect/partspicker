@@ -42,13 +42,21 @@ Each **company** is one customer: one subscription, one set of engines, and **up
 - The device registration is protected by the database rules (only you can reset it); the device check itself runs in the app.
 
 ## Super admin – Catalogues
-- **Upload catalogue**: add a new engine, or upload the same engine again to replace it.
+- **Choose catalogue files → Upload**: pick one or many `*-catalogue.json` files at once. Each becomes its own engine. Uploading the same engine again replaces it.
+- **Search engines** filters the catalogue list.
+- The engine list users see (`meta/catalog`) is updated automatically whenever the super admin opens or changes catalogues.
 - **Shown on app / Hidden**: switch an engine off for everyone without deleting it.
 - **Delete**: removes the engine and its drawings.
 
 ## What users see
 - After sign-in: their company name and "Subscription active until …", a warning when 14 days or fewer are left, or "Your subscription ended on … Contact Marinics to renew."
 - Only the engines that are shown **and** in their company's plan. Everything is enforced by the database rules, not just hidden on screen.
+
+## Download for offline (users)
+- Each engine card has **Download**. The engine is saved on that phone (about 3 MB each) and moves to the top under **On this phone · works offline**.
+- Saved engines open with no internet. Online, the subscription is still checked each time; offline, the app uses the end date it last saw, so access stops when the subscription ends.
+- **Remove** deletes it from the phone. **Update** appears if you upload a newer version of that catalogue.
+- Saved engines belong to the login that downloaded them.
 
 ## Adding a new engine
 Send Claude the engine's parts catalogue PDF → you get `<engine>-catalogue.json` → super admin → Catalogues → Upload. Nothing changes on GitHub.

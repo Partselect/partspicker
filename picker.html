@@ -456,6 +456,7 @@ body{background:
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="firebase-config.js"></script>
 <script src="pp-auth.js"></script>
+<script src="pp-offline.js"></script>
 <script>
 (async () => {
   const L = document.getElementById('pp-load'), M = document.getElementById('pp-load-msg'), A = document.getElementById('pp-load-act'), S = document.getElementById('pp-spin');
@@ -465,20 +466,47 @@ body{background:
     const user = await PP.ready;
     if (!user) { location.replace('index.html'); return; }
     if (PP.session) PP.session.guard(user, d => location.replace('index.html?kicked=' + (d.device === 'signed-out' ? 'admin' : '1')));   // first device only
-    try { const acc = await PP.db.collection('access').doc(user.email.toLowerCase()).get(); if (acc.exists && acc.data().mustChange === true) { location.replace('index.html'); return; } } catch (e) {}
-    // Reuse the drawings saved on this phone unless the admin has uploaded a newer catalogue (saves the free download allowance).
+    const email = user.email.toLowerCase(), owner = PP.adminEmail && email === PP.adminEmail;
     const id = new URLSearchParams(location.search).get('m') || 'f300det';
-    const model = PP.db.collection('models').doc(id), figs = model.collection('figures').orderBy('n');
-    let ver = null, snap = null, meta = null;
-    try { const m = await model.get({ source: 'server' }); meta = m.exists ? m.data() : null; const u = meta && meta.updated; ver = u && u.toMillis ? String(u.toMillis()) : '0'; }
-    catch (e) { if (e && e.code === 'permission-denied') throw e; try { const m = await model.get({ source: 'cache' }); meta = m.exists ? m.data() : null; } catch (e2) {} }
-    window.__MODEL = { id, name: (meta && meta.name) || id.toUpperCase(), catalog: (meta && meta.catalog) || '', short: (meta && meta.short) || id.slice(0, 4).toUpperCase() };
     document.title = 'Parts Picker';
-    let saved = null; try { saved = localStorage.getItem('pp-cat-ver-' + id); } catch (e) {}
-    if (ver === null || ver === saved) { try { const c = await figs.get({ source: 'cache' }); if (!c.empty) snap = c; } catch (e) {} }
-    if (!snap) { M.textContent = 'Downloading drawings… (first time only)'; snap = await figs.get(); if (ver !== null) try { localStorage.setItem('pp-cat-ver-' + id, ver); } catch (e) {} }
-    if (snap.empty) return stop('The drawings haven’t been uploaded yet. An admin needs to upload the catalogue on the admin page.', 'Back to home', 'index.html');
-    window.__FIGS = snap.docs.map(d => { const x = d.data(); return { n: x.n, t: x.t, w: x.w, h: x.h, hs: x.hs, img: x.img, hot: JSON.parse(x.hot), parts: JSON.parse(x.parts) }; });
+    const denied = () => { throw { code: 'permission-denied' }; };
+    // Subscription check: online it reads the login and its company (2 reads); offline it uses the last one seen online
+    const checkSub = async () => {
+      if (owner) return { owner: true };
+      if (!navigator.onLine) return window.PPOff ? PPOff.getSub(email) : null;
+      try {
+        const acc = await PP.db.collection('access').doc(email).get();
+        if (acc.exists && acc.data().mustChange === true) { location.replace('index.html'); return 'redirect'; }
+        if (!acc.exists || !acc.data().company) denied();
+        const c = await PP.db.collection('companies').doc(acc.data().company).get(); if (!c.exists) denied();
+        const x = c.data(), sub = { name: x.name || '', end: x.end && x.end.toMillis ? x.end.toMillis() : 0, active: x.active !== false, models: Array.isArray(x.models) ? x.models : ['*'], at: Date.now() };
+        if (window.PPOff) PPOff.saveSub(email, sub);
+        return sub;
+      } catch (e) { if (e && e.code === 'permission-denied') throw e; return window.PPOff ? PPOff.getSub(email) : null; }
+    };
+    // 1) Engine saved on this phone: open it from the phone (works offline, no drawing downloads)
+    const rec = window.PPOff ? await PPOff.get(email, id) : null;
+    if (rec && rec.figs && rec.figs.length) {
+      const sub = await checkSub(); if (sub === 'redirect') return;
+      if (!PPOff.allowed(sub, id)) denied();
+      const m = rec.meta || {};
+      window.__MODEL = { id, name: m.name || id.toUpperCase(), catalog: m.catalog || '', short: m.short || id.slice(0, 4).toUpperCase() };
+      window.__FIGS = rec.figs;
+    } else {
+      if (!navigator.onLine) return stop('This engine isn’t saved on this phone. Connect to the internet, or download it on the home page to use it offline.', 'Back to home', 'index.html');
+      try { const acc = await PP.db.collection('access').doc(email).get(); if (acc.exists && acc.data().mustChange === true) { location.replace('index.html'); return; } } catch (e) {}
+      // 2) Not saved: load from the database (reuses drawings this browser already has unless the catalogue was uploaded again)
+      const model = PP.db.collection('models').doc(id), figs = model.collection('figures').orderBy('n');
+      let ver = null, snap = null, meta = null;
+      try { const m = await model.get({ source: 'server' }); meta = m.exists ? m.data() : null; const u = meta && meta.updated; ver = u && u.toMillis ? String(u.toMillis()) : '0'; }
+      catch (e) { if (e && e.code === 'permission-denied') throw e; try { const m = await model.get({ source: 'cache' }); meta = m.exists ? m.data() : null; } catch (e2) {} }
+      window.__MODEL = { id, name: (meta && meta.name) || id.toUpperCase(), catalog: (meta && meta.catalog) || '', short: (meta && meta.short) || id.slice(0, 4).toUpperCase() };
+      let saved = null; try { saved = localStorage.getItem('pp-cat-ver-' + id); } catch (e) {}
+      if (ver === null || ver === saved) { try { const c = await figs.get({ source: 'cache' }); if (!c.empty) snap = c; } catch (e) {} }
+      if (!snap) { M.textContent = 'Loading drawings… Tip: tap Download on the home page to keep this engine on your phone.'; snap = await figs.get(); if (ver !== null) try { localStorage.setItem('pp-cat-ver-' + id, ver); } catch (e) {} }
+      if (snap.empty) return stop('The drawings haven’t been uploaded yet. An admin needs to upload the catalogue on the admin page.', 'Back to home', 'index.html');
+      window.__FIGS = snap.docs.map(d => { const x = d.data(); return { n: x.n, t: x.t, w: x.w, h: x.h, hs: x.hs, img: x.img, hot: JSON.parse(x.hot), parts: JSON.parse(x.parts) }; });
+    }
     const s = document.createElement('script'); s.textContent = document.getElementById('pp-main').textContent; document.body.appendChild(s);
     L.style.transition = 'opacity .35s'; L.style.opacity = '0'; setTimeout(() => L.remove(), 380);
   } catch (err) {

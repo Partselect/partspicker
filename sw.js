@@ -1,6 +1,6 @@
 // Parts Picker service worker: lets phones install the site as an app and keeps drawings for offline use.
-const CACHE = 'parts-picker-v7';
-const CORE = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './marinics.png', './picker.html', './firebase-config.js', './pp-auth.js'];
+const CACHE = 'parts-picker-v8';
+const CORE = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './marinics.png', './picker.html', './firebase-config.js', './pp-auth.js', './pp-offline.js'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
 });
@@ -19,7 +19,7 @@ self.addEventListener('fetch', e => {
   if (req.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname.endsWith('/')) {
     // pages: newest version when online, saved copy when offline
     e.respondWith(fetch(req).then(r => { const c = r.clone(); caches.open(CACHE).then(x => x.put(req, c)); return r; })
-      .catch(() => caches.match(req).then(r => r || caches.match('./index.html'))));
+      .catch(() => caches.match(req).then(r => r || caches.match(req, { ignoreSearch: true })).then(r => r || caches.match('./index.html'))));
     return;
   }
   // drawings, icons: saved copy first, fetch and keep if missing

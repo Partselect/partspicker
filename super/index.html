@@ -196,12 +196,13 @@ tr:last-child td{border-bottom:0}
   <section id="v-cats" hidden>
     <div class="panel">
       <div class="upload">
-        <label class="file" for="cfile"><b>Choose catalogue file</b> · <span id="cfname">e.g. f300det-catalogue.json</span></label>
-        <input id="cfile" type="file" accept=".json,application/json" hidden>
-        <button class="btn pri" id="cgo" disabled>Upload catalogue</button>
+        <label class="file" for="cfile"><b>Choose catalogue files</b> · <span id="cfname">one or many, e.g. f300det-catalogue.json</span></label>
+        <input id="cfile" type="file" accept=".json,application/json" multiple hidden>
+        <button class="btn pri" id="cgo" disabled>Upload</button>
       </div>
       <div class="prog"><i id="cprog"></i></div>
       <div class="msg" id="cmsg" style="padding:10px 14px 0"></div>
+      <div style="padding:12px 14px 0"><input id="cq" type="search" placeholder="Search engines" style="width:100%;box-sizing:border-box;height:40px;padding:0 12px;border-radius:10px;border:1px solid var(--line, #d2d9db);font:inherit"></div>
       <div class="cats" id="clist"></div>
     </div>
   </section>
@@ -287,8 +288,19 @@ async function refresh(){
     const [us, ms] = await Promise.all([PP.db.collection('companies').get(), PP.db.collection('models').get()]);
     users = us.docs.map(d => ({ id: d.id, ...d.data() }));
     models = ms.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (a.name || a.id).localeCompare(b.name || b.id));
-    renderUsers(); renderCats();
+    renderUsers(); renderCats(); syncIndex();
   } catch (e) { toast(e.code === 'permission-denied' ? 'Refused: check the owner email in the rules.' : 'Couldn’t load data.'); }
+}
+// One small list of all engines (meta/catalog), so the user app loads the engine list with a single read
+async function syncIndex(){
+  const list = {};
+  for (const m of models) if (m.figures) list[m.id] = { name: m.name || m.id, sub: m.sub || '', codes: m.codes || '', catalog: m.catalog || '', short: m.short || '',
+    figures: m.figures || 0, parts: m.parts || 0, visible: m.visible !== false, updated: toDate(m.updated) ? toDate(m.updated).getTime() : 0 };
+  try {
+    const ref = PP.db.collection('meta').doc('catalog'), cur = await ref.get();
+    const norm = o => JSON.stringify(Object.keys(o).sort().map(k => [k, Object.keys(o[k]).sort().map(f => [f, o[k][f]])]));
+    if (!cur.exists || norm((cur.data() || {}).list || {}) !== norm(list)) await ref.set({ list, count: Object.keys(list).length, at: firebase.firestore.FieldValue.serverTimestamp() });
+  } catch (e) { console.error('engine list', e); }
 }
 const modelName = id => (models.find(m => m.id === id) || {}).name || id;
 
@@ -568,7 +580,9 @@ function confirmRemove(u){
 // ---------- catalogues ----------
 function renderCats(){
   const count = id => users.filter(u => status(u).k === 'active' || status(u).k === 'soon').filter(u => !u.models || u.models.includes('*') || u.models.includes(id)).length;
-  $('clist').innerHTML = models.length ? models.map(m => `<div class="cat" data-id="${esc(m.id)}">
+  const q = ($('cq').value || '').trim().toLowerCase();
+  const shown = models.filter(m => !q || [m.id, m.name, m.sub, m.codes, m.catalog].join(' ').toLowerCase().includes(q));
+  $('clist').innerHTML = models.length ? (shown.length ? '' : '<div class="empty">No engines match.</div>') + shown.map(m => `<div class="cat" data-id="${esc(m.id)}">
       <h3>${esc(m.name || m.id)}</h3>
       <div class="r">
         <label class="switch"><input type="checkbox" data-a="vis" ${m.visible !== false ? 'checked' : ''}> <span>${m.visible !== false ? 'Shown on app' : 'Hidden'}</span></label>
@@ -590,29 +604,51 @@ $('clist').onclick = async e => {
     catch (err) { toast('Couldn’t delete: ' + (err.message || err)); }
   }
 };
+$('cq').oninput = renderCats;
 const cmsg = (t, c) => { $('cmsg').textContent = t || ''; $('cmsg').className = 'msg ' + (c || ''); };
-$('cfile').onchange = async () => {
-  const f = $('cfile').files[0]; if (!f) return; $('cfname').textContent = f.name;
-  try { data = JSON.parse(await f.text()); if (!data.model || !Array.isArray(data.figures) || !data.figures.length) throw 0; cmsg(`${data.name || data.model}: ${data.figures.length} figures ready.`); $('cgo').disabled = false; }
-  catch (e) { data = null; $('cgo').disabled = true; cmsg('That isn’t a Parts Picker catalogue file.', 'err'); }
+let files = [];
+$('cfile').onchange = () => {
+  files = [...$('cfile').files]; data = null;
+  $('cfname').textContent = files.length === 1 ? files[0].name : `${files.length} files`;
+  $('cgo').disabled = !files.length; $('cprog').style.width = '0';
+  cmsg(files.length ? `${files.length} catalogue file${files.length === 1 ? '' : 's'} ready. Press Upload.` : '');
 };
+// Upload one catalogue (keeps the engine's Shown/Hidden setting when it is uploaded again)
+async function uploadOne(d, onFig){
+  const model = PP.db.collection('models').doc(d.model), col = model.collection('figures');
+  const prev = await model.get(), visible = prev.exists ? prev.data().visible !== false : true;
+  const keep = new Set(d.figures.map(f => 'fig' + String(f.n).padStart(2, '0')));
+  if (prev.exists) for (const x of (await col.get()).docs) if (!keep.has(x.id)) await x.ref.delete();
+  for (let i = 0; i < d.figures.length; i += 8) {           // 8 drawings per batch (each batch stays under Firestore's size limit)
+    const b = PP.db.batch();
+    for (const f of d.figures.slice(i, i + 8)) b.set(col.doc('fig' + String(f.n).padStart(2, '0')), { n: f.n, t: f.t, w: f.w, h: f.h, hs: f.hs, img: f.img, hot: JSON.stringify(f.hot), parts: JSON.stringify(f.parts) });
+    await b.commit(); onFig(Math.min(i + 8, d.figures.length), d.figures.length);
+  }
+  await model.set({ name: d.name || d.model, sub: d.sub || '', codes: d.codes || '', catalog: d.catalog || '', short: d.short || '',
+    figures: d.figures.length, parts: d.figures.reduce((a, f) => a + f.parts.length, 0), visible, updated: firebase.firestore.FieldValue.serverTimestamp() });
+  return d.name || d.model;
+}
 $('cgo').onclick = async () => {
-  if (!data) return; $('cgo').disabled = true;
-  const model = PP.db.collection('models').doc(data.model), col = model.collection('figures');
-  try {
-    const prev = await model.get(), visible = prev.exists ? prev.data().visible !== false : true;
-    const keep = new Set(data.figures.map(f => 'fig' + String(f.n).padStart(2, '0')));
-    for (const d of (await col.get()).docs) if (!keep.has(d.id)) await d.ref.delete();
-    let done = 0;
-    for (const f of data.figures) {
-      await col.doc('fig' + String(f.n).padStart(2, '0')).set({ n: f.n, t: f.t, w: f.w, h: f.h, hs: f.hs, img: f.img, hot: JSON.stringify(f.hot), parts: JSON.stringify(f.parts) });
-      done++; $('cprog').style.width = (done / data.figures.length * 100) + '%'; cmsg(`Uploading… ${done} / ${data.figures.length}`);
+  if (!files.length) return; $('cgo').disabled = true; $('cfile').disabled = true;
+  const ok = [], bad = [];
+  for (let k = 0; k < files.length; k++) {
+    const f = files[k], pre = files.length > 1 ? `${k + 1} / ${files.length} · ` : '';
+    let d = null;
+    try { d = JSON.parse(await f.text()); if (!d.model || !Array.isArray(d.figures) || !d.figures.length) throw 0; }
+    catch (e) { bad.push(f.name + ' (not a catalogue file)'); continue; }
+    try {
+      const name = await uploadOne(d, (n, t) => { $('cprog').style.width = ((k + n / t) / files.length * 100) + '%'; cmsg(`${pre}${d.name || d.model}: uploading drawings ${n} / ${t}`); });
+      ok.push(name);
+    } catch (err) {
+      bad.push(`${f.name} (${err && err.code === 'permission-denied' ? 'refused: only the owner can upload' : (err && err.message) || err})`);
+      if (err && err.code === 'permission-denied') break;
     }
-    await model.set({ name: data.name || data.model, sub: data.sub || '', codes: data.codes || '', catalog: data.catalog || '', short: data.short || '',
-      figures: data.figures.length, parts: data.figures.reduce((a, f) => a + f.parts.length, 0), visible, updated: firebase.firestore.FieldValue.serverTimestamp() });
-    cmsg(`Done. ${data.name || data.model} is uploaded${visible ? ' and shown on the app' : ' (hidden)'}.`, 'ok'); refresh();
-  } catch (err) { cmsg(err && err.code === 'permission-denied' ? 'Upload refused: only the owner can upload.' : 'Upload stopped: ' + (err.message || err), 'err'); }
-  finally { $('cgo').disabled = false; }
+    d = null;
+  }
+  $('cprog').style.width = '100%';
+  cmsg((ok.length ? `Done: ${ok.length} engine${ok.length === 1 ? '' : 's'} uploaded${ok.length <= 3 ? ' (' + ok.join(', ') + ')' : ''}.` : '') + (bad.length ? ` Not uploaded: ${bad.join('; ')}.` : ''), bad.length ? 'err' : 'ok');
+  $('cgo').disabled = false; $('cfile').disabled = false; files = []; $('cfile').value = ''; $('cfname').textContent = 'one or many, e.g. f300det-catalogue.json';
+  await refresh();
 };
 </script>
 <script>if("serviceWorker" in navigator)navigator.serviceWorker.register("../sw.js",{scope:"../"}).catch(function(){});</script>

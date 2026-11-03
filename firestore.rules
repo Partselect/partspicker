@@ -34,6 +34,12 @@ service cloud.firestore {
       allow write: if isOwner();
     }
 
+    // The list of all engines (names and codes only, no drawings): readable by logins with a running subscription.
+    match /meta/{doc} {
+      allow read: if isOwner() || hasSub();
+      allow write: if isOwner();
+    }
+
     // Companies: a login can read its own company (to see the end date). Max 5 logins per company.
     match /companies/{company} {
       allow read: if isOwner() || (signedIn() && exists(myLink()) && get(myLink()).data.company == company);

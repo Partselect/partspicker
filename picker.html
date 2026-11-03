@@ -429,6 +429,18 @@ html{background:#1A242B}
 
 /* text size from Settings: header and parts list (not the drawings) */
 .panel #plist,.figs .flist,#flist{zoom:var(--fz,1)}
+
+/* iPhone home-screen app: the page can end above the bottom edge; keep the parts list on the edge and paint the strip like the list */
+html{background:#F2F5F6}
+@media (prefers-color-scheme: dark){html:not([data-theme="light"]){background:#1E282E}}
+html[data-theme="dark"]{background:#1E282E}
+@media (max-width:760px){
+  .vgap .panel{padding-bottom:0}
+  .vgap .app.mini .panel{height:76px}
+  .vgap .app.mini .phead{padding-bottom:10px}
+  .vgap .pfoot{padding-bottom:12px}
+  .vgap .app.mini .tools{bottom:90px}
+}
 </style>
 
 <div class="app mini" id="app">
@@ -559,6 +571,9 @@ html{background:#1A242B}
 const FIGS = window.__FIGS;
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+(function(){try{var s=window.navigator.standalone||matchMedia('(display-mode: standalone)').matches;
+function chk(){var gap=s&&Math.round(screen.height-window.innerHeight)>4;document.documentElement.classList.toggle('vgap',!!gap);}
+chk();addEventListener('resize',chk);addEventListener('orientationchange',function(){setTimeout(chk,300)});}catch(e){}})();
 try { const t = localStorage.getItem('pp-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}   // Settings → Appearance
 try { const z = +localStorage.getItem('pp-fs') || 100; document.documentElement.style.setProperty('--fz', z / 100); } catch (e) {}   // Settings → Text size
 const MODEL = Object.assign({ id: 'f300det', name: 'F300DET / FL300DET', catalog: '1Z6JD-200SA', short: 'F300' }, window.__MODEL || {});

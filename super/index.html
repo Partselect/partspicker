@@ -211,7 +211,7 @@ tr:last-child td{border-bottom:0}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="../firebase-config.js"></script>
+<script src="../firebase-config.js"></script><script>window.PP_APP_NAME = "super";</script>
 <script src="../pp-auth.js"></script>
 <script>
 const $ = id => document.getElementById(id);
@@ -259,7 +259,14 @@ async function checkRules(){
   }
 }
 if (!PP.configured) { $('login').hidden = false; $('lmsg').textContent = 'Firebase isn’t connected. Fill in firebase-config.js.'; $('lmsg').className = 'msg err'; }
-else PP.ready.then(u => view(u && PP.adminEmail && u.email.toLowerCase() === PP.adminEmail ? u : null));
+else PP.ready.then(u => {
+  view(u && PP.adminEmail && u.email.toLowerCase() === PP.adminEmail ? u : null);
+  // If this page's sign-in changes (signed out in another tab, or not the owner any more), go back to the sign-in screen
+  PP.auth.onAuthStateChanged(n => {
+    const owner = n && PP.adminEmail && (n.email || '').toLowerCase() === PP.adminEmail;
+    if (me && !owner) { view(null); $('lmsg').textContent = 'You were signed out. Sign in again as the super admin.'; $('lmsg').className = 'msg err'; }
+  });
+});
 $('lform').onsubmit = async e => {
   e.preventDefault(); $('lmsg').textContent = 'Signing in…'; $('lmsg').className = 'msg';
   try {

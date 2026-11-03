@@ -2,8 +2,10 @@
 window.PP = (() => {
   const cfg = window.PP_FIREBASE || {};
   if (!window.firebase || !cfg.apiKey || !cfg.projectId) return { configured: false };
-  firebase.initializeApp(cfg);
-  const auth = firebase.auth(), db = firebase.firestore();
+  // The super admin uses its own named app, so its sign-in is kept apart from the user app's sign-in in the same browser.
+  const name = window.PP_APP_NAME || '';
+  const app = name ? (firebase.apps.find(a => a.name === name) || firebase.initializeApp(cfg, name)) : firebase.initializeApp(cfg);
+  const auth = app.auth(), db = app.firestore();
   try { db.enablePersistence({ synchronizeTabs: true }).catch(() => {}); } catch (e) {}   // keeps the catalogue for offline use
   const ready = new Promise(res => { const off = auth.onAuthStateChanged(u => { off(); res(u); }); });
   const adminEmail = (window.PP_ADMIN_EMAIL || '').toLowerCase();

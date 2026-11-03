@@ -149,6 +149,8 @@ tr:last-child td{border-bottom:0}
 .warnbox{display:grid;gap:4px;padding:12px 14px;border-radius:12px;background:var(--bad-soft);color:#7A2318;font-size:14px;line-height:1.45}
 .warnbox b{color:var(--bad)}
 .btn.danger-solid{background:var(--bad);border-color:var(--bad);color:#fff}
+.rulesban{margin-bottom:16px;padding:14px 16px;border-radius:14px;background:var(--bad-soft);border:1px solid rgba(192,57,43,.3);color:#7A2318;line-height:1.5;font-size:14.5px}
+.rulesban b{color:var(--bad)}.rulesban code{font:600 13px var(--f-mono)}
 </style>
 </head>
 <body>
@@ -179,6 +181,7 @@ tr:last-child td{border-bottom:0}
     </form>
   </section>
 
+  <div class="rulesban" id="rulesban" hidden></div>
   <section id="v-users" hidden>
     <div class="stats" id="stats"></div>
     <div class="panel">
@@ -240,7 +243,20 @@ function view(user){
   if (!ok) { $('v-users').hidden = $('v-cats').hidden = true; return; }
   $('me').textContent = user.email;
   if (PP.adminEmail && user.email.toLowerCase() !== PP.adminEmail) { $('lmsg').textContent = ''; }
-  showTab('users'); refresh();
+  showTab('users'); refresh(); checkRules();
+}
+// Make sure the rules published in Firebase give the super admin full control
+async function checkRules(){
+  const ban = $('rulesban');
+  try {
+    const r = PP.db.collection('_check').doc('owner');
+    await r.set({ at: firebase.firestore.FieldValue.serverTimestamp(), by: me.email });
+    await r.delete();
+    ban.hidden = true;
+  } catch (e) {
+    ban.hidden = false;
+    ban.innerHTML = `<b>Firebase is blocking the super admin (${esc(e.code || e.message)}).</b> The Firestore rules published in Firebase are old. Open Firebase → Firestore Database → Rules, delete everything, paste the latest <code>firestore.rules</code>, Publish, wait a minute, then reload this page.`;
+  }
 }
 if (!PP.configured) { $('login').hidden = false; $('lmsg').textContent = 'Firebase isn’t connected. Fill in firebase-config.js.'; $('lmsg').className = 'msg err'; }
 else PP.ready.then(u => view(u && PP.adminEmail && u.email.toLowerCase() === PP.adminEmail ? u : null));
@@ -366,8 +382,11 @@ async function addLogin(co, email, pw){
     }
   }
   const list = [...members(co), email];
-  await cRef(co.id).set({ members: list, updated: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
-  await aRef(email).set({ company: co.id, mustChange: created, added: firebase.firestore.FieldValue.serverTimestamp(), by: me.email });
+  const RULES = ' Firebase refused it: the Firestore rules published in Firebase are not the latest. Paste the latest rules (Firestore → Rules), Publish, wait a minute, then add this login again.';
+  try { await aRef(email).set({ company: co.id, mustChange: created, added: firebase.firestore.FieldValue.serverTimestamp(), by: me.email }); }
+  catch (err) { throw new Error(created ? `The login ${email} was created, but linking it to the company was refused (access/${email}, ${err.code || err.message}).` + RULES : `Linking ${email} was refused (access/${email}, ${err.code || err.message}).` + RULES); }
+  try { await cRef(co.id).set({ members: list, updated: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true }); }
+  catch (err) { try { await aRef(email).delete(); } catch (e) {} throw new Error(`Adding ${email} to the company list was refused (companies/${co.id}, ${err.code || err.message}).` + RULES); }
   co.members = list;
   return { email, pw, created, note };
 }
@@ -469,7 +488,7 @@ function manage(u){
     if ($('lp').value.length < 6) return m('Password needs at least 6 characters.', 'err');
     $('ladd').disabled = true; m('Adding…');
     try { const r = await addLogin(u, $('le').value, $('lp').value); await refresh(); showCreds(u, r, true); }
-    catch (err) { m(err.code === 'permission-denied' ? 'Refused by the security rules.' : (err.message || String(err)), 'err'); $('ladd').disabled = false; }
+    catch (err) { m(err.code === 'permission-denied' ? 'Refused by the Firestore rules. Paste the latest rules, Publish, wait a minute and try again.' : (err.message || String(err)), 'err'); $('ladd').disabled = false; await refresh(); }
   };
   f.querySelector('.logins').onclick = async e => {
     const rb = e.target.closest('[data-rml]'), pb = e.target.closest('[data-reset]'), sb = e.target.closest('[data-so]');

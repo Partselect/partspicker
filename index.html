@@ -209,6 +209,24 @@ body{background-image:radial-gradient(60vmax 50vmax at 10% 30%,var(--glow-a),tra
 .hero h1 span{color:#3E8FCB}
 .card a.open{text-decoration:none}
 [hidden]{display:none!important}
+
+/* engine grid: 5 per row on a full PC screen, fewer on smaller screens; not-downloaded engines slightly dimmed */
+.wrap{max-width:1680px}
+.grid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+@media (min-width:1500px){.grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media (max-width:640px){.grid{grid-template-columns:1fr}}
+.card{padding:16px;gap:12px}
+.card .ic{width:48px;height:48px}.card .ic svg{width:36px;height:36px}
+.card h3{font-size:18px}
+.specs{font-size:13px;gap:5px 12px}.specs dd{font-size:12.5px}
+.card .foot{padding-top:12px}
+.open{height:38px;padding:0 14px}
+.offrow .mini{height:32px}
+body.signed .card:not(.is-saved){opacity:.72;filter:saturate(.6)}
+body.signed .card:not(.is-saved):hover{opacity:1;filter:none}
+.card.is-saved{opacity:1}
+.soon{min-height:180px}
+.msearch{position:sticky;top:max(10px,env(safe-area-inset-top,0px));z-index:5}
 </style>
 
 <div class="splash" id="splash" aria-hidden="true">
@@ -264,7 +282,7 @@ body{background-image:radial-gradient(60vmax 50vmax at 10% 30%,var(--glow-a),tra
     <div class="subnote" id="subnote" hidden></div>
     <div class="sec"><h2>Select engine model</h2><small id="mcount"></small></div>
     <div class="msearch" id="msearch" hidden><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="mq" type="search" placeholder="Search engine, HP or model code" autocomplete="off" enterkeyhint="search"></div>
-    <div class="grid" id="grid"></div>
+    <div id="grid"></div>
   </div>
 </main>
 <footer><div class="wrap"><div class="powered"><span>Powered by</span><img src="marinics.png" alt="Marinics"></div>Lists are saved on this device only. Part numbers come from the manufacturer's parts catalogue for each model; check them before ordering.</div></footer>
@@ -301,7 +319,7 @@ function renderModels(models, note){
   SHOWN = { models, note };
   const q = (document.getElementById('mq').value || '').trim().toLowerCase();
   document.getElementById('mcount').textContent = `${models.length} model${models.length === 1 ? '' : 's'}`;
-  document.getElementById('msearch').hidden = models.length < 5;
+  document.getElementById('msearch').hidden = !models.length && !q;
   const hit = m => !q || [m.name, m.hp, m.codes, m.catalog, m.id].join(' ').toLowerCase().includes(q);
   const saved = models.filter(m => m.saved && hit(m)), rest = models.filter(m => !m.saved && hit(m));
   const soon = `<div class="soon">${ICON.replace('<svg', '<svg width="40" height="40"')}<b>${note || 'More engines coming'}</b><span>New models will appear here.</span></div>`;
@@ -422,11 +440,11 @@ function afterSplash(){
       : `This login is now registered to another device${d.label ? ' (' + d.label + ')' : ''}. Ask Marinics to reset the device.`, 'err');
   };
   const showApp = user => {
-    $i('useremail').textContent = user.email || ''; $i('userbar').hidden = false; loadModels(ACC); ACC = null;
+    $i('useremail').textContent = user.email || ''; $i('userbar').hidden = false; document.body.classList.add('signed'); loadModels(ACC); ACC = null;
     if (unguard) unguard(); unguard = PP.session ? PP.session.guard(user, kicked) : null;
     if (!si.hidden) { si.classList.add('out'); setTimeout(() => { si.hidden = true; si.classList.remove('out'); }, 480); }
   };
-  const showSignin = () => { $i('userbar').hidden = true; si.hidden = false; setTimeout(() => $i('si-email').focus(), 350); };
+  const showSignin = () => { document.body.classList.remove('signed'); $i('userbar').hidden = true; si.hidden = false; setTimeout(() => $i('si-email').focus(), 350); };
   if (!PP.configured) { showSignin(); $i('si-setup').hidden = false; $i('si-form').hidden = true; return; }
   // First sign-in: the user must replace the temporary password from Marinics
   let ACC = null;   // the login's access record, read once and reused for the engine list

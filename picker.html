@@ -506,6 +506,9 @@ body{background:
       if (!snap) { M.textContent = 'Loading drawings… Tip: tap Download on the home page to keep this engine on your phone.'; snap = await figs.get(); if (ver !== null) try { localStorage.setItem('pp-cat-ver-' + id, ver); } catch (e) {} }
       if (snap.empty) return stop('The drawings haven’t been uploaded yet. An admin needs to upload the catalogue on the admin page.', 'Back to home', 'index.html');
       window.__FIGS = snap.docs.map(d => { const x = d.data(); return { n: x.n, t: x.t, w: x.w, h: x.h, hs: x.hs, img: x.img, hot: JSON.parse(x.hot), parts: JSON.parse(x.parts) }; });
+      // First time this engine is opened: keep it on this phone so it opens offline next time
+      if (window.PPOff && meta) { const keep = { name: meta.name, sub: meta.sub, codes: meta.codes, catalog: meta.catalog, short: meta.short, figures: meta.figures || window.__FIGS.length, parts: meta.parts };
+        setTimeout(() => PPOff.put(email, id, keep, window.__FIGS, Number(ver) || 0).catch(() => {}), 1500); }
     }
     const s = document.createElement('script'); s.textContent = document.getElementById('pp-main').textContent; document.body.appendChild(s);
     L.style.transition = 'opacity .35s'; L.style.opacity = '0'; setTimeout(() => L.remove(), 380);

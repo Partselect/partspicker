@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null && request.auth.token.email != null; }
+    function me() { return request.auth.token.email.lower(); }
+
+    // The owner (super admin): the only account that can add users, renew subscriptions and manage catalogues.
+    function isOwner() { return signedIn() && me() == 'admin@marinics.com'; }
+
+    // A user's subscription, kept by the owner on the super admin page.
+    function sub() { return get(/databases/$(database)/documents/access/$(me())).data; }
+    function hasSub() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/access/$(me()))
+        && sub().active == true
+        && request.time < sub().end;
+    }
+    function inPlan(model) { return '*' in sub().models || model in sub().models; }
+    function shown(model) { return get(/databases/$(database)/documents/models/$(model)).data.visible == true; }
+
+    // Engines: users see only engines that are shown and in their plan, while their subscription is running.
+    match /models/{model} {
+      allow read: if isOwner() || (hasSub() && inPlan(model) && resource.data.visible == true);
+      allow write: if isOwner();
+    }
+    match /models/{model}/figures/{figure} {
+      allow read: if isOwner() || (hasSub() && inPlan(model) && shown(model));
+      allow write: if isOwner();
+    }
+
+    // Subscriptions: users may read only their own (to see their end date); only the owner can change them.
+    match /access/{email} {
+      allow read: if isOwner() || (signedIn() && me() == email);
+      allow write: if isOwner();
+    }
+  }
+}

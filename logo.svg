@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="#E0520F" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- top cowling -->
+  <path d="M40 22c0-7 6-12 14-12h24c10 0 17 7 17 16v14c0 6-4 10-10 10H46c-4 0-6-3-6-7z"/>
+  <path d="M46 24h30M46 31h22"/>
+  <path d="M86 18v26"/>
+  <!-- apron / bottom cowling -->
+  <path d="M46 50l4 10h32l4-10"/>
+  <!-- clamp bracket -->
+  <path d="M40 40H28v28h8"/><path d="M28 54h-6"/>
+  <!-- midsection -->
+  <path d="M54 60l2 28h18l2-28"/>
+  <path d="M60 68h10"/>
+  <!-- anti-cavitation plate -->
+  <path d="M46 90h40"/>
+  <!-- gearcase -->
+  <path d="M54 92c0 6 5 10 12 10h14c5 0 7-3 5-7l-2-3"/>
+  <path d="M63 102l-3 10h6l5-10"/>
+  <!-- propeller -->
+  <path d="M86 97c4-11 11-14 14-9 2 4-4 8-14 9z"/>
+  <path d="M86 97c5 9 4 16-1 15-4-1-3-8 1-15z"/>
+  <circle cx="86" cy="97" r="2.4"/>
+</svg>

@@ -511,9 +511,7 @@ const shortName = n => String(n || '').split('/')[0].trim() || n;
 function card(m){
   const n = savedCount(m.listKey || (m.id + '-parts-list-v1'), m.id);
   const off = window.PP && window.PPOff;
-  const state = !off ? '' : m.saved
-    ? `${m.stale && !m.offline ? `<button class="mini dl" data-dl="${esc(m.id)}" type="button">Update</button>` : ''}<button class="mini rm" data-rm="${esc(m.id)}" type="button">Remove</button>`
-    : (m.offline ? '' : `<button class="mini dl" data-dl="${esc(m.id)}" type="button">${DL_IC}Download</button>`);
+  const state = '';   // engines are saved on the phone automatically when they are opened
   return `<div class="card${m.saved ? ' is-saved' : ''}" data-href="${esc(m.href)}" data-id="${esc(m.id)}">
     <div class="top"><span class="ic">${ICON}${window.PP ? picTag('img/engines/' + slug(m.id), 'ph') : ''}</span><div><div class="hp">${esc(m.hp || '')}</div><h3>${esc(shortName(m.name))}</h3></div></div>
     <dl class="specs"><dt>Model codes</dt><dd>${esc(m.codes || '–')}</dd><dt>Catalogue</dt><dd>${esc(m.catalog || '–')}</dd><dt>Drawings</dt><dd>${m.figs} figures · ${(m.parts || 0).toLocaleString()} parts</dd></dl>

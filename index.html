@@ -819,5 +819,13 @@ function showIntro(next){
 // keep room under the engine list for the pinned footer
 (() => { const f = document.querySelector('footer'); if (!f || !window.ResizeObserver) return;
   new ResizeObserver(() => document.documentElement.style.setProperty('--footh', (f.offsetHeight + 12) + 'px')).observe(f); })();
+
+// iPhone home-screen app: when the page is shorter than the screen, iOS ends the page above the bottom edge,
+// which lifts the "Powered by" bar. Keeping the page always a little taller than the screen keeps the bar at the same level.
+(() => {
+  const set = () => { const h = Math.max(screen.height, screen.width > screen.height && matchMedia('(orientation: landscape)').matches ? screen.width : 0, window.innerHeight);
+    document.body.style.minHeight = (Math.max(screen.height, window.innerHeight) + 2) + 'px'; };
+  set(); addEventListener('orientationchange', () => setTimeout(set, 300)); addEventListener('resize', set);
+})();
 </script>
 <script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js",{scope:"./"}).catch(function(){});</script></body></html>

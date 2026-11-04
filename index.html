@@ -579,7 +579,17 @@ function openFolder(st, push){
 }
 window.addEventListener('popstate', e => { const st = e.state || {}; OPEN = { b: st.b || null, g: st.g || null }; renderModels(SHOWN.models, SHOWN.note); });
 renderModels(window.PP ? [] : MODELS, window.PP ? 'Sign in to see your engines' : '');
-document.getElementById('mq').oninput = () => renderModels(SHOWN.models, SHOWN.note);
+// Search box: iPhones don't always send "input" when the text is cleared (clear button, predictive text),
+// so listen to several events. When the box is emptied, go back to the brand list.
+(() => {
+  const mq = document.getElementById('mq'); let lastQ = '';
+  const upd = () => { const q = mq.value.trim();
+    if (q === lastQ) return;
+    if (!q) { OPEN = { b: null, g: null }; try { if (history.state && history.state.b) history.replaceState(null, '', location.pathname + location.search); } catch (e) {} }
+    lastQ = q; renderModels(SHOWN.models, SHOWN.note); };
+  ['input', 'search', 'change', 'keyup', 'compositionend', 'blur'].forEach(ev => mq.addEventListener(ev, upd));
+  mq.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); mq.blur(); upd(); } });
+})();
 // Engines come from the protected database once signed in, filtered by the user's subscription
 function subNote(text, kind){
   const n = document.getElementById('subnote');

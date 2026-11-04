@@ -184,13 +184,16 @@ html,body{overflow-x:hidden;max-width:100%}
 .cbrand{display:flex;align-items:center;gap:8px;margin:10px 12px 0;padding:12px 14px;border-radius:12px;background:var(--blue);color:#fff}
 .cbrand b{font-size:17px}.cbrand small{font:500 12px var(--f-mono);opacity:.8}
 .cfold{padding-left:26px}
+.brand .lg{background:#0F2A44}.brand .lg img{width:44px;height:44px;object-fit:cover}
+.li .dev .last{color:var(--ink);font-weight:600}
+.mails .seen{display:block;font:500 11px var(--f-ui);font-style:normal;color:var(--muted);margin:0 0 3px}
 </style>
 </head>
 <body>
 <header class="top" id="top" hidden>
   <div class="in">
     <div class="bar">
-      <div class="brand"><span class="lg"><img src="../marinics.png" alt=""></span><div><b>Parts Picker</b><small>Super admin</small></div></div>
+      <div class="brand"><span class="lg"><img src="../icons/icon-192.png" alt="Parts Picker"></span><div><b>Parts Picker</b><small>Super admin</small></div></div>
       <span class="me" id="me"></span>
       <button class="tbtn" id="signout">Sign out</button>
     </div>
@@ -321,6 +324,7 @@ function showTab(k){
 async function refresh(){
   try {
     const [us, ms] = await Promise.all([PP.db.collection('companies').get(), PP.db.collection('models').get()]);
+    try { const ss = await PP.db.collection('sessions').get(); SEEN = {}; ss.docs.forEach(d => { const x = d.data(); const t = toDate(x.seen) || toDate(x.at); if (t && x.device !== 'signed-out') SEEN[d.id] = t; }); } catch (e) {}
     users = us.docs.map(d => ({ id: d.id, ...d.data() }));
     models = ms.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (a.name || a.id).localeCompare(b.name || b.id));
     renderUsers(); renderCats(); syncIndex();
@@ -355,10 +359,12 @@ async function syncIndex(){
     if (!cur.exists || norm((cur.data() || {}).list || {}) !== norm(list)) await ref.set({ list, count: Object.keys(list).length, at: firebase.firestore.FieldValue.serverTimestamp() });
   } catch (e) { console.error('engine list', e); }
 }
+const ago = d => { const m = Math.round((Date.now() - d) / 60000); return m < 2 ? 'just now' : m < 60 ? m + ' min ago' : m < 1440 ? Math.round(m / 60) + ' h ago' : Math.round(m / 1440) + ' day' + (Math.round(m / 1440) === 1 ? '' : 's') + ' ago'; };
 const modelName = id => (models.find(m => m.id === id) || {}).name || id;
 
 // ---------- companies ----------
 const MAXL = 5;
+let SEEN = {};   // login email → last time the app was used
 const slug = n => (n.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'company') + '-' + Math.random().toString(36).slice(2, 6);
 const cRef = id => PP.db.collection('companies').doc(id);
 const aRef = email => PP.db.collection('access').doc(email);
@@ -381,7 +387,7 @@ function renderUsers(){
     const ms = members(u);
     return `<tr data-id="${esc(u.id)}">
       <td class="u"><b>${esc(u.name || u.id)}</b><small>since ${fmtD(toDate(u.start))}</small></td>
-      <td data-l="Logins"><span class="cnt ${ms.length >= MAXL ? 'full' : ''}">${ms.length} / ${MAXL}</span><div class="mails">${ms.map(m => `<span>${esc(m)}</span>`).join('') || '<span class="none">No logins yet</span>'}</div></td>
+      <td data-l="Logins"><span class="cnt ${ms.length >= MAXL ? 'full' : ''}">${ms.length} / ${MAXL}</span><div class="mails">${ms.map(m => `<span>${esc(m)}<em class="seen">${SEEN[m] ? 'last active ' + esc(ago(SEEN[m])) : 'not signed in yet'}</em></span>`).join('') || '<span class="none">No logins yet</span>'}</div></td>
       <td data-l="Engines"><div class="chips">${eng}</div></td>
       <td data-l="Ends" class="mono">${fmtD(toDate(u.end))}<span class="days">${left}</span></td>
       <td data-l="Status"><span class="pill s-${s.k}">${s.label}</span></td>
@@ -551,7 +557,9 @@ function manage(u){
       el.dataset.pw = pwNote;
       if (!x || x.device === 'signed-out') { el.textContent = 'No device yet: the next device they sign in on becomes theirs' + pwNote; return; }
       const at = toDate(x.at);
-      el.textContent = `Device: ${x.label || 'registered device'}${at ? ' · since ' + at.toLocaleString(undefined, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''}${pwNote}`;
+      const fmtT = t => t.toLocaleString(undefined, { day: 'numeric', month: 'short', year: t.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined, hour: '2-digit', minute: '2-digit' });
+      const seen = toDate(x.seen) || at;
+      el.innerHTML = `<b class="last">Last active: ${seen ? esc(ago(seen)) + ' · ' + esc(fmtT(seen)) : 'not yet'}</b><br>Device: ${esc(x.label || 'registered device')}${at ? ' · since ' + esc(fmtT(at)) : ''}${esc(pwNote)}`;
       so.hidden = false;
     } catch (e) { el.textContent = ''; }
   });

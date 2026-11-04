@@ -39,9 +39,18 @@ window.PP = (() => {
       throw { code: 'pp/other-device', label: cur.label || '' };
     }
     if (!cur || cur.device !== deviceId) {
-      try { await ref(u).set({ device: deviceId, label: deviceLabel(), at: firebase.firestore.FieldValue.serverTimestamp() }); }
+      try { await ref(u).set({ device: deviceId, label: deviceLabel(), at: firebase.firestore.FieldValue.serverTimestamp(), seen: firebase.firestore.FieldValue.serverTimestamp() }); }
       catch (e) { await auth.signOut().catch(() => {}); throw { code: 'pp/other-device', label: '' }; }
     }
+  }
+  // "Last active" for the super admin: at most once every 10 minutes per device
+  function touch(u){
+    try {
+      const k = 'pp-seen-' + (u.email || '').toLowerCase(), last = +sessionStorage.getItem(k) || 0;
+      if (Date.now() - last < 600000) return;
+      sessionStorage.setItem(k, String(Date.now()));
+      ref(u).set({ seen: firebase.firestore.FieldValue.serverTimestamp(), seenOn: deviceLabel() }, { merge: true }).catch(() => {});
+    } catch (e) {}
   }
   // Watch the login: if another device signs in, sign this one out and call onKick(info).
   function guard(u, onKick){
@@ -54,8 +63,9 @@ window.PP = (() => {
         if (!d) { if (first) claim(u).catch(kick); first = false; return; }   // signed in before the lock existed: this device takes it
         first = false;
         if (d.device !== deviceId) kick(d);   // reset by Marinics, or registered to another device
+        else touch(u);
       }, () => {});
     } catch (e) { return () => {}; }
   }
-  return { configured: true, auth, db, ready, adminEmail, session: { deviceId, deviceLabel, claim, guard } };
+  return { configured: true, auth, db, ready, adminEmail, session: { deviceId, deviceLabel, claim, guard, touch } };
 })();

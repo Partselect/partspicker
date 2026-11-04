@@ -441,6 +441,10 @@ html[data-theme="dark"]{background:#1E282E}
   .vgap .pfoot{padding-bottom:12px}
   .vgap .app.mini .tools{bottom:90px}
 }
+
+/* the page is 2px taller than the screen (see above): keep the app itself on screen and stop the page from moving */
+html,body{overscroll-behavior:none}
+.app{height:100vh;height:100dvh;position:fixed;inset:0}
 </style>
 
 <div class="app mini" id="app">
@@ -587,6 +591,10 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':
 (function(){try{var s=window.navigator.standalone||matchMedia('(display-mode: standalone)').matches;
 function chk(){var gap=s&&Math.round(screen.height-window.innerHeight)>4;document.documentElement.classList.toggle('vgap',!!gap);}
 chk();addEventListener('resize',chk);addEventListener('orientationchange',function(){setTimeout(chk,300)});}catch(e){}})();
+// iPhone home-screen app: when the page is no taller than the screen, iOS ends it above the bottom edge
+// (the dark strip). Keeping the page 2px taller than the screen makes it reach the bottom, like the home page.
+(function(){ var fit = function(){ document.documentElement.style.minHeight = (Math.max(screen.height, window.innerHeight) + 2) + 'px'; };
+  fit(); addEventListener('resize', fit); addEventListener('orientationchange', function(){ setTimeout(fit, 300); }); })();
 try { const t = localStorage.getItem('pp-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}   // Settings → Appearance
 try { const z = +localStorage.getItem('pp-fs') || 100; document.documentElement.style.setProperty('--fz', z / 100); } catch (e) {}   // Settings → Text size
 const MODEL = Object.assign({ id: 'f300det', name: 'F300DET / FL300DET', catalog: '1Z6JD-200SA', short: 'F300' }, window.__MODEL || {});

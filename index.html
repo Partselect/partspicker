@@ -394,10 +394,13 @@ footer{padding-bottom:max(4px,calc(env(safe-area-inset-bottom,0px) - 16px))}
 .vgap footer{padding-bottom:2px}
 /* brand logos and engine photos */
 .fold .fi,.card .ic{position:relative;overflow:hidden}
-.fold .fi img.logo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:6px;box-sizing:border-box}
+.fold .fi img.logo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:9px 7px;box-sizing:border-box}
+.fold .fi:has(img.logo) b{display:none}
 .card .ic img.ph{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:3px;box-sizing:border-box}
 .card .ic:has(img.ph){width:58px;height:76px;background:#fff}
 @media (max-width:640px){.card .ic:has(img.ph){width:46px;height:60px}}
+.fold.brand .fi:has(img.logo){width:68px;border-radius:14px}
+@media (max-width:640px){.fold.brand .fi:has(img.logo){width:60px;height:46px}}
 </style>
 
 <div class="splash" id="splash" aria-hidden="true">

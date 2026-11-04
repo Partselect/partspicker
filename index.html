@@ -386,6 +386,18 @@ body{background:transparent!important}
 .fold.brand .fi{background:linear-gradient(160deg,#2A6FA8,#0F2A44)}
 .fold.brand .fi b{font-size:24px;color:#fff}
 .fold.brand .ft b{font-size:22px}
+
+/* footer: only "Powered by Marinics", centred, close to the bottom edge */
+footer .wrap{padding-block:16px 6px!important}
+footer .powered{justify-content:center;margin:0}
+footer{padding-bottom:max(4px,calc(env(safe-area-inset-bottom,0px) - 16px))}
+.vgap footer{padding-bottom:2px}
+/* brand logos and engine photos */
+.fold .fi,.card .ic{position:relative;overflow:hidden}
+.fold .fi img.logo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:6px;box-sizing:border-box}
+.card .ic img.ph{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:3px;box-sizing:border-box}
+.card .ic:has(img.ph){width:58px;height:76px;background:#fff}
+@media (max-width:640px){.card .ic:has(img.ph){width:46px;height:60px}}
 </style>
 
 <div class="splash" id="splash" aria-hidden="true">
@@ -472,7 +484,7 @@ body{background:transparent!important}
     <div id="grid"></div>
   </div>
 </main>
-<footer><div class="wrap"><div class="powered"><span>Powered by</span><img src="marinics.png" alt="Marinics"></div>Lists are saved on this device only. Part numbers come from the manufacturer's parts catalogue for each model; check them before ordering.</div></footer>
+<footer><div class="wrap"><div class="powered"><span>Powered by</span><img src="marinics.png" alt="Marinics"></div></div></footer>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="firebase-config.js"></script><script src="pp-auth.js"></script><script src="pp-offline.js"></script><script>
 /* Add a new engine here: copy one entry, point href at its folder. */
@@ -503,7 +515,7 @@ function card(m){
     ? `${m.stale && !m.offline ? `<button class="mini dl" data-dl="${esc(m.id)}" type="button">Update</button>` : ''}<button class="mini rm" data-rm="${esc(m.id)}" type="button">Remove</button>`
     : (m.offline ? '' : `<button class="mini dl" data-dl="${esc(m.id)}" type="button">${DL_IC}Download</button>`);
   return `<div class="card${m.saved ? ' is-saved' : ''}" data-href="${esc(m.href)}" data-id="${esc(m.id)}">
-    <div class="top"><span class="ic">${ICON}</span><div><div class="hp">${esc(m.hp || '')}</div><h3>${esc(shortName(m.name))}</h3></div></div>
+    <div class="top"><span class="ic">${ICON}${window.PP ? picTag('img/engines/' + slug(m.id), 'ph') : ''}</span><div><div class="hp">${esc(m.hp || '')}</div><h3>${esc(shortName(m.name))}</h3></div></div>
     <dl class="specs"><dt>Model codes</dt><dd>${esc(m.codes || '–')}</dd><dt>Catalogue</dt><dd>${esc(m.catalog || '–')}</dd><dt>Drawings</dt><dd>${m.figs} figures · ${(m.parts || 0).toLocaleString()} parts</dd></dl>
     ${state ? `<div class="offrow">${state}</div>` : ''}
     <div class="foot"><span class="saved">${n ? `<b>${n}</b> part${n === 1 ? '' : 's'} in your list` : 'No saved list yet'}</span><a class="open" href="${esc(m.href)}">Open ${OPEN_IC}</a></div>
@@ -517,7 +529,11 @@ const brandOf = m => m.brand || (/^BFP?\d/i.test(m.name || '') ? 'Honda' : 'Yama
 const gnum = g => parseFloat(g) || 1e9;
 let OPEN = { b: null, g: null };   // open brand folder and HP folder (null = list above)
 const FOLDER_IC = '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>';
-const foldCard = (key, val, title, sub, brand) => `<button type="button" class="fold${brand ? ' brand' : ''}" data-${key}="${esc(val)}"><span class="fi">${brand ? `<b>${esc(title.slice(0, 1))}</b>` : FOLDER_IC}</span><span class="ft"><b>${esc(title)}</b><small>${sub}</small></span><span class="fa">›</span></button>`;
+const foldCard = (key, val, title, sub, brand) => `<button type="button" class="fold${brand ? ' brand' : ''}" data-${key}="${esc(val)}"><span class="fi">${brand ? `<b>${esc(title.slice(0, 1))}</b>${picTag('img/brands/' + slug(title), 'logo')}` : FOLDER_IC}</span><span class="ft"><b>${esc(title)}</b><small>${sub}</small></span><span class="fa">›</span></button>`;
+// Pictures: put files in the site's img folder (img/brands/honda.png, img/engines/<engine id>.jpg). Missing ones fall back to the icon.
+const slug = t => String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const picTag = (base, cls) => `<img class="${cls}" src="${base}.png" alt="" loading="lazy" data-try="webp,jpg" onerror="ppPic(this)">`;
+window.ppPic = img => { const t = (img.dataset.try || '').split(',').filter(Boolean); if (!t.length) { img.remove(); return; } const n = t.shift(); img.dataset.try = t.join(','); img.src = img.src.replace(/\.[a-z]+$/, '.' + n); };
 const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
 function renderModels(models, note){
   SHOWN = { models, note };

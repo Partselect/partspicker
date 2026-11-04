@@ -535,7 +535,13 @@ html[data-theme="dark"]{background:#1E282E}
     };
     // 1) Engine saved on this phone: open it from the phone (works offline, no drawing downloads)
     const rec = window.PPOff ? await PPOff.get(email, id) : null;
-    if (rec && rec.figs && rec.figs.length) {
+    // a saved engine is refreshed when Marinics uploads a newer catalogue
+    let fresh = true;
+    if (rec && navigator.onLine) {
+      try { const md = await PP.db.collection('models').doc(id).get(); const u = md.exists && md.data().updated; const ms = u && u.toMillis ? u.toMillis() : 0; if (ms && rec.updated && ms > rec.updated) fresh = false; }
+      catch (e) { if (e && e.code === 'permission-denied') throw e; }
+    }
+    if (rec && fresh && rec.figs && rec.figs.length) {
       const sub = await checkSub(); if (sub === 'redirect') return;
       if (!PPOff.allowed(sub, id)) denied();
       const m = rec.meta || {};

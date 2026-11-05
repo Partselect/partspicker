@@ -337,7 +337,7 @@ body.signed .card:not(.is-saved):hover :is(.top,.specs,.saved){opacity:1;filter:
 .set-foot{padding-top:12px;border-top:1px solid var(--line);font:500 11px var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:center}
 
 /* text size from Settings */
-:root{--fz:1}
+:root{--fz:.85}
 main,footer,.mbar,.hero .wrap{zoom:var(--fz)}
 .set-fs{flex-wrap:wrap}
 .fs{display:flex;align-items:center;gap:10px;flex:1 1 200px;justify-content:flex-end}
@@ -410,6 +410,42 @@ footer{padding-bottom:max(4px,calc(env(safe-area-inset-bottom,0px) - 16px))}
 .mbar .subnote[hidden]{display:none}
 .mbar .subnote::before{display:inline-block;width:7px;height:7px;margin-right:6px;vertical-align:1px}
 .mbar .subnote.ok{color:#8FD3AE}.mbar .subnote.warn{color:#F2C26B}.mbar .subnote.bad{color:#FF9C8F}.mbar .subnote.info{color:#8EC8EE}
+
+/* ================= Glass 2: one consistent frosted-glass look (drawings stay solid white) ================= */
+:root{
+  --g-bg:rgba(255,255,255,.62); --g-bg2:rgba(255,255,255,.80); --g-line:rgba(255,255,255,.75); --g-edge:rgba(20,40,55,.10);
+  --g-hl:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -1px 0 rgba(255,255,255,.25);
+  --g-sh:0 1px 2px rgba(16,40,60,.06),0 14px 34px -14px rgba(16,40,60,.28);
+  --g-blur:saturate(180%) blur(22px);
+  --g-bar:rgba(11,29,48,.9); --g-bar-line:rgba(255,255,255,.08);
+  --g-acc:rgba(0,101,151,.86);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --g-bg:rgba(24,36,44,.58); --g-bg2:rgba(22,33,40,.82); --g-line:rgba(255,255,255,.09); --g-edge:rgba(255,255,255,.06);
+  --g-hl:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -1px 0 rgba(0,0,0,.2);
+  --g-sh:0 1px 2px rgba(0,0,0,.3),0 18px 40px -14px rgba(0,0,0,.6);
+  --g-bar:rgba(8,16,24,.70); --g-acc:rgba(30,120,180,.82)}}
+:root[data-theme="dark"]{
+  --g-bg:rgba(24,36,44,.58); --g-bg2:rgba(22,33,40,.82); --g-line:rgba(255,255,255,.09); --g-edge:rgba(255,255,255,.06);
+  --g-hl:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -1px 0 rgba(0,0,0,.2);
+  --g-sh:0 1px 2px rgba(0,0,0,.3),0 18px 40px -14px rgba(0,0,0,.6);
+  --g-bar:rgba(8,16,24,.70); --g-acc:rgba(30,120,180,.82)}
+/* people who switched transparency off in their phone settings get solid surfaces */
+@media (prefers-reduced-transparency: reduce){:root{--g-bg:var(--surface,#fff);--g-bg2:var(--surface,#fff);--g-bar:#0F2236;--g-blur:none}}
+
+.mbar{background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,0) 70%),var(--g-bar)!important;-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);border-bottom:1px solid var(--g-bar-line)}
+.mb-btn,.mb-ic{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.fold,.card,.msearch,.soon{background:var(--g-bg)!important;border:1px solid var(--g-line)!important;-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);box-shadow:var(--g-hl),var(--g-sh)!important}
+.soon{border-style:dashed!important}
+.fold:hover,.card:hover{box-shadow:var(--g-hl),0 2px 4px rgba(16,40,60,.06),0 22px 44px -16px rgba(0,60,100,.38)!important}
+.fold .fi{box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 10px 22px -12px rgba(0,60,100,.7)}
+.fbar .fback{background:var(--g-bg)!important;border:1px solid var(--g-line)!important;-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);box-shadow:var(--g-hl)}
+.mmenu,.set-card{background:var(--g-bg2)!important;border:1px solid var(--g-line)!important;-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);box-shadow:var(--g-hl),0 24px 54px -16px rgba(0,20,40,.5)!important;color:var(--ink)}
+.mmenu .mm-who{color:var(--muted);border-color:var(--g-edge)}
+.setl,.intro{-webkit-backdrop-filter:blur(10px) saturate(140%);backdrop-filter:blur(10px) saturate(140%)}
+.in-card{box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 30px 70px -20px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08)}
+footer{background:linear-gradient(180deg,transparent 0,var(--g-bg2) 22px)!important;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.htoast{background:rgba(14,26,36,.72)!important;-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);border:1px solid rgba(255,255,255,.12)}
 </style>
 
 <div class="splash" id="splash" aria-hidden="true">
@@ -797,8 +833,9 @@ const LS = { get: (k, d) => { try { const v = localStorage.getItem(k); return v 
 function applyTheme(t){ if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme'); }
 applyTheme(LS.get('pp-theme', 'auto'));
 // Text size (Settings): scales the page text, not the drawings
-function applyFs(v){ document.documentElement.style.setProperty('--fz', (v || 100) / 100); }
-applyFs(+LS.get('pp-fs', '100'));
+function ppFs(){ try { let v = localStorage.getItem('pp-fs'); if (v && !localStorage.getItem('pp-fs-v2')) { v = String(Math.min(135, Math.max(85, Math.round(+v / 0.85 / 5) * 5))); localStorage.setItem('pp-fs', v); } localStorage.setItem('pp-fs-v2', '1'); return +v || 100; } catch (e) { return 100; } }   // text size: the old 85% is the new 100%
+function applyFs(v){ document.documentElement.style.setProperty('--fz', (v || 100) / 100 * 0.85); }
+applyFs(ppFs());
 function showIntro(next){
   const el = document.getElementById('intro');
   el.hidden = false; requestAnimationFrame(() => el.classList.add('on'));
@@ -823,7 +860,7 @@ function showIntro(next){
   function openSettings(){
     const t = LS.get('pp-theme', 'auto');
     $e('set-theme').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.t === t));
-    const fz = +LS.get('pp-fs', '100'); $e('set-fs').value = fz; $e('set-fsv').textContent = fz + '%';
+    const fz = ppFs(); $e('set-fs').value = fz; $e('set-fsv').textContent = fz + '%';
     $e('set-who').textContent = signedIn() ? $e('useremail').textContent : 'Not signed in';
     $e('set-out').hidden = !signedIn(); L.hidden = false;
   }

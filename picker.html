@@ -428,7 +428,7 @@ html{background:#1A242B}
 .item .src .eng{font:700 11.5px var(--f-mono);color:var(--ink);background:var(--accent-soft);padding:1px 6px;border-radius:6px;margin-right:6px}
 
 /* text size from Settings: header and parts list (not the drawings) */
-.panel #plist,.figs .flist,#flist{zoom:var(--fz,1)}
+.panel #plist,.figs .flist,#flist{zoom:var(--fz,.85)}
 
 /* iPhone home-screen app: the page can end above the bottom edge; keep the parts list on the edge and paint the strip like the list */
 html{background:#F2F5F6}
@@ -452,6 +452,127 @@ html,body{overscroll-behavior:none}
 .hot.on{background:var(--accent);border-color:var(--accent)!important;color:#fff}
 .hot.zero{background:rgba(110,110,110,.13);border-color:var(--accent)!important;color:var(--accent)}
 .hot.found{background:var(--accent);border-color:var(--accent)!important}
+
+/* list: engine subheadings, Edit button, whole-list buttons */
+.lgrp{position:sticky;top:0;z-index:2;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;padding:10px 16px 8px;background:var(--accent);color:#fff}
+.lgrp b{font:700 12.5px var(--f-ui);letter-spacing:.06em;text-transform:uppercase;opacity:.85}
+.lgrp span{font:700 15px var(--f-mono)}
+.lgrp small{margin-left:auto;font:500 11.5px var(--f-mono);opacity:.85}
+.item .src .ebtn{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:999px;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);font:700 11.5px var(--f-ui);cursor:pointer;white-space:nowrap}
+.item .src .ebtn:active{transform:scale(.96)}
+.allset{margin:14px 16px 18px;padding:14px;border-radius:16px;border:1.5px dashed var(--accent);background:var(--accent-soft);display:grid;gap:10px}
+.allset .as-t{font:700 14px var(--f-ui);color:var(--ink)}
+.allset .as-b{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.allset .as-b.two{grid-template-columns:1fr 1fr}
+.allset .as-b button{height:40px;padding:0 4px;border-radius:12px;border:1px solid var(--accent);background:var(--surface);color:var(--accent);font:700 13px var(--f-ui);cursor:pointer;white-space:nowrap}
+.allset .as-b button.pri{background:var(--accent);color:var(--accent-ink,#fff)}
+.allset .as-n{font-size:12px;color:var(--muted);line-height:1.4}
+.qtile.cur{outline:2px solid var(--accent);outline-offset:1px}
+/* phone: the minimised list is a bubble at the bottom right, with the number of parts */
+.pbubble{display:none}
+@media (max-width:760px){
+  .pbubble{position:fixed;z-index:46;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));width:62px;height:62px;border-radius:50%;border:0;cursor:pointer;
+    display:grid;place-items:center;color:#fff;background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,0) 55%),var(--accent);box-shadow:0 14px 30px -10px rgba(0,60,100,.7),0 2px 6px rgba(0,0,0,.25);
+    transform:scale(.4);opacity:0;pointer-events:none;transition:transform .22s cubic-bezier(.2,.9,.3,1.3),opacity .18s}
+  .app.mini ~ .pbubble{transform:none;opacity:1;pointer-events:auto}
+  .pbubble .bb{position:absolute;left:-4px;top:-4px;min-width:24px;height:24px;padding:0 6px;border-radius:999px;background:#C0392B;color:#fff;font:700 12.5px/24px var(--f-mono);text-align:center;box-shadow:0 0 0 2px var(--bg,#fff)}
+  .pbubble .bb.none{display:none}
+  .vgap .pbubble{bottom:18px}
+  .panel{transition:height .22s ease,transform .26s ease}
+  .app.mini .panel,.vgap .app.mini .panel{height:min(58%,540px)!important;transform:translateY(calc(100% + 40px));pointer-events:none;box-shadow:none}
+  .app.mini .tools,.vgap .app.mini .tools{bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+}
+
+/* phone: list opens as a popup over the drawings; tap outside or swipe the header down to close */
+.pback,.ppeek{display:none}
+@media (max-width:760px){
+  .pback{display:block;position:fixed;inset:0;z-index:39;background:rgba(6,16,27,.45);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);opacity:1;transition:opacity .22s}
+  .app.mini .pback{opacity:0;pointer-events:none}
+  .app:not(.mini) .panel{height:min(84%,760px);background:var(--surface)}
+  .ppeek{display:grid;position:fixed;z-index:47;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(92px + env(safe-area-inset-bottom,0px));width:min(290px,calc(100vw - 32px));
+    gap:2px;padding:12px 14px;border:0;border-radius:18px 18px 6px 18px;text-align:left;cursor:pointer;color:var(--ink);font:inherit;
+    background:var(--glass-strong,var(--surface));border:1px solid var(--glass-line,var(--line));box-shadow:0 18px 40px -12px rgba(0,30,60,.55);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+    transform-origin:100% 100%;transform:scale(.3) translate(20px,30px);opacity:0;transition:transform .24s cubic-bezier(.2,.9,.3,1.25),opacity .18s}
+  .ppeek[hidden]{display:none}
+  .ppeek.on{transform:none;opacity:1}
+  .vgap .ppeek{bottom:92px}
+  .ppeek .pk-h{font:600 11px var(--f-ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .ppeek .pk-h b{color:var(--accent)}
+  .ppeek .pk-pn{font:700 16px var(--f-mono)}
+  .ppeek .pk-d{font-size:13.5px;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ppeek .pk-f{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;font-size:12.5px;color:var(--accent);margin-top:2px}
+  .ppeek .pk-f i{font-style:normal;color:var(--muted);margin-left:auto}
+  .pbubble.bump{animation:bump .4s ease}
+  @keyframes bump{40%{transform:scale(1.15)}}
+}
+
+/* ================= Glass 2: one consistent frosted-glass look (drawings stay solid white) ================= */
+:root{
+  --g-bg:rgba(255,255,255,.62); --g-bg2:rgba(255,255,255,.80); --g-line:rgba(255,255,255,.75); --g-edge:rgba(20,40,55,.10);
+  --g-hl:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -1px 0 rgba(255,255,255,.25);
+  --g-sh:0 1px 2px rgba(16,40,60,.06),0 14px 34px -14px rgba(16,40,60,.28);
+  --g-blur:saturate(180%) blur(22px);
+  --g-bar:rgba(11,29,48,.9); --g-bar-line:rgba(255,255,255,.08);
+  --g-acc:rgba(0,101,151,.86);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --g-bg:rgba(24,36,44,.58); --g-bg2:rgba(22,33,40,.82); --g-line:rgba(255,255,255,.09); --g-edge:rgba(255,255,255,.06);
+  --g-hl:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -1px 0 rgba(0,0,0,.2);
+  --g-sh:0 1px 2px rgba(0,0,0,.3),0 18px 40px -14px rgba(0,0,0,.6);
+  --g-bar:rgba(8,16,24,.70); --g-acc:rgba(30,120,180,.82)}}
+:root[data-theme="dark"]{
+  --g-bg:rgba(24,36,44,.58); --g-bg2:rgba(22,33,40,.82); --g-line:rgba(255,255,255,.09); --g-edge:rgba(255,255,255,.06);
+  --g-hl:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -1px 0 rgba(0,0,0,.2);
+  --g-sh:0 1px 2px rgba(0,0,0,.3),0 18px 40px -14px rgba(0,0,0,.6);
+  --g-bar:rgba(8,16,24,.70); --g-acc:rgba(30,120,180,.82)}
+/* people who switched transparency off in their phone settings get solid surfaces */
+@media (prefers-reduced-transparency: reduce){:root{--g-bg:var(--surface,#fff);--g-bg2:var(--surface,#fff);--g-bar:#0F2236;--g-blur:none}}
+
+.top,.search{background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,0) 70%),var(--g-bar)!important;-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);border-bottom:1px solid var(--g-bar-line);box-shadow:0 10px 30px -18px rgba(0,0,0,.6)}
+.figs,.panel{background:var(--g-bg)!important;-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);box-shadow:var(--g-hl)}
+.figs{border-right:1px solid var(--g-edge)}.panel{border-left:1px solid var(--g-edge)}
+.phead,.pfoot{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,0));border-color:var(--g-edge)!important}
+.item{border-color:var(--g-edge)!important}
+.fitem.cur{background:linear-gradient(90deg,var(--accent-soft),transparent);box-shadow:inset 3px 0 0 var(--accent)}
+.lgrp{background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,0) 60%),var(--g-acc);-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 6px 16px -10px rgba(0,60,100,.6)}
+.allset{background:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,.1)),var(--accent-soft);box-shadow:var(--g-hl)}
+.allset .as-b button{background:var(--g-bg2);box-shadow:var(--g-hl)}
+.ftable,.tools{background:var(--g-bg)!important;border:1px solid var(--g-line)!important;-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);box-shadow:var(--g-hl),var(--g-sh)!important}
+.sheet{background:#fff;box-shadow:0 0 0 1px var(--g-edge),0 2px 4px rgba(16,40,60,.06),0 22px 44px -20px rgba(16,40,60,.35)!important}
+.dlg{background:var(--g-bg2)!important;border:1px solid var(--g-line)!important;-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);box-shadow:var(--g-hl),0 30px 70px -20px rgba(0,20,40,.5)!important}
+.modal{background:rgba(6,18,30,.38)!important;-webkit-backdrop-filter:blur(8px) saturate(140%);backdrop-filter:blur(8px) saturate(140%)}
+.qtile{background:var(--g-bg)!important;border:1px solid var(--g-line)!important;box-shadow:var(--g-hl)}
+.toast{background:rgba(14,26,36,.72)!important;-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);border:1px solid rgba(255,255,255,.12)!important}
+@media (max-width:760px){
+  .app:not(.mini) .panel{background:var(--g-bg2)!important}
+  .panel{border-top:1px solid var(--g-line)!important;box-shadow:var(--g-hl),0 -20px 44px -16px rgba(0,20,40,.45)!important}
+  .pback{background:rgba(6,18,30,.34);-webkit-backdrop-filter:blur(6px) saturate(140%);backdrop-filter:blur(6px) saturate(140%)}
+  .ppeek{background:var(--g-bg2)!important;border:1px solid var(--g-line)!important;-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);box-shadow:var(--g-hl),0 20px 44px -14px rgba(0,30,60,.5)}
+  .pbubble{background:radial-gradient(120% 90% at 30% 15%,rgba(255,255,255,.45),rgba(255,255,255,0) 45%),var(--g-acc);-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -2px 6px rgba(0,30,60,.35),0 16px 34px -10px rgba(0,60,100,.65),0 0 0 1px rgba(255,255,255,.25)}
+}
+
+/* phone: the open list is a floating card with a gap on every side; Download stays fixed at its bottom, the parts scroll */
+@media (max-width:760px){
+  .panel{left:max(10px,env(safe-area-inset-left,0px))!important;right:max(10px,env(safe-area-inset-right,0px))!important;bottom:calc(10px + env(safe-area-inset-bottom,0px))!important;
+    border-radius:24px!important;border:1px solid var(--g-line)!important;overflow:hidden;padding-left:0!important;padding-right:0!important}
+  .vgap .panel{bottom:10px!important}
+  .panel::after{display:none!important}
+  .app:not(.mini) .panel{height:min(calc(100% - 96px - env(safe-area-inset-top,0px)),760px)!important}
+  .app.mini .panel,.vgap .app.mini .panel{transform:translateY(calc(100% + 80px))!important}
+  .panel .plist{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+  .panel .phead,.panel .pfoot,.panel .grab{flex:none}
+  .panel .pfoot{padding-bottom:12px!important;background:var(--g-bg2);box-shadow:0 -10px 20px -14px rgba(0,20,40,.35)}
+}
+
+/* peek card: small − qty + on the right side */
+.ppeek{position:fixed}
+.ppeek .pk-pn,.ppeek .pk-d{padding-right:96px}
+.ppeek .pk-q{position:absolute;right:12px;top:34px;display:flex;align-items:center;gap:2px;padding:2px;border-radius:999px;border:1px solid var(--g-line,var(--line));background:var(--g-bg,var(--surface))}
+.ppeek .pk-b{width:28px;height:28px;border-radius:50%;border:0;background:transparent;color:var(--accent);font:600 18px/1 var(--f-ui);cursor:pointer;display:grid;place-items:center;padding:0;-webkit-tap-highlight-color:transparent}
+.ppeek .pk-b:active{background:rgba(0,90,160,.12)}
+.ppeek .pk-b[disabled]{opacity:.3;cursor:default}
+.ppeek .pk-v{min-width:20px;text-align:center;font:700 14px var(--f-mono);color:var(--ink)}
 </style>
 
 <div class="app mini" id="app">
@@ -490,6 +611,7 @@ html,body{overscroll-behavior:none}
     </div>
   </main>
 
+  <div class="pback" id="pback" aria-hidden="true"></div>
   <aside class="panel" id="panel" aria-label="Parts list">
     <div class="grab" id="grab" aria-hidden="true"></div>
     <div class="phead" id="phead" role="button" tabindex="0" aria-label="Show or shrink parts list">
@@ -502,6 +624,8 @@ html,body{overscroll-behavior:none}
     <div class="pfoot" id="pfoot"></div>
   </aside>
 </div>
+<button class="pbubble" id="pbubble" type="button" aria-label="Open parts list"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2" fill="currentColor"/><circle cx="4.5" cy="12" r="1.2" fill="currentColor"/><circle cx="4.5" cy="18" r="1.2" fill="currentColor"/></svg><span class="bb none" id="bbadge">0</span></button>
+<div class="ppeek" id="ppeek" role="button" tabindex="0" aria-live="polite" hidden></div>
 <div id="layer"></div>
 
 <div id="pp-load" style="position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px;text-align:center;background:radial-gradient(70vmax 55vmax at 50% 0%,rgba(0,101,151,.16),transparent 60%),#F7FAFC;color:#132232;font:15px 'IBM Plex Sans Condensed',Arial,sans-serif">
@@ -556,7 +680,7 @@ html,body{overscroll-behavior:none}
       const sub = await checkSub(); if (sub === 'redirect') return;
       if (!PPOff.allowed(sub, id)) denied();
       const m = rec.meta || {};
-      window.__MODEL = { id, sub: m.sub || '', name: m.name || id.toUpperCase(), catalog: m.catalog || '', short: m.short || id.slice(0, 4).toUpperCase() };
+      window.__MODEL = { id, brand: m.brand || '', sub: m.sub || '', name: m.name || id.toUpperCase(), catalog: m.catalog || '', short: m.short || id.slice(0, 4).toUpperCase() };
       window.__FIGS = rec.figs;
     } else {
       if (!navigator.onLine) return stop('This engine isn’t saved on this phone. Connect to the internet, or download it on the home page to use it offline.', 'Back to home', 'index.html');
@@ -566,7 +690,7 @@ html,body{overscroll-behavior:none}
       let ver = null, snap = null, meta = null;
       try { const m = await model.get({ source: 'server' }); meta = m.exists ? m.data() : null; const u = meta && meta.updated; ver = u && u.toMillis ? String(u.toMillis()) : '0'; }
       catch (e) { if (e && e.code === 'permission-denied') throw e; try { const m = await model.get({ source: 'cache' }); meta = m.exists ? m.data() : null; } catch (e2) {} }
-      window.__MODEL = { id, sub: (meta && meta.sub) || '', name: (meta && meta.name) || id.toUpperCase(), catalog: (meta && meta.catalog) || '', short: (meta && meta.short) || id.slice(0, 4).toUpperCase() };
+      window.__MODEL = { id, brand: (meta && meta.brand) || '', sub: (meta && meta.sub) || '', name: (meta && meta.name) || id.toUpperCase(), catalog: (meta && meta.catalog) || '', short: (meta && meta.short) || id.slice(0, 4).toUpperCase() };
       let saved = null; try { saved = localStorage.getItem('pp-cat-ver-' + id); } catch (e) {}
       if (ver === null || ver === saved) { try { const c = await figs.get({ source: 'cache' }); if (!c.empty) snap = c; } catch (e) {} }
       if (!snap && window.PPOff) {   // load in small steps with retries (mobile connections)
@@ -603,7 +727,8 @@ chk();addEventListener('resize',chk);addEventListener('orientationchange',functi
 (function(){ var fit = function(){ document.documentElement.style.minHeight = (Math.max(screen.height, window.innerHeight) + 2) + 'px'; };
   fit(); addEventListener('resize', fit); addEventListener('orientationchange', function(){ setTimeout(fit, 300); }); })();
 try { const t = localStorage.getItem('pp-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}   // Settings → Appearance
-try { const z = +localStorage.getItem('pp-fs') || 100; document.documentElement.style.setProperty('--fz', z / 100); } catch (e) {}   // Settings → Text size
+function ppFs(){ try { let v = localStorage.getItem('pp-fs'); if (v && !localStorage.getItem('pp-fs-v2')) { v = String(Math.min(135, Math.max(85, Math.round(+v / 0.85 / 5) * 5))); localStorage.setItem('pp-fs', v); } localStorage.setItem('pp-fs-v2', '1'); return +v || 100; } catch (e) { return 100; } }
+document.documentElement.style.setProperty('--fz', ppFs() / 100 * 0.85);   // Settings → Text size
 const MODEL = Object.assign({ id: 'f300det', name: 'F300DET / FL300DET', catalog: '1Z6JD-200SA', short: 'F300' }, window.__MODEL || {});
 // One parts list shared by every engine; each item remembers which engine it came from
 const KEY = 'pp-parts-list-v2', FKEY = MODEL.id + '-parts-list-v1';
@@ -624,6 +749,12 @@ try {
   }
 } catch (e) {}
 const mine = x => !x.m || x.m === MODEL.id;   // item belongs to the engine open now
+// Brand folder of an engine (older items don't have it stored)
+const brandFor = (id, name, b) => { b = b || (/^wv-/.test(id || '') ? 'Yamaha Water Vehicles' : (/^honda/.test(id || '') || /^BFP?\d/i.test(name || '')) ? 'Honda' : 'Yamaha Outboard'); return b === 'Yamaha' ? 'Yamaha Outboard' : b; };
+const BRAND = brandFor(MODEL.id, MODEL.name, MODEL.brand);
+const perOf = p => parseInt(p[3], 10) || parseInt(p[4], 10) || 1;   // quantity one engine uses, from the catalogue page
+// fill in what older list items are missing for the engine that is open
+list.forEach(x => { if (mine(x)) { if (!x.br) x.br = BRAND; if (!x.per) { for (const f of FIGS) { const p = f.parts.find(q => q[1] === x.pn); if (p) { x.per = perOf(p); break; } } } } });
 function save(){ try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) {} }
 let cur = 0, zoom = 1;
 try { const f = +localStorage.getItem(FKEY + '-fig'); if (f >= 0 && f < FIGS.length) cur = f; } catch (e) {}
@@ -732,7 +863,7 @@ function drawTable(fi){
 function refreshTables(){ sheetsEl.querySelectorAll('details.ftable[open]').forEach(d => drawTable(+d.dataset.fi)); }
 sheetsEl.addEventListener('click', e => {
   const ab = e.target.closest('.addbtn');
-  if (ab) { const fi = +ab.closest('.figblock').dataset.fi; pickQty(FIGS[fi].parts[+ab.dataset.k], FIGS[fi].n); }
+  if (ab) { const fi = +ab.closest('.figblock').dataset.fi; tapPart(FIGS[fi].parts[+ab.dataset.k], FIGS[fi].n); }
 });
 function refreshAll(flashPn){ save(); renderList(flashPn); refreshHots(); refreshTables(); renderFigList(); }
 
@@ -743,32 +874,40 @@ sheetsEl.addEventListener('click', e => {
   const f = FIGS[+b.parentElement.dataset.fi], ps = partsFor(f, b.dataset.ref);
   if (!ps.length) return;
   b.classList.remove('pulse'); void b.offsetWidth; b.classList.add('pulse');
-  setMini(false);
-  setTimeout(() => {
+  if (!isPhone()) setMini(false);
+  if (!isPhone()) setTimeout(() => {
     const pr = $('#panel').getBoundingClientRect(), br = b.getBoundingClientRect();
     if (isPhone() && br.bottom > pr.top - 12) { progScroll(); viewer.scrollTop += br.bottom - pr.top + 60; }
   }, 260);
-  if (ps.length === 1) pickQty(ps[0], f.n); else chooser(f, b.dataset.ref, ps);
+  if (ps.length === 1) tapPart(ps[0], f.n); else chooser(f, b.dataset.ref, ps);
 });
 function modal(html){ $('#layer').innerHTML = `<div class="modal" id="m">${html}</div>`; $('#m').onclick = e => { if (e.target.id === 'm' || e.target.closest('[data-close]')) closeModal(); }; }
 function closeModal(){ $('#layer').innerHTML = ''; }
 function chooser(f, ref, ps, added = 0){
-  modal(`<div class="dlg" role="dialog" aria-label="Choose part"><h3><span>Fig. ${f.n} · Ref ${esc(ref)}</span><button class="x" data-close aria-label="Close">✕</button></h3><div class="sub">${ps.length} part numbers share this reference. Pick the one you need.</div><div class="body">${
-    ps.map((p, k) => `<div class="var"><div class="pn">${esc(p[1])}${qtyOf(p[1]) !== null ? ` <span style="color:var(--accent);font-size:12px">· in list (${qtyOf(p[1])})</span>` : ''}</div><button class="btn primary" data-k="${k}">Add</button><div class="d">${esc(p[2])}${p[5] ? ' · ' + esc(p[5]) : ''}</div></div>`).join('')}</div>
-    <div class="cfoot"><span>${added ? `${added} added · pick more or confirm` : 'Tap Add, choose how many, then confirm'}</span><button class="btn primary cdone" data-close>${added ? 'Confirm' : 'Close'}</button></div></div>`);
-  // Add → how many → back to this list, so several part numbers can be added; Confirm closes
-  document.querySelectorAll('.var .btn').forEach(btn => btn.onclick = () => pickQty(ps[+btn.dataset.k], f.n,
-    ok => chooser(f, ref, ps, added + (ok ? 1 : 0))));
+  modal(`<div class="dlg" role="dialog" aria-label="Choose part"><h3><span>Fig. ${f.n} · Ref ${esc(ref)}</span><button class="x" data-close aria-label="Close">✕</button></h3><div class="sub">${ps.length} part numbers share this reference. Add the ones you need.</div><div class="body">${
+    ps.map((p, k) => { const q = qtyOf(p[1]); return `<div class="var"><div class="pn">${esc(p[1])}${q !== null ? ` <span style="color:var(--accent);font-size:12px">· in list (${q})</span>` : ` <span style="color:var(--muted);font-size:12px">· ${perOf(p)} per engine</span>`}</div><button class="btn ${q !== null ? '' : 'primary'}" data-k="${k}">${q !== null ? 'Edit' : 'Add'}</button><div class="d">${esc(p[2])}${p[5] ? ' · ' + esc(p[5]) : ''}</div></div>`; }).join('')}</div>
+    <div class="cfoot"><span>${added ? `${added} added · add more or confirm` : 'Add adds the quantity on the page'}</span><button class="btn primary cdone" data-close>${added ? 'Confirm' : 'Close'}</button></div></div>`);
+  // Add puts the page quantity in the list and stays here, so several part numbers can be added; Edit changes one
+  document.querySelectorAll('.var .btn').forEach(btn => btn.onclick = () => {
+    const p = ps[+btn.dataset.k];
+    if (qtyOf(p[1]) !== null) editQty(p[1], () => chooser(f, ref, ps, added));
+    else { add(p, f.n, perOf(p), true); chooser(f, ref, ps, added + 1); }
+  });
+}
+// Tap a number: add the quantity the catalogue page gives for one engine. Already in the list: change it instead.
+function tapPart(p, fig){
+  if (qtyOf(p[1]) !== null) return editQty(p[1]);
+  add(p, fig, perOf(p), true);
 }
 
 // ---------- list ----------
 function add(p, fig, n = 1, eng = false){
   let it = list.find(x => x.pn === p[1]);
   if (it) it.qty += n;
-  else { it = { pn: p[1], desc: p[2].replace(/^\.+/, ''), fig, ref: p[0], rem: p[5] || '', qty: n, m: MODEL.id, en: ENG, mn: MODEL.name, cat: MODEL.catalog }; list.push(it); }
+  else { it = { pn: p[1], desc: p[2].replace(/^\.+/, ''), fig, ref: p[0], rem: p[5] || '', qty: n, m: MODEL.id, en: ENG, mn: MODEL.name, cat: MODEL.catalog, br: BRAND, per: perOf(p) }; list.push(it); }
   if (eng) it.eng = true;
-  refreshAll(it.pn); setMini(false);
-  toast(`Added ${n} × ${it.pn} · qty now ${it.qty}`);
+  refreshAll(it.pn);
+  if (isPhone()) peek(it, n); else { setMini(false); toast(`Added ${n} × ${it.pn} · qty now ${it.qty}`); }
 }
 // Ask: one piece, or the full quantity one engine uses (from the catalogue)
 function pickQty(p, fig, back){
@@ -788,12 +927,53 @@ function pickQty(p, fig, back){
   document.querySelectorAll('.qtile').forEach(b => b.onclick = () => { closeModal(); add(p, fig, +b.dataset.n, b.classList.contains('eng')); if (back) back(true); });
   if (back) { const bk = document.querySelector('[data-back]'); bk.onclick = () => back(false); $('#m').onclick = e => { if (e.target.id === 'm') back(false); }; }
 }
+// How many engines one list item is for (sets the quantity; −/+ still fine-tune it)
+function qLabel(it){
+  const per = it.per || 1, q = it.qty;
+  if (!q) return 'qty 0';
+  if (!it.per) return q + ' pcs';
+  if (per > 1) { const e = Math.floor(q / per), r = q % per; return r === 0 ? `${e} engine${e === 1 ? '' : 's'}` : e === 0 ? (q === 1 ? 'single' : `${q} single`) : `${e} eng + ${r} pc${r === 1 ? '' : 's'}`; }
+  return it.eng ? `${q} engine${q === 1 ? '' : 's'}` : (q === 1 ? 'single' : `${q} single`);
+}
+function editQty(pn, back){
+  const it = list.find(x => x.pn === pn); if (!it) return;
+  const per = it.per || 1;
+  const opts = [{ n: 1, t: 'Single piece', s: '1 pc', eng: false }];
+  for (let k = 1; k <= 4; k++) { if (k === 1 && per === 1) continue; opts.push({ n: per * k, t: `${k} engine${k > 1 ? 's' : ''}`, s: `${per * k} pcs`, eng: true }); }
+  const sel = o => o.n === it.qty && (o.eng === !!it.eng || per > 1 || o.n > 1);
+  modal(`<div class="dlg" role="dialog" aria-label="How many engines"><h3><span>How many engines is this for?</span><button class="x" ${back ? 'data-back' : 'data-close'} aria-label="${back ? 'Back' : 'Close'}">${back ? '‹' : '✕'}</button></h3>
+    <div class="sub"><div class="qpn">${esc(it.pn)}</div>${esc(it.desc)} · ${esc(it.en || '')} · Fig. ${it.fig} · Ref ${esc(it.ref)}
+      <div class="qper">${it.per ? per + ' per engine' : 'Quantity per engine not known'}</div><div class="qin">In list now: ${it.qty} (${esc(qLabel(it))})</div></div>
+    <div class="qgrid ${opts.length % 2 ? 'odd' : ''}">
+      ${opts.map(o => `<button class="qtile ${o.eng ? 'eng' : ''} ${sel(o) ? 'cur' : ''}" data-n="${o.n}"><span class="qn">${o.n}</span><span class="qt"><b>${o.t}</b><span>${o.s}</span></span></button>`).join('')}
+    </div>
+    <div class="cfoot"><button class="btn" id="eq-rm" style="color:var(--bad,#C0392B)">Remove from list</button><button class="btn primary cdone" ${back ? 'data-back2' : 'data-close'}>Done</button></div></div>`);
+  document.querySelectorAll('.qtile').forEach(b => b.onclick = () => {
+    it.qty = +b.dataset.n; it.eng = b.classList.contains('eng'); refreshAll(it.pn);
+    toast(`${it.pn} · ${it.qty} pcs (${qLabel(it)})`); if (back) back(); else closeModal();
+  });
+  $('#eq-rm').onclick = () => { remove(it.pn); toast(`${it.pn} removed`); if (back) back(); else closeModal(); };
+  if (back) { document.querySelector('[data-back]').onclick = back; const d2 = document.querySelector('[data-back2]'); if (d2) d2.onclick = back; $('#m').onclick = e => { if (e.target.id === 'm') back(); }; }
+}
+// Whole list: every part set to the quantity for 1, 2, 3 or 4 engines
+function setAllEngines(k){
+  let n = 0, skip = 0;
+  list.forEach(it => { if (!it.per) { skip++; return; } it.qty = it.per * k; it.eng = true; n++; });
+  refreshAll(); toast(`${n} part${n === 1 ? '' : 's'} set for ${k} engine${k === 1 ? '' : 's'}${skip ? ` · ${skip} kept as they were` : ''}`);
+}
+// The list grouped by engine (brand · model), in the order engines were first added
+function groupsOf(rows){
+  const G = new Map();
+  rows.forEach(x => { const key = x.m || MODEL.id; if (!G.has(key)) G.set(key, { key, br: x.br || brandFor(key, x.mn), en: x.en || (key === MODEL.id ? ENG : key.toUpperCase()), mn: x.mn || '', cat: x.cat || '', items: [] }); G.get(key).items.push(x); });
+  return [...G.values()];
+}
 function setQty(pn, d){ const it = list.find(x => x.pn === pn); if (!it) return; it.qty = Math.max(0, it.qty + d); refreshAll(); }
 function remove(pn){ list = list.filter(x => x.pn !== pn); refreshAll(); }
 function renderList(flashPn){
   const active = list.filter(x => x.qty > 0), pcs = active.reduce((a, x) => a + x.qty, 0);
   $('#count').textContent = list.length ? `${active.length} part${active.length === 1 ? '' : 's'} · ${pcs} pcs${list.length > active.length ? ` · ${list.length - active.length} at 0` : ''}` : 'Nothing added yet';
   const mb = $('#mbadge'); mb.textContent = active.length; mb.classList.toggle("none", !active.length);
+  const bb = $('#bbadge'); bb.textContent = active.length > 99 ? '99+' : active.length; bb.classList.toggle('none', !active.length);
   $('#qdl').disabled = !active.length;
   const pl = $('#plist');
   if (!list.length) {
@@ -802,19 +982,30 @@ function renderList(flashPn){
       <div class="s"><i>2</i><span>Set the quantity with − and +. At 0 the part stays here but is left out of downloads.</span></div>
       <div class="s"><i>3</i><span>Press Download to save the list as an image or an Excel file.</span></div></div></div>`;
   } else {
-    pl.innerHTML = list.map(x => `<div class="item ${x.qty === 0 ? 'z' : ''} ${x.pn === flashPn ? 'flash' : ''}" data-pn="${esc(x.pn)}">
+    const item = x => `<div class="item ${x.qty === 0 ? 'z' : ''} ${x.pn === flashPn ? 'flash' : ''}" data-pn="${esc(x.pn)}">
       <div class="pn">${esc(x.pn)}</div>
       <div class="step"><button data-a="-" aria-label="Decrease">−</button><output>${x.qty}</output><button data-a="+" aria-label="Increase">+</button></div>
       <div class="nm">${esc(x.desc)}</div>
-      <div class="src">${mine(x) ? '' : `<b class="eng">${esc(x.en || x.m)}</b>`}<a data-a="go" role="button">Fig. ${x.fig} · Ref ${esc(x.ref)}</a>${x.rem ? `<span>${esc(x.rem)}</span>` : ''}${x.qty === 0 ? '<a data-a="x" role="button">Remove</a>' : ''}</div>
-      ${x.qty === 0 ? '<div class="zn">Qty 0 · not downloaded</div>' : ''}</div>`).join('');
+      <div class="src"><button class="ebtn" data-a="e" type="button" aria-label="Choose how many engines"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>${esc(qLabel(x))}</button><a data-a="go" role="button">Fig. ${x.fig} · Ref ${esc(x.ref)}</a>${x.rem ? `<span>${esc(x.rem)}</span>` : ''}${x.qty === 0 ? '<a data-a="x" role="button">Remove</a>' : ''}</div>
+      ${x.qty === 0 ? '<div class="zn">Qty 0 · not downloaded</div>' : ''}</div>`;
+    pl.innerHTML = groupsOf(list).map(g => `<div class="lgrp"><b>${esc(g.br)}</b><span>${esc(g.en)}</span><small>${g.items.length} part${g.items.length === 1 ? '' : 's'}</small></div>` + g.items.map(item).join('')).join('')
+      + `<div class="allset" id="allset"><div class="as-t">Set the whole list for</div><div class="as-b">${[1, 2, 3, 4].map(k => `<button type="button" data-all="${k}">${k} engine${k > 1 ? 's' : ''}</button>`).join('')}</div><div class="as-n">Every part gets the quantity for that many engines. Leave it to keep the list as it is.</div></div>`;
     if (flashPn) pl.querySelector('.flash')?.scrollIntoView({ block: 'nearest' });
   }
   renderFoot();
 }
 $('#plist').addEventListener('click', e => {
+  const all = e.target.closest('[data-all]');
+  if (all) {   // ask once before changing every part
+    const k = +all.dataset.all, box = $('#allset');
+    box.innerHTML = `<div class="as-t">Set all ${list.length} parts for <b>${k} engine${k > 1 ? 's' : ''}</b>?</div><div class="as-b two"><button type="button" data-allno>Cancel</button><button type="button" class="pri" data-allyes="${k}">Apply</button></div>`;
+    return;
+  }
+  if (e.target.closest('[data-allno]')) return renderList();
+  const yes = e.target.closest('[data-allyes]'); if (yes) return setAllEngines(+yes.dataset.allyes);
   const b = e.target.closest('[data-a]'); if (!b) return;
   const pn = b.closest('.item').dataset.pn, a = b.dataset.a;
+  if (a === 'e') return editQty(pn);
   if (a === '+') setQty(pn, 1); else if (a === '-') setQty(pn, -1); else if (a === 'x') remove(pn);
   else if (a === 'go') { const it = list.find(x => x.pn === pn);
     if (!mine(it)) { location.href = 'picker.html?m=' + encodeURIComponent(it.m); return; } const i = FIGS.findIndex(f => f.n === it.fig); const p = FIGS[i].parts.find(q => q[1] === pn); if (p) goToPart({ i, f: it.fig, p }, true); }
@@ -837,8 +1028,10 @@ $('#qdl').addEventListener('click', e => { e.stopPropagation(); openDownload(); 
 // ---------- downloads ----------
 // "F300DET / FL300DET · 1Z6JD-200SA" for one engine, or the short names when the list mixes engines
 function listEngines(rows){
+  const gs = groupsOf(rows);
+  if (gs.length > 1) return `${gs.length} engines`;
   const es = [...new Map(rows.map(x => [x.m || MODEL.id, x])).values()];
-  if (es.length <= 1) { const x = es[0] || {}; return `${(x.mn || MODEL.name).split('/')[0].trim()} · ${x.cat || MODEL.catalog}`; }
+  if (es.length <= 1) { const x = es[0] || {}; return `${x.br || BRAND} · ${(x.mn || MODEL.name).split('/')[0].trim()} · ${x.cat || MODEL.catalog}`; }
   return es.map(x => x.en || x.m).join(', ');
 }
 function stamp(){ const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
@@ -902,7 +1095,7 @@ const XL = (() => {
   // Same look as the downloaded image: dark title band, orange logo cell, grey caps headers, striped rows, orange qty.
   const STYLES = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
-<fonts count="11">
+<fonts count="12">
 <font><sz val="11"/><name val="Arial"/></font>
 <font><b/><sz val="20"/><color rgb="FFFFFFFF"/><name val="Arial"/></font>
 <font><sz val="10"/><color rgb="FF93A3AB"/><name val="Consolas"/></font>
@@ -914,6 +1107,7 @@ const XL = (() => {
 <font><b/><sz val="13"/><color rgb="FF006597"/><name val="Consolas"/></font>
 <font><b/><sz val="12"/><color rgb="FF162026"/><name val="Arial"/></font>
 <font><b/><sz val="14"/><color rgb="FF006597"/><name val="Consolas"/></font>
+<font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Arial"/></font>
 </fonts>
 <fills count="6">
 <fill><patternFill patternType="none"/></fill>
@@ -930,7 +1124,7 @@ const XL = (() => {
 <border><left/><right/><top style="medium"><color rgb="FF132232"/></top><bottom/><diagonal/></border>
 </borders>
 <cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
-<cellXfs count="21">
+<cellXfs count="22">
 <xf numFmtId="0" fontId="0" fillId="5" borderId="0" xfId="0" applyFill="1"/>
 <xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="bottom" indent="1"/></xf>
 <xf numFmtId="0" fontId="2" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="top" indent="1"/></xf>
@@ -952,6 +1146,7 @@ const XL = (() => {
 <xf numFmtId="0" fontId="9" fillId="5" borderId="3" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="right" vertical="center"/></xf>
 <xf numFmtId="0" fontId="10" fillId="5" borderId="3" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="right" vertical="center"/></xf>
 <xf numFmtId="0" fontId="0" fillId="5" borderId="3" xfId="0" applyFill="1" applyBorder="1"/>
+<xf numFmtId="0" fontId="11" fillId="3" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="center" indent="1"/></xf>
 </cellXfs>
 <cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>
 </styleSheet>`;
@@ -971,13 +1166,21 @@ const XL = (() => {
     row(2, 22, [cell(0, 2, 4), cell(1, 2, 2, meta.subtitle), cell(2, 2, 2), cell(3, 2, 2), cell(4, 2, 2)]);
     row(3, 10, [0, 1, 2, 3, 4].map(c => cell(c, 3, 3)));
     row(4, 14, [0, 1, 2, 3, 4].map(c => cell(c, 4, 0)));
-    row(5, 22, [cell(0, 5, 5, '#'), cell(1, 5, 5, 'PART NO.'), cell(2, 5, 5, 'DESCRIPTION'), cell(3, 5, 5, 'ENGINE · FIG / REF'), cell(4, 5, 6, 'QTY')]);
-    let r = 6;
-    rows.forEach((it, i) => {
-      const z = i % 2 ? 5 : 0, d = it.desc + (it.rem ? ' (' + it.rem + ')' : '');
-      const lines = Math.max(1, Math.ceil(d.length / 44));
-      row(r, Math.max(24, 15 * lines + 9), [cell(0, r, 7 + z, i + 1), cell(1, r, 8 + z, it.pn), cell(2, r, 9 + z, d), cell(3, r, 10 + z, `${it.en ? it.en + ' · ' : ''}Fig ${it.fig} / ${it.ref}`), cell(4, r, 11 + z, it.qty)]);
-      r++;
+    const gs = meta.groups || [{ items: rows }], multi = gs.length > 1;
+    row(5, 22, [cell(0, 5, 5, '#'), cell(1, 5, 5, 'PART NO.'), cell(2, 5, 5, 'DESCRIPTION'), cell(3, 5, 5, 'FIG / REF'), cell(4, 5, 6, 'QTY')]);
+    let r = 6, i = 0;
+    const merges = [];
+    gs.forEach(g => {
+      if (multi) {   // engine subheading: brand · model · catalogue
+        row(r, 24, [cell(0, r, 21, `${g.br} · ${g.en}${g.cat ? ' · ' + g.cat : ''}  (${g.items.length} part${g.items.length === 1 ? '' : 's'})`), cell(1, r, 21), cell(2, r, 21), cell(3, r, 21), cell(4, r, 21)]);
+        merges.push(`A${r}:E${r}`); r++;
+      }
+      g.items.forEach(it => {
+        const z = i % 2 ? 5 : 0, d = it.desc + (it.rem ? ' (' + it.rem + ')' : '');
+        const lines = Math.max(1, Math.ceil(d.length / 44));
+        row(r, Math.max(24, 15 * lines + 9), [cell(0, r, 7 + z, i + 1), cell(1, r, 8 + z, it.pn), cell(2, r, 9 + z, d), cell(3, r, 10 + z, `Fig ${it.fig} / ${it.ref}`), cell(4, r, 11 + z, it.qty)]);
+        r++; i++;
+      });
     });
     const last = r - 1, pcs = rows.reduce((a, b) => a + b.qty, 0);
     row(r, 6, [0, 1, 2, 3, 4].map(c => cell(c, r, 0))); r++;
@@ -991,7 +1194,7 @@ const XL = (() => {
 <sheetFormatPr defaultRowHeight="15"/>
 <cols><col min="1" max="1" width="7" customWidth="1"/><col min="2" max="2" width="20" customWidth="1"/><col min="3" max="3" width="48" customWidth="1"/><col min="4" max="4" width="26" customWidth="1"/><col min="5" max="5" width="9" customWidth="1"/></cols>
 <sheetData>${R.join('')}</sheetData>
-<mergeCells count="4"><mergeCell ref="A1:A2"/><mergeCell ref="B1:E1"/><mergeCell ref="B2:E2"/><mergeCell ref="A${tr}:B${tr}"/></mergeCells>
+<mergeCells count="${4 + merges.length}"><mergeCell ref="A1:A2"/><mergeCell ref="B1:E1"/><mergeCell ref="B2:E2"/><mergeCell ref="A${tr}:B${tr}"/>${merges.map(m => `<mergeCell ref="${m}"/>`).join('')}</mergeCells>
 <printOptions horizontalCentered="1"/>
 <pageMargins left="0.4" right="0.4" top="0.5" bottom="0.5" header="0.3" footer="0.3"/>
 <pageSetup paperSize="9" orientation="portrait" fitToWidth="1" fitToHeight="0"/>
@@ -1010,7 +1213,7 @@ const XL = (() => {
 
 async function downloadExcel(){
   const rows = list.filter(x => x.qty > 0);
-  const data = XL.build(rows, { logo: 'PP', title: 'Parts list', subtitle: `${listEngines(rows)} · ${stamp()}` });
+  const data = XL.build(rows, { logo: 'PP', title: 'Parts list', subtitle: `${listEngines(rows)} · ${stamp()}`, groups: groupsOf(rows) });
   const ok = await offer(`parts-list-${stamp()}.xlsx`, new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
   if (!ok) toast('File downloads are not available in this view');
 }
@@ -1027,7 +1230,12 @@ async function buildImage(){
   const c = document.createElement('canvas'), ctx = c.getContext('2d');
   const sans = '"IBM Plex Sans Condensed", Arial, sans-serif', mono = '"IBM Plex Mono", Menlo, monospace';
   ctx.font = `15px ${sans}`;
-  const lay = rows.map(r => { const lines = wrapText(ctx, r.desc + (r.rem ? ' (' + r.rem + ')' : ''), cols.src - cols.d - 16); return { r, lines, h: Math.max(r.en ? 58 : 42, 18 + lines.length * 20) }; });
+  const gs = groupsOf(rows), multi = gs.length > 1;
+  const lay = [];
+  gs.forEach(g => {
+    if (multi) lay.push({ head: g, h: 40 });
+    g.items.forEach(r => { const lines = wrapText(ctx, r.desc + (r.rem ? ' (' + r.rem + ')' : ''), cols.src - cols.d - 16); lay.push({ r, lines, h: Math.max(42, 18 + lines.length * 20) }); });
+  });
   const H = 168 + lay.reduce((a, l) => a + l.h, 0) + 100;
   c.width = W * S; c.height = H * S; ctx.scale(S, S);
   ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, W, H);
@@ -1039,16 +1247,24 @@ async function buildImage(){
   ctx.fillText(`${listEngines(rows)} · ${stamp()}`.slice(0, 120), pad + 60, 72);
   let y = 132;
   ctx.font = `600 12px ${sans}`; ctx.fillStyle = '#5D6A71';
-  ctx.fillText('#', cols.n, y); ctx.fillText('PART NO.', cols.pn, y); ctx.fillText('DESCRIPTION', cols.d, y); ctx.fillText('ENGINE · FIG / REF', cols.src, y);
+  ctx.fillText('#', cols.n, y); ctx.fillText('PART NO.', cols.pn, y); ctx.fillText('DESCRIPTION', cols.d, y); ctx.fillText('FIG / REF', cols.src, y);
   ctx.textAlign = 'right'; ctx.fillText('QTY', cols.q, y); ctx.textAlign = 'left';
   y += 12; ctx.fillStyle = '#132232'; ctx.fillRect(pad, y, W - 2 * pad, 2); y += 2;
-  lay.forEach((l, i) => {
+  let i = -1;
+  lay.forEach(l => {
+    if (l.head) {   // engine subheading
+      ctx.fillStyle = '#006597'; ctx.fillRect(pad, y + 6, W - 2 * pad, l.h - 8);
+      ctx.fillStyle = '#FFFFFF'; ctx.font = `700 15px ${sans}`; ctx.fillText(`${l.head.br.toUpperCase()}  ·  ${l.head.en}`, pad + 12, y + 30);
+      ctx.font = `13px ${mono}`; ctx.textAlign = 'right'; ctx.fillText(`${l.head.cat ? l.head.cat + ' · ' : ''}${l.head.items.length} part${l.head.items.length === 1 ? '' : 's'}`, W - pad - 12, y + 30); ctx.textAlign = 'left';
+      y += l.h; return;
+    }
+    i++;
     if (i % 2 === 1) { ctx.fillStyle = '#F3F5F5'; ctx.fillRect(pad, y, W - 2 * pad, l.h); }
     const by = y + 27;
     ctx.fillStyle = '#5D6A71'; ctx.font = `14px ${mono}`; ctx.fillText(String(i + 1), cols.n, by);
     ctx.fillStyle = '#162026'; ctx.font = `600 15px ${mono}`; ctx.fillText(l.r.pn, cols.pn, by);
     ctx.font = `15px ${sans}`; l.lines.forEach((t, k) => ctx.fillText(t, cols.d, by + k * 20));
-    ctx.fillStyle = '#5D6A71'; ctx.font = `13px ${mono}`; if (l.r.en) { ctx.fillText(l.r.en, cols.src, by); ctx.fillText(`Fig ${l.r.fig} / ${l.r.ref}`, cols.src, by + 18); } else ctx.fillText(`Fig ${l.r.fig} / ${l.r.ref}`, cols.src, by);
+    ctx.fillStyle = '#5D6A71'; ctx.font = `13px ${mono}`; ctx.fillText(`Fig ${l.r.fig} / ${l.r.ref}`, cols.src, by);
     ctx.fillStyle = '#006597'; ctx.font = `700 19px ${mono}`; ctx.textAlign = 'right'; ctx.fillText(String(l.r.qty), cols.q, by + 1); ctx.textAlign = 'left';
     y += l.h; ctx.fillStyle = '#E1E6E7'; ctx.fillRect(pad, y - 1, W - 2 * pad, 1);
   });
@@ -1260,7 +1476,7 @@ $('#grab').addEventListener('click', () => { if (dragJustEnded) return; setMini(
   const panel = $('#panel'), plist = $('#plist');
   let st = null;
   panel.addEventListener('touchstart', e => {
-    if (!isPhone() || e.touches.length !== 1 || e.target.closest('.step,.pfoot,.qdl,[data-a]')) return;
+    if (!isPhone() || e.touches.length !== 1 || e.target.closest('.step,.pfoot,.qdl,[data-a]') || !e.target.closest('.grab,.phead')) return;
     const inList = !!e.target.closest('#plist');
     st = { y: e.touches[0].clientY, t: Date.now(), h: panel.getBoundingClientRect().height, inList, top: plist.scrollTop, drag: false };
   }, { passive: true });
@@ -1294,6 +1510,34 @@ viewer.addEventListener('touchstart', e => {
   if (!isPhone() || e.target.closest('.hot,.ftable,button')) return;
   setMini(true);
 }, { passive: true });
+$('#pbubble').addEventListener('click', () => { hidePeek(); setMini(false, true); });
+// Phone: a small card comes out of the bubble after adding; tap it for the full list, it hides after 5 s or on scrolling
+let peekT = 0;
+function peek(it, n){
+  const el = $('#ppeek'), act = list.filter(x => x.qty > 0).length;
+  peekPn = it.pn; peekN = n; peekDraw();
+  el.hidden = false; el.classList.remove('on'); void el.offsetWidth; el.classList.add('on');
+  const bb = $('#pbubble'); bb.classList.remove('bump'); void bb.offsetWidth; bb.classList.add('bump');
+  clearTimeout(peekT); peekT = setTimeout(hidePeek, 5000);
+}
+let peekPn = '', peekN = 0;
+function peekDraw(){
+  const el = $('#ppeek'), it = list.find(x => x.pn === peekPn); if (!it) return hidePeek();
+  const act = list.filter(x => x.qty > 0).length;
+  el.innerHTML = `<span class="pk-h">Added to list <b>+${peekN}</b></span><span class="pk-pn">${esc(it.pn)}</span><span class="pk-d">${esc(it.desc)}</span>
+    <span class="pk-q"><button type="button" class="pk-b" data-pk="-1" aria-label="One less" ${it.qty <= 1 ? 'disabled' : ''}>−</button><b class="pk-v">${it.qty}</b><button type="button" class="pk-b" data-pk="1" aria-label="One more">+</button></span>
+    <span class="pk-f"><b>${it.qty} pcs</b> · ${esc(qLabel(it))}<i>${act} part${act === 1 ? '' : 's'} · tap to open</i></span>`;
+}
+function hidePeek(){ const el = $('#ppeek'); clearTimeout(peekT); if (el.hidden) return; el.classList.remove('on'); setTimeout(() => { if (!el.classList.contains('on')) el.hidden = true; }, 220); }
+$('#ppeek').addEventListener('click', e => {
+  const b = e.target.closest('[data-pk]');
+  if (b) { e.stopPropagation(); const it = list.find(x => x.pn === peekPn); if (it && it.qty + +b.dataset.pk >= 1) { setQty(peekPn, +b.dataset.pk); peekDraw(); } clearTimeout(peekT); peekT = setTimeout(hidePeek, 5000); return; }
+  hidePeek(); setMini(false, true);
+});
+$('#ppeek').addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('[data-pk]')) { e.preventDefault(); hidePeek(); setMini(false, true); } });
+$('#pback').addEventListener('click', () => setMini(true, true));
+viewer.addEventListener('scroll', () => { if (!prog) hidePeek(); }, { passive: true });
+viewer.addEventListener('touchmove', hidePeek, { passive: true });
 $('#phead').addEventListener('keydown', e => { if (e.target.id === 'phead' && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); setMini(!app.classList.contains('mini'), true); } });
 
 // ---------- misc ----------
@@ -1306,7 +1550,7 @@ document.addEventListener('keydown', e => {
 });
 $('#home').addEventListener('click', e => { try { if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) { e.preventDefault(); history.back(); } } catch (err) {} });
 buildFigs(); renderFigList(); renderList();
-if (!isPhone()) app.classList.remove('mini');   // PC: list open from the start
+if (!isPhone()) app.classList.remove('mini'); else app.classList.add('mini');   // PC: list open from the start · phone: starts as the bubble
 applyWidths();
 { const start = cur; cur = -1; setCur(start); requestAnimationFrame(() => { applyWidths(); if (start > 0) showFig(start); toolsVis(); }); }
 </script>

@@ -1,4 +1,27 @@
 // Parts Picker – shared Firebase sign-in helper. Needs firebase-app/auth/firestore (compat) and firebase-config.js loaded first.
+// Moving from the old address (partselect.github.io): the notice page there sends this phone's device ID,
+// parts list and settings in the link (#move=…), so the login keeps working on this phone without a device reset.
+(() => {
+  try {
+    const m = /[#&]move=([A-Za-z0-9_-]+)/.exec(location.hash || '');
+    if (!m) return;
+    const b64 = m[1].replace(/-/g, '+').replace(/_/g, '/');
+    const d = JSON.parse(decodeURIComponent(escape(atob(b64))));
+    if (d && typeof d.dev === 'string' && /^dev-[a-z0-9]{4,40}$/.test(d.dev) && !localStorage.getItem('pp-moved')) {
+      localStorage.setItem('pp-device', d.dev);
+      localStorage.setItem('pp-moved', String(Date.now()));   // one time only
+    }
+    if (d && Array.isArray(d.list) && d.list.length) {
+      let cur = []; try { cur = JSON.parse(localStorage.getItem('pp-parts-list-v2') || '[]') || []; } catch (e) {}
+      d.list.forEach(x => { if (x && x.pn && !cur.some(y => y.pn === x.pn)) cur.push(x); });
+      localStorage.setItem('pp-parts-list-v2', JSON.stringify(cur));
+    }
+    if (d && (d.theme === 'light' || d.theme === 'dark' || d.theme === 'auto') && !localStorage.getItem('pp-theme')) localStorage.setItem('pp-theme', d.theme);
+    if (d && +d.fs >= 85 && +d.fs <= 135 && !localStorage.getItem('pp-fs')) { localStorage.setItem('pp-fs', String(+d.fs)); localStorage.removeItem('pp-fs-v2'); }
+  } catch (e) {}
+  try { history.replaceState(history.state, '', location.pathname + location.search); } catch (e) {}
+})();
+
 window.PP = (() => {
   const cfg = window.PP_FIREBASE || {};
   if (!window.firebase || !cfg.apiKey || !cfg.projectId) return { configured: false };

@@ -619,17 +619,57 @@ html,body{overscroll-behavior:none}
 .allset .as-undo{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:5px;height:34px;padding:0 12px 0 10px;border-radius:999px;border:1px solid var(--accent);background:var(--g-bg2,var(--surface));color:var(--accent);font:700 12.5px var(--f-ui);cursor:pointer;animation:asU .25s ease}
 .allset .as-undo:active{transform:scale(.94)}
 @keyframes asU{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
+
+.ppeek .pk-e{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 9px;border-radius:999px;border:1px solid var(--accent);background:transparent;color:var(--accent);font:600 12px var(--f-ui);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ppeek .pk-e:active{transform:scale(.95)}
+.ppeek .pk-f{align-items:center!important}
+
+/* header menu + settings (picker) */
+.pmenu{position:absolute;right:max(12px,env(safe-area-inset-right,0px));top:calc(100% + 6px);z-index:60;min-width:230px;padding:6px;border-radius:16px;color:var(--ink);
+  background:var(--surface);border:1px solid var(--g-line,var(--line));-webkit-backdrop-filter:var(--g-blur,blur(16px));backdrop-filter:var(--g-blur,blur(16px));box-shadow:var(--g-hl,none),0 24px 54px -16px rgba(0,20,40,.5)}
+.pmenu[hidden]{display:none}
+.pm-who{padding:10px 12px 8px;font:500 12px var(--f-mono);color:var(--muted);border-bottom:1px solid var(--line);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pmenu button{display:flex;align-items:center;gap:10px;width:100%;height:44px;padding:0 12px;border:0;border-radius:10px;background:none;color:inherit;font:600 15px var(--f-ui);cursor:pointer;text-align:left}
+.pmenu button:hover,.pmenu button:active{background:rgba(0,101,151,.08)}
+.pmenu button.out{color:#C0392B}
+.setl{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:16px;background:rgba(6,16,27,.45);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.setl[hidden]{display:none}
+.set-card{width:min(420px,100%);padding:6px 18px 18px;border-radius:22px;color:var(--ink);background:var(--surface);border:1px solid var(--g-line,var(--line));-webkit-backdrop-filter:var(--g-blur,blur(16px));backdrop-filter:var(--g-blur,blur(16px));box-shadow:var(--g-hl,none),0 30px 60px -20px rgba(0,20,40,.55)}
+.set-h{display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px}
+.set-h b{font:700 18px var(--f-ui)}
+.set-x{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:none;color:inherit;cursor:pointer;font-size:15px}
+.set-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+.set-row>span{font:600 15px var(--f-ui)}
+.set-row small{display:block;font:500 12px var(--f-mono);color:var(--muted);margin-top:2px;max-width:220px;overflow:hidden;text-overflow:ellipsis}
+.seg{display:flex;padding:3px;border-radius:12px;background:rgba(0,60,110,.08)}
+.seg button{height:34px;padding:0 13px;border:0;border-radius:9px;background:none;color:var(--muted);font:600 13.5px var(--f-ui);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--accent);box-shadow:0 1px 3px rgba(0,30,60,.18)}
+.set-fs .fs{display:flex;align-items:center;gap:10px;flex:1;min-width:200px}
+.set-fs .fs input{flex:1;accent-color:var(--accent)}
+.set-fs .a1{font-size:12px;color:var(--muted)}.set-fs .a2{font-size:20px;color:var(--muted)}
+.set-btn{height:38px;padding:0 16px;border-radius:12px;border:1px solid #C0392B;background:none;color:#C0392B;font:700 14px var(--f-ui);cursor:pointer}
+.set-foot{padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);text-align:center}
+@media (max-width:760px){ #mbtn{width:38px;height:38px;flex:none} }
+
+.top .mark,.top .mark svg{color:#4FA3DF!important}
 </style>
 
 <div class="app mini" id="app">
   <header class="top">
-    <a class="brand" href="index.html" id="home" aria-label="All engine models"><svg class="back" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg><span class="mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" ><path d="M40 22c0-7 6-12 14-12h24c10 0 17 7 17 16v14c0 6-4 10-10 10H46c-4 0-6-3-6-7z"/> <path d="M46 24h30M46 31h22"/> <path d="M86 18v26"/> <path d="M46 50l4 10h32l4-10"/> <path d="M40 40H28v28h8"/><path d="M28 54h-6"/> <path d="M54 60l2 28h18l2-28"/> <path d="M60 68h10"/> <path d="M46 90h40"/> <path d="M54 92c0 6 5 10 12 10h14c5 0 7-3 5-7l-2-3"/> <path d="M63 102l-3 10h6l5-10"/> <path d="M86 97c4-11 11-14 14-9 2 4-4 8-14 9z"/> <path d="M86 97c5 9 4 16-1 15-4-1-3-8 1-15z"/> <circle cx="86" cy="97" r="2.4"/></svg></span><div><b>Parts Picker</b><small>F300DET · FL300DET</small></div></a>
+    <a class="brand" href="index.html" id="home" aria-label="All engine models"><svg class="back" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg><span class="mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" ><g transform="rotate(0 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g><g transform="rotate(120 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g><g transform="rotate(240 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g> <circle cx="60" cy="60" r="12" stroke="#2CCFC0"/> <circle cx="60" cy="60" r="4.5" stroke="#2CCFC0"/> <circle cx="60" cy="60" r="53" stroke="#2CCFC0"/></svg></span><div><b>Parts Picker</b><small>F300DET · FL300DET</small></div></a>
     <div class="fignav">
       <button class="navbtn" id="prev" aria-label="Previous figure"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
       <button class="navbtn figbtn" id="figbtn" aria-label="Choose figure"><span class="fn" id="bfn"></span><span class="ft" id="bft"></span><span class="of" id="bof"></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
       <button class="navbtn" id="next" aria-label="Next figure"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
     </div>
     <button class="iconbtn" id="sbtn" aria-label="Search part number"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></button>
+    <button class="iconbtn" id="mbtn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="pmenu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <div class="pmenu" id="pmenu" hidden>
+      <div class="pm-who" id="pm-who">Parts Picker</div>
+      <button type="button" id="pm-home"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/></svg>All engines</button>
+      <button type="button" id="pm-set"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Settings</button>
+      <button type="button" id="pm-out" class="out"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"/><path d="M10 17l-5-5 5-5M5 12h11"/></svg>Sign out</button>
+    </div>
     <form class="search" id="sform" hidden autocomplete="off">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>
       <input id="q" type="search" enterkeyhint="search" inputmode="search" autocapitalize="characters" spellcheck="false" placeholder="Part number, e.g. 6CB-24501" aria-label="Search part number">
@@ -672,14 +712,25 @@ html,body{overscroll-behavior:none}
 </div>
 <button class="pbubble" id="pbubble" type="button" aria-label="Open parts list"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2" fill="currentColor"/><circle cx="4.5" cy="12" r="1.2" fill="currentColor"/><circle cx="4.5" cy="18" r="1.2" fill="currentColor"/></svg><span class="bb none" id="bbadge">0</span></button>
 <div class="ppeek" id="ppeek" role="button" tabindex="0" aria-live="polite" hidden></div>
+<div class="setl" id="setl" hidden>
+  <div class="set-card" role="dialog" aria-label="Settings">
+    <div class="set-h"><b>Settings</b><button type="button" class="set-x" data-sx aria-label="Close">✕</button></div>
+    <div class="set-row"><span>Appearance</span><div class="seg" id="set-theme"><button type="button" data-t="auto">Auto</button><button type="button" data-t="light">Light</button><button type="button" data-t="dark">Dark</button></div></div>
+    <div class="set-row set-fs"><span>Text size<small id="set-fsv">100%</small></span>
+      <div class="fs"><span class="a1">A</span><input type="range" id="set-fs" min="85" max="135" step="5" value="100" aria-label="Text size"><span class="a2">A</span></div></div>
+    <div class="set-row"><span>Signed in as<small id="set-who">–</small></span><button type="button" class="set-btn" id="set-out">Sign out</button></div>
+    <div class="set-foot">Parts Picker · powered by Marinics</div>
+  </div>
+</div>
 <div id="layer"></div>
 
 <div id="pp-load" style="position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px;text-align:center;background:radial-gradient(70vmax 55vmax at 50% 0%,rgba(0,101,151,.16),transparent 60%),#F7FAFC;color:#132232;font:15px 'IBM Plex Sans Condensed',Arial,sans-serif">
-  <img src="marinics.png" alt="Marinics" style="width:150px;height:auto">
-  <div id="pp-spin" style="width:34px;height:34px;border-radius:50%;border:3px solid rgba(0,101,151,.18);border-top-color:#006597;animation:ppspin .8s linear infinite"></div>
+  <div id="pp-spin" style="width:120px;height:120px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="#006597" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><g class="pp-rot"><g transform="rotate(0 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g><g transform="rotate(120 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g><g transform="rotate(240 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g> <circle cx="60" cy="60" r="12" stroke="#2CCFC0"/> <circle cx="60" cy="60" r="4.5" stroke="#2CCFC0"/></g><circle cx="60" cy="60" r="53" stroke="#2CCFC0"/></svg></div>
   <div id="pp-load-msg" style="max-width:320px;line-height:1.5;color:#486B7D">Loading drawings…</div>
+  <div style="margin-top:14px;font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.3em;text-transform:uppercase;color:#58778E">powered by</div>
+  <img src="marinics.png" alt="Marinics" style="width:100px;height:auto;margin-top:-10px">
   <a id="pp-load-act" href="index.html" hidden style="display:inline-flex;align-items:center;height:44px;padding:0 18px;border-radius:12px;background:#006597;color:#fff;font-weight:600;text-decoration:none">Go to sign in</a>
-  <style>@keyframes ppspin{to{transform:rotate(360deg)}}</style>
+  <style>@keyframes ppspin{to{transform:rotate(360deg)}}#pp-spin svg{width:100%;height:100%}#pp-spin .pp-rot{transform-box:view-box;transform-origin:50% 50%;animation:ppspin .45s linear infinite}#pp-spin.stop .pp-rot{animation:none}</style>
 </div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -690,7 +741,7 @@ html,body{overscroll-behavior:none}
 <script>
 (async () => {
   const L = document.getElementById('pp-load'), M = document.getElementById('pp-load-msg'), A = document.getElementById('pp-load-act'), S = document.getElementById('pp-spin');
-  const stop = (text, label, href) => { S.hidden = true; M.textContent = text; if (label) { A.textContent = label; A.href = href; A.hidden = false; } };
+  const stop = (text, label, href) => { S.classList.add('stop'); M.textContent = text; if (label) { A.textContent = label; A.href = href; A.hidden = false; } };
   try {
     if (!window.PP || !PP.configured) return stop('Sign-in isn’t connected yet. See the README to add your Firebase keys.', 'Back to home', 'index.html');
     const user = await PP.ready;
@@ -1580,10 +1631,11 @@ function peekDraw(){
   const act = list.filter(x => x.qty > 0).length;
   el.innerHTML = `<span class="pk-h">Added to list <b>+${peekN}</b></span><span class="pk-pn">${esc(it.pn)}</span><span class="pk-d">${esc(it.desc)}</span>
     <span class="pk-q"><button type="button" class="pk-b" data-pk="-1" aria-label="One less" ${it.qty <= 1 ? 'disabled' : ''}>−</button><b class="pk-v">${it.qty}</b><button type="button" class="pk-b" data-pk="1" aria-label="One more">+</button></span>
-    <span class="pk-f"><b>${it.qty} pcs</b> · ${esc(qLabel(it))}<i>${act} part${act === 1 ? '' : 's'}${isPhone() ? ' · tap to open' : ''}</i></span>`;
+    <span class="pk-f"><b>${it.qty} pcs</b><button type="button" class="pk-e" data-pkeng aria-label="Choose how many engines"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>${esc(qLabel(it))}</button><i>${act} part${act === 1 ? '' : 's'}${isPhone() ? ' · tap to open' : ''}</i></span>`;
 }
 function hidePeek(){ const el = $('#ppeek'); clearTimeout(peekT); if (el.hidden) return; el.classList.remove('on'); setTimeout(() => { if (!el.classList.contains('on')) el.hidden = true; }, 220); }
 $('#ppeek').addEventListener('click', e => {
+  if (e.target.closest('[data-pkeng]')) { e.stopPropagation(); const pn = peekPn; hidePeek(); editQty(pn); return; }
   const b = e.target.closest('[data-pk]');
   if (b) { e.stopPropagation(); const it = list.find(x => x.pn === peekPn); if (it && it.qty + +b.dataset.pk >= 1) { setQty(peekPn, +b.dataset.pk); peekDraw(); } clearTimeout(peekT); peekT = setTimeout(hidePeek, 5000); return; }
   hidePeek(); setMini(false, true);
@@ -1594,6 +1646,38 @@ viewer.addEventListener('scroll', () => { if (!prog) hidePeek(); }, { passive: t
 viewer.addEventListener('touchmove', hidePeek, { passive: true });
 $('#phead').addEventListener('keydown', e => { if (e.target.id === 'phead' && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); setMini(!app.classList.contains('mini'), true); } });
 
+
+// ---------- menu (all screen sizes): all engines, settings, sign out ----------
+(() => {
+  const btn = $('#mbtn'), menu = $('#pmenu'), L = $('#setl');
+  const who = () => { try { return (window.PP && PP.auth && PP.auth.currentUser && PP.auth.currentUser.email) || ''; } catch (e) { return ''; } };
+  const close = () => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
+  btn.addEventListener('click', e => { e.stopPropagation(); if (!menu.hidden) return close(); const w = who(); $('#pm-who').textContent = w || 'Parts Picker'; $('#pm-out').hidden = !w; menu.hidden = false; btn.setAttribute('aria-expanded', 'true'); });
+  document.addEventListener('click', e => { if (!menu.hidden && !menu.contains(e.target) && e.target !== btn) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { close(); L.hidden = true; } });
+  $('#pm-home').onclick = () => { close(); location.href = $('#home').href; };
+  const applyTheme = t => { if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme'); };
+  const get = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } };
+  const set = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+  async function signOut(){
+    if (!confirmOut()) return;
+    try { if (window.PP && PP.auth) await PP.auth.signOut(); } catch (e) {}
+    location.replace($('#home').href);
+  }
+  const confirmOut = () => true;
+  $('#pm-out').onclick = () => { close(); signOut(); };
+  $('#pm-set').onclick = () => {
+    close(); const t = get('pp-theme', 'auto');
+    $('#set-theme').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.t === t));
+    const fz = ppFs(); $('#set-fs').value = fz; $('#set-fsv').textContent = fz + '%';
+    const w = who(); $('#set-who').textContent = w || 'Not signed in'; $('#set-out').hidden = !w; L.hidden = false;
+  };
+  L.addEventListener('click', e => { if (e.target === L || e.target.closest('[data-sx]')) L.hidden = true; });
+  $('#set-theme').addEventListener('click', e => { const b = e.target.closest('[data-t]'); if (!b) return; set('pp-theme', b.dataset.t); applyTheme(b.dataset.t);
+    $('#set-theme').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); });
+  $('#set-fs').addEventListener('input', e => { const v = +e.target.value; $('#set-fsv').textContent = v + '%'; set('pp-fs', String(v)); document.documentElement.style.setProperty('--fz', v / 100 * 0.85); });
+  $('#set-out').onclick = () => { L.hidden = true; signOut(); };
+})();
 // ---------- misc ----------
 let tt; function toast(m){ let t = $('.toast'); if (!t) { t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); } t.textContent = m; clearTimeout(tt); tt = setTimeout(() => t.remove(), 2200); }
 document.addEventListener('keydown', e => {
@@ -1602,7 +1686,8 @@ document.addEventListener('keydown', e => {
   else if (e.key === 'Escape') { closeModal(); app.classList.remove('navopen'); }
   else if (e.key === '/') { e.preventDefault(); openSearch(); }
 });
-$('#home').addEventListener('click', e => { try { if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) { e.preventDefault(); history.back(); } } catch (err) {} });
+// The logo always opens home (the brand list), on phone and PC
+$('#home').addEventListener('click', e => { e.preventDefault(); location.href = $('#home').href.split('#')[0]; });
 buildFigs(); renderFigList(); renderList();
 if (!isPhone()) app.classList.remove('mini'); else app.classList.add('mini');   // PC: list open from the start · phone: starts as the bubble
 applyWidths();

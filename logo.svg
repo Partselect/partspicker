@@ -1,22 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="#E0520F" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
-  <!-- top cowling -->
-  <path d="M40 22c0-7 6-12 14-12h24c10 0 17 7 17 16v14c0 6-4 10-10 10H46c-4 0-6-3-6-7z"/>
-  <path d="M46 24h30M46 31h22"/>
-  <path d="M86 18v26"/>
-  <!-- apron / bottom cowling -->
-  <path d="M46 50l4 10h32l4-10"/>
-  <!-- clamp bracket -->
-  <path d="M40 40H28v28h8"/><path d="M28 54h-6"/>
-  <!-- midsection -->
-  <path d="M54 60l2 28h18l2-28"/>
-  <path d="M60 68h10"/>
-  <!-- anti-cavitation plate -->
-  <path d="M46 90h40"/>
-  <!-- gearcase -->
-  <path d="M54 92c0 6 5 10 12 10h14c5 0 7-3 5-7l-2-3"/>
-  <path d="M63 102l-3 10h6l5-10"/>
-  <!-- propeller -->
-  <path d="M86 97c4-11 11-14 14-9 2 4-4 8-14 9z"/>
-  <path d="M86 97c5 9 4 16-1 15-4-1-3-8 1-15z"/>
-  <circle cx="86" cy="97" r="2.4"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="#1E7FC0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+<!-- three-blade outboard propeller, swept blades -->
+<g transform="rotate(0 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g><g transform="rotate(120 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g><g transform="rotate(240 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g>
+<circle cx="60" cy="60" r="12" stroke="#2CCFC0"/>
+<circle cx="60" cy="60" r="4.5" stroke="#2CCFC0"/>
+<!-- ring -->
+<circle cx="60" cy="60" r="53" stroke="#2CCFC0"/>
 </svg>

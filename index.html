@@ -446,21 +446,66 @@ footer{padding-bottom:max(4px,calc(env(safe-area-inset-bottom,0px) - 16px))}
 .in-card{box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 30px 70px -20px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08)}
 footer{background:linear-gradient(180deg,transparent 0,var(--g-bg2) 22px)!important;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 .htoast{background:rgba(14,26,36,.72)!important;-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);border:1px solid rgba(255,255,255,.12)}
+
+.mb-home{color:inherit;text-decoration:none;display:flex;-webkit-tap-highlight-color:transparent}
+.mb-home:active{opacity:.75}
+
+.mb-ic svg{color:#4FA3DF!important}
+
+/* opening screen: the propeller spins very fast, slows down and stops lined up with the logo */
+.sp-icon svg *{stroke-dasharray:none!important;stroke-dashoffset:0!important;animation:none!important}
+.sp-icon svg .pp-rot{transform-box:view-box;transform-origin:50% 50%;animation:ppSpin 2.8s cubic-bezier(.12,.75,.25,1) both!important}
+@keyframes ppSpin{from{transform:rotate(-3960deg)}to{transform:rotate(0deg)}}
+.sp-logo{width:min(130px,36vw)!important;margin-top:10px!important}
+.sp-by{margin-top:30px!important}
+@media (prefers-reduced-motion:reduce){.sp-icon svg .pp-rot{animation:none!important}}
+
+/* sign-in: the propeller logo, big, with no tile behind it; Marinics small at the bottom */
+.si-prop{width:132px;height:132px;margin:0 auto 14px}
+.si-prop svg{width:100%;height:100%}
+.si-prop .pp-rot{transform-box:view-box;transform-origin:50% 50%;animation:ppSpin 2.8s cubic-bezier(.12,.75,.25,1) both}
+@keyframes ppSpin{from{transform:rotate(-3960deg)}to{transform:rotate(0deg)}}
+.si-card h2{font-size:30px!important}
+.si-by{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:22px;padding-top:16px;border-top:1px solid rgba(19,34,50,.08)}
+.si-by span{font:600 10px var(--f-mono);letter-spacing:.3em;text-transform:uppercase;color:#58778E}
+.si-by img{width:92px;height:auto}
+@media (prefers-reduced-motion:reduce){.si-prop .pp-rot{animation:none}}
+
+/* loading screen: propeller spinning, Powered by Marinics below */
+.ppwait{position:fixed;inset:0;z-index:95;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;text-align:center;
+  background:radial-gradient(70vmax 55vmax at 50% 0%,rgba(0,101,151,.16),transparent 60%),#F7FAFC;transition:opacity .35s}
+.ppwait[hidden]{display:none}
+.ppwait.out{opacity:0}
+.pw-prop{width:120px;height:120px}
+.pw-prop svg{width:100%;height:100%}
+.pw-prop .pp-rot{transform-box:view-box;transform-origin:50% 50%;animation:ppSpinL .45s linear infinite}
+@keyframes ppSpinL{to{transform:rotate(360deg)}}
+.pw-msg{font:500 15px var(--f-ui);color:#486B7D}
+.pw-by{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:18px}
+.pw-by span{font:600 10px var(--f-mono);letter-spacing:.3em;text-transform:uppercase;color:#58778E}
+.pw-by img{width:100px;height:auto}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ppwait{background:radial-gradient(70vmax 55vmax at 50% 0%,rgba(79,163,223,.16),transparent 60%),#0E1A26}:root:not([data-theme="light"]) .pw-msg{color:#9DB6C6}}
+:root[data-theme="dark"] .ppwait{background:radial-gradient(70vmax 55vmax at 50% 0%,rgba(79,163,223,.16),transparent 60%),#0E1A26}
+:root[data-theme="dark"] .pw-msg{color:#9DB6C6}
 </style>
 
 <div class="splash" id="splash" aria-hidden="true">
   <div class="sp-in">
-    <div class="sp-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><path d="M40 22c0-7 6-12 14-12h24c10 0 17 7 17 16v14c0 6-4 10-10 10H46c-4 0-6-3-6-7z"/> <path d="M46 24h30M46 31h22"/> <path d="M86 18v26"/> <path d="M46 50l4 10h32l4-10"/> <path d="M40 40H28v28h8"/><path d="M28 54h-6"/> <path d="M54 60l2 28h18l2-28"/> <path d="M60 68h10"/> <path d="M46 90h40"/> <path d="M54 92c0 6 5 10 12 10h14c5 0 7-3 5-7l-2-3"/> <path d="M63 102l-3 10h6l5-10"/> <path d="M86 97c4-11 11-14 14-9 2 4-4 8-14 9z"/> <path d="M86 97c5 9 4 16-1 15-4-1-3-8 1-15z"/> <circle cx="86" cy="97" r="2.4"/></svg></div>
+    <div class="sp-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="#006597" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><g class="pp-rot"><g transform="rotate(0 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g><g transform="rotate(120 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g><g transform="rotate(240 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g> <circle cx="60" cy="60" r="12" stroke="#2CCFC0"/> <circle cx="60" cy="60" r="4.5" stroke="#2CCFC0"/></g><circle cx="60" cy="60" r="53" stroke="#2CCFC0"/></svg></div>
     <h1 class="sp-title">Parts <span>Picker</span></h1>
     <div class="sp-by">powered by</div>
     <img class="sp-logo" src="marinics.png" alt="Marinics">
   </div>
-  <div class="sp-bar"><i></i></div>
+</div>
+<div class="ppwait" id="ppwait" hidden aria-live="polite">
+  <div class="pw-prop" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="#006597" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><g class="pp-rot"><g transform="rotate(0 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g><g transform="rotate(120 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g><g transform="rotate(240 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g> <circle cx="60" cy="60" r="12" stroke="#2CCFC0"/> <circle cx="60" cy="60" r="4.5" stroke="#2CCFC0"/></g><circle cx="60" cy="60" r="53" stroke="#2CCFC0"/></svg></div>
+  <div class="pw-msg" id="pw-msg">Loading your engines…</div>
+  <div class="pw-by"><span>powered by</span><img src="marinics.png" alt="Marinics"></div>
 </div>
 <!--LOGIN-->
 <section class="signin" id="signin" hidden aria-label="Sign in">
   <div class="si-card">
-    <img class="si-logo" src="marinics.png" alt="Marinics">
+    <div class="si-prop" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="#006597" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><g class="pp-rot"><g transform="rotate(0 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g><g transform="rotate(120 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g><g transform="rotate(240 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g> <circle cx="60" cy="60" r="12" stroke="#2CCFC0"/> <circle cx="60" cy="60" r="4.5" stroke="#2CCFC0"/></g><circle cx="60" cy="60" r="53" stroke="#2CCFC0"/></svg></div>
     <h2>Parts <span>Picker</span></h2>
     <p class="si-sub">Sign in to continue</p>
     <div class="si-setup" id="si-setup" hidden>Sign-in isn't connected yet. Add your Firebase keys to <code>firebase-config.js</code>, following the README.</div>
@@ -480,12 +525,12 @@ footer{background:linear-gradient(180deg,transparent 0,var(--g-bg2) 22px)!import
       <button class="si-btn" id="np-btn" type="submit">Save password</button>
       <div class="si-msg" id="np-msg" role="status"></div>
     </form>
-    <div class="si-foot">Powered by Marinics</div>
+    <div class="si-by"><span>powered by</span><img src="marinics.png" alt="Marinics"></div>
   </div>
 </section>
 <!--/LOGIN-->
 <header class="mbar" id="mbar">
-  <span class="mb-ic"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><path d="M40 22c0-7 6-12 14-12h24c10 0 17 7 17 16v14c0 6-4 10-10 10H46c-4 0-6-3-6-7z"/> <path d="M46 24h30M46 31h22"/> <path d="M86 18v26"/> <path d="M46 50l4 10h32l4-10"/> <path d="M40 40H28v28h8"/><path d="M28 54h-6"/> <path d="M54 60l2 28h18l2-28"/> <path d="M60 68h10"/> <path d="M46 90h40"/> <path d="M54 92c0 6 5 10 12 10h14c5 0 7-3 5-7l-2-3"/> <path d="M63 102l-3 10h6l5-10"/> <path d="M86 97c4-11 11-14 14-9 2 4-4 8-14 9z"/> <path d="M86 97c5 9 4 16-1 15-4-1-3-8 1-15z"/> <circle cx="86" cy="97" r="2.4"/></svg></span><div class="mb-t"><b>Parts <span>Picker</span></b><div class="subnote" id="subnote" hidden></div></div>
+  <a class="mb-home" id="mb-home" href="index.html" aria-label="Home: all brands"><span class="mb-ic"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><g transform="rotate(0 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g><g transform="rotate(120 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g><g transform="rotate(240 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g> <circle cx="60" cy="60" r="12" stroke="#2CCFC0"/> <circle cx="60" cy="60" r="4.5" stroke="#2CCFC0"/> <circle cx="60" cy="60" r="53" stroke="#2CCFC0"/></svg></span></a><div class="mb-t"><a class="mb-home" href="index.html" data-home><b>Parts <span>Picker</span></b></a><div class="subnote" id="subnote" hidden></div></div>
   <button class="mb-btn" id="mb-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mmenu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <div class="mmenu" id="mmenu" hidden>
     <div class="mm-who" id="mm-who"></div>
@@ -495,7 +540,7 @@ footer{background:linear-gradient(180deg,transparent 0,var(--g-bg2) 22px)!import
 </header>
 <div class="intro" id="intro" hidden role="dialog" aria-label="Welcome">
   <div class="in-card">
-    <div class="in-ic"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><path d="M40 22c0-7 6-12 14-12h24c10 0 17 7 17 16v14c0 6-4 10-10 10H46c-4 0-6-3-6-7z"/> <path d="M46 24h30M46 31h22"/> <path d="M86 18v26"/> <path d="M46 50l4 10h32l4-10"/> <path d="M40 40H28v28h8"/><path d="M28 54h-6"/> <path d="M54 60l2 28h18l2-28"/> <path d="M60 68h10"/> <path d="M46 90h40"/> <path d="M54 92c0 6 5 10 12 10h14c5 0 7-3 5-7l-2-3"/> <path d="M63 102l-3 10h6l5-10"/> <path d="M86 97c4-11 11-14 14-9 2 4-4 8-14 9z"/> <path d="M86 97c5 9 4 16-1 15-4-1-3-8 1-15z"/> <circle cx="86" cy="97" r="2.4"/></svg></div>
+    <div class="in-ic"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><g transform="rotate(0 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g><g transform="rotate(120 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g><g transform="rotate(240 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g> <circle cx="60" cy="60" r="12" stroke="#2CCFC0"/> <circle cx="60" cy="60" r="4.5" stroke="#2CCFC0"/> <circle cx="60" cy="60" r="53" stroke="#2CCFC0"/></svg></div>
     <h1>Parts <span>Picker</span></h1>
     <p>Pick parts straight from the exploded drawings. Tap a number, set the quantity, and download your list as an image or Excel file.</p>
     <div class="in-steps"><span><i>1</i>Choose engine</span><span><i>2</i>Tap numbers</span><span><i>3</i>Download list</span></div>
@@ -515,7 +560,7 @@ footer{background:linear-gradient(180deg,transparent 0,var(--g-bg2) 22px)!import
 <header class="hero">
   <!--USERBAR--><div class="userbar" id="userbar" hidden><span id="useremail"></span><button id="ub-set" type="button" onclick="openSettings()">Settings</button><button id="signout" type="button">Sign out</button></div><!--/USERBAR-->
   <div class="wrap">
-    <div class="logo" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><path class="draw" d="M40 22c0-7 6-12 14-12h24c10 0 17 7 17 16v14c0 6-4 10-10 10H46c-4 0-6-3-6-7z"/> <path class="draw" d="M46 24h30M46 31h22"/> <path class="draw" d="M86 18v26"/> <path class="draw" d="M46 50l4 10h32l4-10"/> <path class="draw" d="M40 40H28v28h8"/><path class="draw" d="M28 54h-6"/> <path class="draw" d="M54 60l2 28h18l2-28"/> <path class="draw" d="M60 68h10"/> <path class="draw" d="M46 90h40"/> <path class="draw" d="M54 92c0 6 5 10 12 10h14c5 0 7-3 5-7l-2-3"/> <path class="draw" d="M63 102l-3 10h6l5-10"/> <path class="draw" d="M86 97c4-11 11-14 14-9 2 4-4 8-14 9z"/> <path class="draw" d="M86 97c5 9 4 16-1 15-4-1-3-8 1-15z"/> <circle class="draw" cx="86" cy="97" r="2.4"/></svg></div>
+    <div class="logo" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><g transform="rotate(0 60 60)"><path class="draw" d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path class="draw" d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g><g transform="rotate(120 60 60)"><path class="draw" d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path class="draw" d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g><g transform="rotate(240 60 60)"><path class="draw" d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path class="draw" d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g> <circle class="draw" cx="60" cy="60" r="12" stroke="#2CCFC0"/> <circle class="draw" cx="60" cy="60" r="4.5" stroke="#2CCFC0"/> <circle class="draw" cx="60" cy="60" r="53" stroke="#2CCFC0"/></svg></div>
     <div>
       <h1>Parts <span>Picker</span></h1>
       <p>Pick parts straight from the exploded drawings. Tap a number, set the quantity, and download your list as an image or Excel file.</p>
@@ -539,7 +584,7 @@ const MODELS = [
   { id: 'f300det', hp: '300 HP · 2025', name: 'F300DET / FL300DET', codes: '6JD7 · 6JE7', catalog: '1Z6JD-200SA',
     figs: 53, parts: 1474, listKey: 'f300det-parts-list-v1', href: 'f300det/index.html' },
 ];
-const ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><path d="M40 22c0-7 6-12 14-12h24c10 0 17 7 17 16v14c0 6-4 10-10 10H46c-4 0-6-3-6-7z"/> <path d="M46 24h30M46 31h22"/> <path d="M86 18v26"/> <path d="M46 50l4 10h32l4-10"/> <path d="M40 40H28v28h8"/><path d="M28 54h-6"/> <path d="M54 60l2 28h18l2-28"/> <path d="M60 68h10"/> <path d="M46 90h40"/> <path d="M54 92c0 6 5 10 12 10h14c5 0 7-3 5-7l-2-3"/> <path d="M63 102l-3 10h6l5-10"/> <path d="M86 97c4-11 11-14 14-9 2 4-4 8-14 9z"/> <path d="M86 97c5 9 4 16-1 15-4-1-3-8 1-15z"/> <circle cx="86" cy="97" r="2.4"/></svg>`;
+const ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><g transform="rotate(0 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g><g transform="rotate(120 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g><g transform="rotate(240 60 60)"><path d="M52.0 51.1C51.4 47.8 46.3 37.1 48.4 31.3C50.5 25.5 58.6 18.0 64.6 16.2C70.6 14.5 80.0 18.0 84.4 21.0C88.7 24.0 91.2 30.9 90.6 34.3C90.0 37.7 85.1 38.8 80.8 41.3C76.5 43.7 67.5 47.7 64.9 49.0"/><path d="M57.8 44.2C58.7 41.7 59.8 32.3 63.2 29.2C66.7 26.1 75.8 26.2 78.3 25.6" stroke-width="1.8"/></g> <circle cx="60" cy="60" r="12" stroke="#2CCFC0"/> <circle cx="60" cy="60" r="4.5" stroke="#2CCFC0"/> <circle cx="60" cy="60" r="53" stroke="#2CCFC0"/></svg>`;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 // One shared list for all engines; each card counts the parts that came from that engine
 function savedCount(key, id){
@@ -614,6 +659,13 @@ function openFolder(st, push){
   if (push) { try { history.pushState({ b: st.b, g: st.g }, '', '#' + encodeURIComponent(st.b) + (st.g ? '/' + encodeURIComponent(st.g) : '')); } catch (e) {} }
   renderModels(SHOWN.models, SHOWN.note); window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+// The app logo / name always goes back to the brand list (home)
+document.querySelectorAll('.mb-home').forEach(a => a.addEventListener('click', e => {
+  e.preventDefault();
+  const mq = document.getElementById('mq'); if (mq && mq.value) { mq.value = ''; mq.dispatchEvent(new Event('input')); }
+  try { history.replaceState({}, '', location.pathname + location.search); } catch (err) {}
+  openFolder({ b: null, g: null }, false);
+}));
 window.addEventListener('popstate', e => { const st = e.state || {}; OPEN = { b: st.b || null, g: st.g || null }; renderModels(SHOWN.models, SHOWN.note); });
 renderModels(window.PP ? [] : MODELS, window.PP ? 'Sign in to see your engines' : '');
 // Search box: iPhones don't always send "input" when the text is cleared (clear button, predictive text),
@@ -641,7 +693,7 @@ async function loadModels(acc){
   const saved = await PPOff.list(email), byId = Object.fromEntries(saved.map(s => [s.id, s]));
   const toCard = (id, m, offline) => ({ id, hp: m.sub, group: m.group || '', groups: m.groups || null, brand: m.brand || '', name: m.name || id, codes: m.codes, catalog: m.catalog, figs: m.figures, parts: m.parts,
     href: 'picker.html?m=' + encodeURIComponent(id), saved: byId[id] || null, stale: !!(byId[id] && m.updated && byId[id].updated && m.updated > byId[id].updated), offline });
-  const show = (cards, note) => renderModels(cards.sort((a, b) => a.name.localeCompare(b.name)), note);
+  const show = (cards, note) => { ppWait(false); renderModels(cards.sort((a, b) => a.name.localeCompare(b.name)), note); };
   const stop = (text, label) => { subNote(text, 'bad'); show([], label); };
   try {
     if (!navigator.onLine) throw { code: 'offline' };
@@ -729,8 +781,12 @@ document.getElementById('grid').addEventListener('click', async e => {
 });
 
 // ---------- Sign in (only when the site is connected to Firebase) ----------
+// Loading screen (spinning propeller) while sign-in is checked and the engine list loads
+function ppWait(on, text){ const w = document.getElementById('ppwait'); if (!w) return; if (text) document.getElementById('pw-msg').textContent = text;
+  clearTimeout(ppWait.t); if (on) { w.hidden = false; w.classList.remove('out'); ppWait.t = setTimeout(() => ppWait(false), 15000); } else if (!w.hidden) { w.classList.add('out'); setTimeout(() => { if (w.classList.contains('out')) w.hidden = true; }, 350); } }
 function afterSplash(){
   const PP = window.PP; if (!PP) return;              // preview without sign-in
+  if (PP.configured) ppWait(true, 'Loading your engines…');
   const si = document.getElementById('signin'), $i = id => document.getElementById(id);
   const msg = (t, cls) => { $i('si-msg').textContent = t || ''; $i('si-msg').className = 'si-msg ' + (cls || ''); };
   let unguard = null;
@@ -742,11 +798,12 @@ function afterSplash(){
       : `This login is now registered to another device${d.label ? ' (' + d.label + ')' : ''}. Ask Marinics to reset the device.`, 'err');
   };
   const showApp = user => {
+    ppWait(true, 'Loading your engines…');
     $i('useremail').textContent = user.email || ''; $i('userbar').hidden = false; document.body.classList.add('signed'); loadModels(ACC); ACC = null;
     if (unguard) unguard(); unguard = PP.session ? PP.session.guard(user, kicked) : null;
     if (!si.hidden) { si.classList.add('out'); setTimeout(() => { si.hidden = true; si.classList.remove('out'); }, 480); }
   };
-  const showSignin = () => { document.body.classList.remove('signed'); $i('userbar').hidden = true; si.hidden = false; setTimeout(() => $i('si-email').focus(), 350); };
+  const showSignin = () => { ppWait(false); document.body.classList.remove('signed'); $i('userbar').hidden = true; si.hidden = false; setTimeout(() => $i('si-email').focus(), 350); };
   if (!PP.configured) { showSignin(); $i('si-setup').hidden = false; $i('si-form').hidden = true; return; }
   // First sign-in: the user must replace the temporary password from Marinics
   let ACC = null;   // the login's access record, read once and reused for the engine list
@@ -825,7 +882,7 @@ function afterSplash(){
   let done = false;
   const hide = () => { if (done) return; done = true; showIntro(afterSplash); sp.classList.add('out'); setTimeout(() => sp.remove(), 550); };
   sp.addEventListener('click', hide);
-  setTimeout(hide, 2600);
+  setTimeout(hide, 3200);   // the propeller spins fast, slows and stops lined up (about 3 s), then the app opens
 })();
 
 // ---------- welcome popup, phone menu, settings ----------

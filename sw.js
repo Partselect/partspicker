@@ -1,5 +1,5 @@
 // Parts Picker service worker: lets phones install the site as an app and keeps drawings for offline use.
-const CACHE = 'parts-picker-v14';
+const CACHE = 'parts-picker-v15';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './marinics.png', './picker.html', './firebase-config.js', './pp-auth.js', './pp-offline.js'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));

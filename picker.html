@@ -615,6 +615,10 @@ html,body{overscroll-behavior:none}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .allset{background:var(--g-bg2,var(--surface))!important}:root:not([data-theme="light"]) .allset .as-b{background:rgba(255,255,255,.05)}}
 :root[data-theme="dark"] .allset{background:var(--g-bg2,var(--surface))!important}
 :root[data-theme="dark"] .allset .as-b{background:rgba(255,255,255,.05)}
+
+.allset .as-undo{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:5px;height:34px;padding:0 12px 0 10px;border-radius:999px;border:1px solid var(--accent);background:var(--g-bg2,var(--surface));color:var(--accent);font:700 12.5px var(--f-ui);cursor:pointer;animation:asU .25s ease}
+.allset .as-undo:active{transform:scale(.94)}
+@keyframes asU{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
 </style>
 
 <div class="app mini" id="app">
@@ -796,7 +800,7 @@ const brandFor = (id, name, b) => { b = b || (/^wv-/.test(id || '') ? 'Yamaha Wa
 const BRAND = brandFor(MODEL.id, MODEL.name, MODEL.brand);
 const perOf = p => parseInt(p[3], 10) || parseInt(p[4], 10) || 1;   // quantity one engine uses, from the catalogue page
 // fill in what older list items are missing for the engine that is open
-list.forEach(x => { if (mine(x)) { if (!x.br) x.br = BRAND; if (!x.per) { for (const f of FIGS) { const p = f.parts.find(q => q[1] === x.pn); if (p) { x.per = perOf(p); break; } } } } });
+list.forEach(x => { if (!x.per && !mine(x)) { const v = (() => { for (const f of FIGS) { const p = f.parts.find(q => q[1] === x.pn); if (p) return perOf(p); } return 0; })(); if (v) x.per = v; } if (mine(x)) { if (!x.br) x.br = BRAND; if (!x.per) { for (const f of FIGS) { const p = f.parts.find(q => q[1] === x.pn); if (p) { x.per = perOf(p); break; } } } } });
 function save(){ try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) {} }
 let cur = 0, zoom = 1;
 try { const f = +localStorage.getItem(FKEY + '-fig'); if (f >= 0 && f < FIGS.length) cur = f; } catch (e) {}
@@ -907,7 +911,8 @@ sheetsEl.addEventListener('click', e => {
   const ab = e.target.closest('.addbtn');
   if (ab) { const fi = +ab.closest('.figblock').dataset.fi; tapPart(FIGS[fi].parts[+ab.dataset.k], FIGS[fi].n); }
 });
-function refreshAll(flashPn){ save(); renderList(flashPn); refreshHots(); refreshTables(); renderFigList(); }
+let undoSnap = null, keepUndo = false;   // the list as it was before "Engines for the whole list"
+function refreshAll(flashPn){ if (!keepUndo) undoSnap = null; save(); renderList(flashPn); refreshHots(); refreshTables(); renderFigList(); }
 
 // ---------- tapping numbers ----------
 let moved = false;
@@ -979,6 +984,7 @@ function qLabel(it){
 }
 function editQty(pn, back){
   const it = list.find(x => x.pn === pn); if (!it) return;
+  if (!it.per) { const v = perFind(it.pn); if (v) it.per = v; }
   const per = it.per || 1;
   const opts = [{ n: 1, t: 'Single piece', s: '1 pc', eng: false }];
   for (let k = 1; k <= 4; k++) { if (k === 1 && per === 1) continue; opts.push({ n: per * k, t: `${k} engine${k > 1 ? 's' : ''}`, s: `${per * k} pcs`, eng: true }); }
@@ -997,11 +1003,14 @@ function editQty(pn, back){
   $('#eq-rm').onclick = () => { remove(it.pn); toast(`${it.pn} removed`); if (back) back(); else closeModal(); };
   if (back) { document.querySelector('[data-back]').onclick = back; const d2 = document.querySelector('[data-back2]'); if (d2) d2.onclick = back; $('#m').onclick = e => { if (e.target.id === 'm') back(); }; }
 }
+// Quantity one engine uses, looked up by part number in the drawings of the engine open now (0 if not found)
+function perFind(pn){ for (const f of FIGS) { const p = f.parts.find(q => q[1] === pn); if (p) return perOf(p); } return 0; }
 // Whole list: every part set to the quantity for 1, 2, 3 or 4 engines
 function setAllEngines(k){
   let n = 0, skip = 0;
-  list.forEach(it => { if (!it.per) { skip++; return; } it.qty = it.per * k; it.eng = true; n++; });
-  refreshAll(); toast(`${n} part${n === 1 ? '' : 's'} set for ${k} engine${k === 1 ? '' : 's'}${skip ? ` · ${skip} kept as they were` : ''}`);
+  const snap = JSON.parse(JSON.stringify(list));
+  list.forEach(it => { if (!it.per) it.per = perFind(it.pn) || 1; it.qty = it.per * k; it.eng = true; n++; });
+  undoSnap = snap; keepUndo = true; refreshAll(); keepUndo = false; toast(`${n} part${n === 1 ? '' : 's'} set for ${k} engine${k === 1 ? '' : 's'}`);
 }
 // The list grouped by engine (brand · model), in the order engines were first added
 function groupsOf(rows){
@@ -1032,7 +1041,7 @@ function renderList(flashPn){
       ${x.qty === 0 ? '<div class="zn">Qty 0 · not downloaded</div>' : ''}</div>`;
     pl.innerHTML = groupsOf(list).map(g => `<div class="lgrp"><b>${esc(g.br)}</b><span>${esc(g.en)}</span><small>${g.items.length} part${g.items.length === 1 ? '' : 's'}</small></div>` + g.items.map(item).join('')).join('')
       + (() => { const per = list.filter(x => x.per), cur = [1, 2, 3, 4].find(k => per.length && per.every(x => x.qty === x.per * k && x.eng)) || 0;
-        return `<div class="allset" id="allset"><div class="as-hd"><span class="as-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 7.5l9 4.5 9-4.5L12 3z"/><path d="m3 12 9 4.5 9-4.5"/><path d="m3 16.5 9 4.5 9-4.5"/></svg></span><span><b class="as-t">Engines for the whole list</b><small>Tap to set every part's quantity</small></span></div>
+        return `<div class="allset" id="allset"><div class="as-hd"><span class="as-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 7.5l9 4.5 9-4.5L12 3z"/><path d="m3 12 9 4.5 9-4.5"/><path d="m3 16.5 9 4.5 9-4.5"/></svg></span><span><b class="as-t">Engines for the whole list</b><small>Tap to set every part's quantity</small></span>${undoSnap ? `<button type="button" class="as-undo" data-allundo aria-label="Undo: put the list back as it was" title="Undo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg><span>Undo</span></button>` : ''}</div>
         <div class="as-b">${[1, 2, 3, 4].map(k => `<button type="button" data-all="${k}" class="${k === cur ? 'cur' : ''}" aria-label="${k} engine${k > 1 ? 's' : ''}"><b>${k}</b><span>engine${k > 1 ? 's' : ''}</span></button>`).join('')}</div></div>`; })();
     if (flashPn) pl.querySelector('.flash')?.scrollIntoView({ block: 'nearest' });
   }
@@ -1042,10 +1051,11 @@ $('#plist').addEventListener('click', e => {
   const all = e.target.closest('[data-all]');
   if (all) {   // ask once before changing every part
     const k = +all.dataset.all, box = $('#allset');
-    box.innerHTML = `<div class="as-hd"><span class="as-ic big" aria-hidden="true">${k}</span><span><b class="as-t">Set all ${list.length} parts for ${k} engine${k > 1 ? 's' : ''}?</b><small>Parts without a known quantity per engine stay as they are</small></span></div><div class="as-b two"><button type="button" data-allno>Cancel</button><button type="button" class="pri" data-allyes="${k}">Apply</button></div>`;
+    box.innerHTML = `<div class="as-hd"><span class="as-ic big" aria-hidden="true">${k}</span><span><b class="as-t">Set all ${list.length} parts for ${k} engine${k > 1 ? 's' : ''}?</b><small>Each part gets its quantity per engine × ${k}</small></span></div><div class="as-b two"><button type="button" data-allno>Cancel</button><button type="button" class="pri" data-allyes="${k}">Apply</button></div>`;
     return;
   }
   if (e.target.closest('[data-allno]')) return renderList();
+  if (e.target.closest('[data-allundo]')) { if (undoSnap) { list = undoSnap; undoSnap = null; refreshAll(); toast('List put back as it was'); } return; }
   const yes = e.target.closest('[data-allyes]'); if (yes) return setAllEngines(+yes.dataset.allyes);
   const b = e.target.closest('[data-a]'); if (!b) return;
   const pn = b.closest('.item').dataset.pn, a = b.dataset.a;
